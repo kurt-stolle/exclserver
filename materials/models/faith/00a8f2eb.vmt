@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\faith/Eye_Lashes"
+"$nocull" "1"
+	"$model" "1"
+	"$halflambert" 1
+		"$translucent" 1
+}

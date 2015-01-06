@@ -1,0 +1,12 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/niko/niko_bellic/niko_hair"
+	"$bumpmap" "models/player/niko/niko_bellic/niko_hair_bump"
+	"$alphatest" 1
+
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmaptint" "[.24 .17 .13]" 
+	"$envmapcontrast" .5
+	"$envmapsaturation" 0.65
+}

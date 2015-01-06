@@ -1,0 +1,7 @@
+"Teeth"
+{
+	"$basetexture" "jessev92\ww2\hd_hitler_v3\mouth"
+	"$model" 1
+	"$clientshader" "MouthShader"
+	"$halflambert" 1
+}

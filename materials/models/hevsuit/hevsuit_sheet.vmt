@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" 	"Models/hevsuit/hevsuit_sheet"
+	"$bumpmap" "Models/hevsuit/hevsuit_normal"
+//	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+
+// -- From here down is new stuff which will only be applied if $phong is set to 1 --
+	"$phong" "1"
+	"$phongexponent" "5"
+	"$phongboost"	"3"
+	"$phongfresnelranges"	"[0.25 0.5 0.75]"
+}

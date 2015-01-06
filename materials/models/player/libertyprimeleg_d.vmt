@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models\player\libertyprimeleg_d"
+	"$bumpmap" "models\player\libertyprimeleg_n"
+	"$model" 1
+	"$envmapmode" 1
+}

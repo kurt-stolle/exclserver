@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\daftpunk\daft_suit"
+	"$bumpmap" "models\daftpunk\daft_suit_n"
+	"$phong" "1"
+	"$phongexponent" "8"
+	"$phongboost" ".1"	
+	"$phongfresnelranges"	"[.3 1 8]"
+	"$halflambert" "1"
+	"$rimlight" "1"
+	"$rimlightexponent" "4"
+	"$rimlightboost" "1"
+}

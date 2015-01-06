@@ -1,0 +1,11 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/slow/rorschach_v2/slow_buttons"
+	"$bumpmap" "models/player/slow/rorschach_v2/slow_buttons_bump"
+
+ 	"$phong" "1"
+	"$phongexponent" "15"
+	"$phongboost"	".5"
+	"$phongfresnelranges"	"[.15 .5 1]"
+
+}

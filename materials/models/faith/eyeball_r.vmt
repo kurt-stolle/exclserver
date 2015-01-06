@@ -1,0 +1,16 @@
+"eyes"
+{
+	"$basetexture" "models/faith/eyeball_r"
+	"$bumpmap" "models\faith/Eye_Normal"
+	"$iris" "models/faith/pupil"
+	"$halflambert" 1
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" "1"
+	"$envmaptint" "[ .15 .15 .15 ]"
+	"$envmapconstrast" "1"
+	"$phong" "1"
+	"$phongboost"   "10"
+	"$phongfresnelranges" "[0.2 .5 10]"
+	"$phongalbedotint" "1.5"
+	
+}

@@ -1,0 +1,9 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\ninja/jason/hair 2"
+
+
+$alphatest 1
+	$nocull 1
+
+}

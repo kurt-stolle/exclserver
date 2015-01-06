@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/slow/arkham_asylum/scarecrow/slow_head"
+	"$bumpmap" "models/player/slow/arkham_asylum/scarecrow/slow_head_bump"
+}

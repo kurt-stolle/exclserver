@@ -1,0 +1,17 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/niko/niko_bellic/niko_jacket"
+	"$bumpmap" "models/player/niko/niko_bellic/niko_jacket_bump"
+
+
+	"$phong" "1"
+	"$phongexponent" "3"
+	"$phongboost" ".3"	
+	"$phongfresnelranges"	"[.3 1 8]"
+	"$halflambert" "1"
+
+	// Rim lighting parameters
+	"$rimlight" "1"												// To enable rim lighting (requires phong)
+	"$rimlightexponent" "4"										// Exponent for phong component of rim lighting	
+	"$rimlightboost" "1"
+}

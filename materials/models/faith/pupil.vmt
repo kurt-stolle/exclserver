@@ -1,0 +1,6 @@
+"Eyeball"
+{
+	"$baseTexture" "models\faith\pupil"
+	
+	"$halflambert" 1
+}

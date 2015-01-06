@@ -1,0 +1,31 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/slow/rorschach_v2/slow_face_fx"
+
+	"$translucent" 1
+
+	"s-low_var" 0
+	"s-low_var2" 137
+	"s-low_var3" 0
+
+	"Proxies"
+	{
+		"EntityRandom"
+		{
+			"scale"		"1"
+			"resultVar"	"s-low_var"
+		}
+		"Multiply"
+		{
+			"srcVar1"	"s-low_var"
+			"srcVar2"	"s-low_var2"
+			"resultVar"	"s-low_var3"
+		}
+		"TextureScroll"
+		{
+			"textureScrollVar"	"$basetexturetransform"
+			"textureScrollRate"	"0.03"
+			"textureScrollAngle"	"s-low_var3"
+		}
+	}
+}

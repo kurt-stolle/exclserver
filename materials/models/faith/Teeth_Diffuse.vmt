@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\faith/Teeth_Diffuse"
+		"$bumpmap" "models\faith/Teeth_Diffuse normal"
+	
+
+	"$halflambert" 1
+	"$nocull" "1"
+       	"$phong" "1"
+	"$phongexponenttexture" "models\faith\Teeth_Diffuse spec"
+	"$phongboost"	"2"
+	"$phongfresnelranges"	"[0.4 0.4 0.4]"
+	"$rimlight" "1"
+	"$rimlightexponenttexture" "models\faith\Teeth_Diffuse spec"									
+	"$rimlightexponent" "0.5"								
+	"$rimlightboost" "0.5"
+}

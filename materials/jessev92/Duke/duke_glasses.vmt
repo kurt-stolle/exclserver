@@ -1,0 +1,21 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "jessev92/duke/duke_glasses_diff"
+	"$bumpmap" "jessev92/duke/duke_glasses_normal"
+	"$halflambert" "1"	
+	"$model" "1"
+	"$nocull" 1
+
+	"$rimlight" "1"
+	"$rimlightexponent" "1"
+	"$rimlightboost" ".2"
+
+	"$phong" "1"
+	"$phongexponent" "10"
+	"$phongtint" ".5 .5 .5"
+	"$phongboost" "1"	
+	"$phongfresnelranges"	"[1 1 16]"
+	"$basemapalphaphongmask" ".1"
+	"$phongexponenttexture" "jessev92/duke/duke_glasses_spec"
+	"$phongalbedotint" "1"					
+}

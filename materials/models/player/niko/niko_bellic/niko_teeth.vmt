@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/niko/niko_bellic/niko_teeth"
+	"$bumpmap" "models/player/niko/niko_bellic/niko_teeth_bump"
+}

@@ -1,0 +1,11 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/slow/arkham_asylum/scarecrow/slow_head"
+	"$bumpmap" "models/player/slow/arkham_asylum/scarecrow/slow_head_bump"
+
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$envmaptint" "[.55 .55 .55]" 
+	"$envmapcontrast" .85
+	"$envmapsaturation" .85
+}

@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/niko/niko_bellic/niko_head"
+
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models/player/niko/niko_bellic/niko_head"
+	"$envmaptint" "[.7 .7 .7]" 
+	"$envmapcontrast" .6
+	"$envmapsaturation" 1
+}

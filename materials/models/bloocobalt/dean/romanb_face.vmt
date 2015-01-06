@@ -1,0 +1,22 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\bloocobalt\dean/romanb_face"
+
+	"$bumpmap" "models\bloocobalt\dean/romanb_face_n"
+
+
+
+
+	"$phong" "1"
+	"$phongexponent" "13"
+	"$phongboost" ".2"	
+	"$phongfresnelranges"	"[.2 0.7 7]"
+	"$halflambert" "1"
+
+	// Rim lighting parameters
+	"$rimlight" "1"												// To enable rim lighting (requires phong)
+	"$rimlightexponent" "2"										// Exponent for phong component of rim lighting	
+	"$rimlightboost" "1"										// Boost for ambient cube component of rim lighting
+
+}
+}

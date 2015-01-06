@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/Bender/Policeman_hat"
+	"$bumpmap" "models/Bender/Policeman_hat_nor"
+}

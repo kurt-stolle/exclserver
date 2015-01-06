@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/slow/arkham_asylum/scarecrow/slow_head"
+	"$bumpmap" "models/player/slow/arkham_asylum/scarecrow/slow_head_bump"
+
+	"$phong" 			"1"
+	"$phongexponent" 		"3"
+	"$phongboost"		"28"
+	"$phongfresnelranges"	"[.05 .1 .2]"
+}
