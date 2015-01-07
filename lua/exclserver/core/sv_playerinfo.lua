@@ -13,11 +13,11 @@ ES:AddCommand("info",function(p,a)
 	targ = targ[1];
 	if not targ or not IsValid(targ) or not targ.Nick then p:ChatPrint("No target found") return end
 
-	local info = p:ESHasPower(60) and GeoIP.Get(string.Left(targ:IPAddress(),string.len(targ:IPAddress()) - 6)) or {};
+	local info = p:IsSuperAdmin() and GeoIP.Get(string.Left(targ:IPAddress(),string.len(targ:IPAddress()) - 6)) or {};
 	info.nickname = targ:Nick();
 	info.SteamID = targ:SteamID();
 	info.rank = targ:ESGetRank().pretty
-	info.IP = p:ESHasPower(60) and targ:IPAddress() or "HIDDEN FOR SA AND BELOW";
+	info.IP = p:IsSuperAdmin() and targ:IPAddress() or "HIDDEN";
 
 	net.Start("ESSendPlayerInfo");
 	net.WriteTable(info);

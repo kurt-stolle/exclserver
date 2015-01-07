@@ -30,8 +30,8 @@ function ES.UIDrawRippleEffect(tab,w,h)
 	tab.rippleScale = Lerp(FrameTime()*4,tab.rippleScale,1);
 
 	if tab.rippleScale > 0 and tab.rippleScale < 1 then
-		tab.cursorPos_x = Lerp(FrameTime()*1.5,tab.cursorPos_x,w/2);
-		tab.cursorPos_y = Lerp(FrameTime()*1.5,tab.cursorPos_y,h/2);
+		tab.cursorPos_x = Lerp(FrameTime()*0.5,tab.cursorPos_x,w/2);
+		tab.cursorPos_y = Lerp(FrameTime()*0.5,tab.cursorPos_y,h/2);
 		tab.rippleColor.a = 255 - 255*tab.rippleScale;
 
 		surface.SetDrawColor(tab.rippleColor);

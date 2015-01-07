@@ -1,4 +1,5 @@
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("RTV","Mapvoting.","Excl")
 
 
@@ -29,6 +30,7 @@ PLUGIN:AddCommand("rtv",function(p,a)
 end,0);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
+PLUGIN();
 
 function ES:ResetRTV()
 	rockers = {};

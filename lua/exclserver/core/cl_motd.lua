@@ -1,88 +1,108 @@
 -- cl_motd.lua
 -- the motd
 ES.motdEnabled = true;
+ES.serverRules={
+	"Do act friendly towards other players.",
+	"Do obey to the administration team's directions.",
+	"Do not spam in any way.",
+	"Do not cheat.",
+}
 
-local motdString = [[
-This server is running ExclServer, to open up the menu press F6.
-Visit our website at www.CasualBananas.com
+local color_background_faded=Color(0,0,0,150)
 
-Enjoy your stay!
-]]
-local rulesString = [[
-Todo: Add Hook: "ESGetRules" to retrieve gamemode rules.
-]]
+local timeOpen=0;
+local motdPaint=function(self,w,h)
+	surface.SetDrawColor(color_background_faded);
+	surface.DrawRect(0,0,w,h);
+	Derma_DrawBackgroundBlur(self,timeOpen)
+end
+local navPaint=function(self,w,h)
+	surface.SetDrawColor(color_background_faded)
+	surface.DrawRect(0,0,w,h);
+end
+
+local navigationOptions={
+	{
+			title="Rules",
+			fn=function(pnl)
+
+			end
+	},
+	{
+			title="About",
+			fn=function(pnl)
+
+			end
+	},
+	{
+			title="Donate",
+			fn=function(pnl)
+
+			end
+	},
+
+}
 
 local motd
-concommand.Add("excl_debug_closemotd",function()
-	if motd and motd:IsValid() then motd:Remove() end
-end)
-function ES:ToggleMotd()
-	if not ES.motdEnabled or hook.Call("ESShouldPreventMOTD") then return end
-	if motd and motd:IsValid() then motd:Remove() end
 
-	motd = vgui.Create("esFrame");
-	motd:SetPos(ScrW()/2-200,ScrH()/2-250);
-	motd:SetSize(460,530);
-	motd.Title= "Welcome to CasualBananas"--GetHostName();
-	motd.showCloseBut = false;
-	motd:MakePopup();
-
-	local sl = vgui.Create("esSlideButton",motd);
-	sl:SetPos(20,motd:GetTall()-50);
-	sl:SetSize(motd:GetWide()-40,30);
-	sl.Text = "Drag the car to the other side to close this panel."
-	sl.car.OnDone = function()
-		if motd and motd:IsValid() then motd:Remove(); hook.Call("ESMotdClosed"); return end
+local w=760;
+local h=600;
+function ES.CloseMOTD()
+	if IsValid(motd) then 
+		motd:Remove() 
 	end
+end
+function ES.OpenMOTD()
+	ES.CloseMOTD();
 
-	local p = vgui.Create("esPanel",motd);
-	p:SetPos(5,35);
-	p:SetSize(motd:GetWide()-10,100);
-	p.PaintHook = function(w,h)
-		draw.RoundedBox(2,2,2,w-4,20,Color(0,0,0,200));
-		draw.SimpleText("Message of the day","ESDefaultBold",w/2,12,Color(255,255,255),1,1);
-	end
-
-	local l = Label(exclFormatLine(motdString,"ESDefault",p:GetWide()-20),p)
-	l:SetFont("ESDefault");
-	l:SetPos(10,30);
-	l:SetColor(COLOR_BLACK)
-	l:SizeToContents();
-
-	local p = vgui.Create("esPanel",motd);
-	p:SetPos(5,35+100+5);
-	p:SetSize(motd:GetWide()-10,330);
-	p.PaintHook = function(w,h)
-		draw.RoundedBox(2,2,2,w-4,20,Color(0,0,0,200));
-		draw.SimpleText("Gamemode Rules","ESDefaultBold",w/2,12,Color(255,255,255),1,1);
-	end
-
-	local cont = vgui.Create("Panel",p);
-	cont:SetPos(0,22);
-	cont:SetSize(p:GetWide(),p:GetTall()-22);
-
-	local l = Label(exclFormatLine(rulesString,"ESDefault",p:GetWide()-20),cont)
-	l:SetFont("ESDefault");
-	l:SetPos(10,5);
-	l:SetColor(COLOR_BLACK)
-	l:SizeToContents();	
-
-	if l.y + l:GetTall() > cont:GetTall() then
-		local scr = cont:Add("esScrollbar");
-		scr:SetPos(cont:GetWide()-17,2);
-		scr:SetSize(15,cont:GetTall()-4);
-		scr:SetUp()
-	end
+	timeOpen=SysTime();
 	
+	motd=vgui.Create("EditablePanel");
+	motd:SetSize(ScrW(),ScrH());
+	motd:SetPos(0,0);
+	motd.Paint=motdPaint;
+
+		local master=motd:Add("ES.MainMenu.Frame");
+		master:SetSize(w,h);
+		master:SetPos(ScrW(),(ScrH()/2)-(h/2));
+		master.Title="MOTD";
+		master.xDesired=(ScrW()/2)-(w/2)
+		master:PerformLayout();
+
+		local frame=master.context;
+		local context=frame:Add("Panel");
+		local navigation=frame:Add("Panel");
+		local btn_close=frame:Add("esButton");
+
+		navigation:SetPos(0,0);
+		navigation:SetSize(256,frame:GetTall());
+		navigation.Paint=navPaint;
+
+			local i=1;
+			for k,v in ipairs(navigationOptions)do
+				local btn=navigation:Add("ES.MainMenu.NavigationItem");
+				btn:SetSize(256,32);
+				btn:SetPos(0,i*32);
+				btn.Title=v.title;
+				btn.DoClick=function()
+					fn(context);
+				end
+
+				i=i+1;
+			end
+		
+		context:SetSize(frame:GetWide()-navigation:GetWide(),frame:GetTall()-10-30-10);
+		context:SetPos(navigation.x+navigation:GetWide(),0);
+
+				
+
+		btn_close:SetSize(context:GetWide()-20,30);
+		btn_close:SetPos(context.x+10,frame:GetTall()-10-30);
+		btn_close.Text="Close MOTD"
+		btn_close.DoClick=ES.CloseMOTD
+
+	motd:MakePopup();
 end
 
 -- Open this when the client loads.
-hook.Add("Initialize","whiowdhwiouwdhiowd",function()
-	rulesString = hook.Call("ESGetRules") or rulesString;
-
-	if !system.IsOSX() then
-
-		ES:ToggleMotd()
-
-	end
-end)
+hook.Add("InitPostEntity","ES.OpenMOTD",ES.OpenMOTD)

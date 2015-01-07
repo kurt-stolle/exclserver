@@ -1,3 +1,4 @@
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Jokes",
 "Being funny has never been so easy.",
 "Excl")
@@ -20,6 +21,7 @@ PLUGIN:AddCommand("joke",function(p,a)
 end);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE);
+PLUGIN();
 
 if SERVER then
 	util.AddNetworkString("ESFunny");

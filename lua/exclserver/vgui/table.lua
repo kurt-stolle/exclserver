@@ -6,19 +6,18 @@ end
 
 COLOR_BLACK = COLOR_BLACK or Color(0,0,0);
 COLOR_WHITE = COLOR_WHITE or Color(255,255,255);
-local colorWhiteAlpha = Color(255,255,255,5);
-local colorOutline = Color(0,0,0,100);
+local color_black_transparent = Color(0,0,0,100);
+local color_shadow = Color(255,255,255,25);
 local colorItemBG = Color(50,50,50);
 local headColor = Color(213,213,213);
-local mat = Material("exclserver/bananas.png");
+local mat = Material("exclserver/bananas_16.png");
 local margin = 10;
 COLOR_BLACK = COLOR_BLACK or Color(0,0,0);
 
-surface.CreateFont("esFontTableItemCost",{
-	font = "Arial Narrow",
-	--italic = true,
+surface.CreateFont("ES.VIPTableFont",{
+	font = "Roboto",
 	size = 16,
-	weight = 500
+	weight = 700
 })
 
 function PANEL:SetRows(x,y)
@@ -51,8 +50,8 @@ function PANEL:SetRows(x,y)
 	for i=2,x do
 		local xpos = (wRow * (i-1)) + (margin * (i-1)) -1;
 		self.buttons[i] = vgui.Create("esButton",self);
-		self.buttons[i]:SetPos(xpos+3,self:GetTall()-23);
-		self.buttons[i]:SetSize(wRow-6,20);
+		self.buttons[i]:SetPos(xpos+3,self:GetTall()-33);
+		self.buttons[i]:SetSize(wRow-6,30);
 		self.buttons[i].Text = "Buy";
 	end
 end
@@ -68,23 +67,21 @@ function PANEL:Paint(w,h)
 
 		for i=2,(#self.rows) do
 			local x = (wRow * (i-1)) + (margin * (i-1)) -1;
-			draw.RoundedBox(0,x-1,0,wRow+2,h,colorOutline);
+			draw.RoundedBox(0,x-1,0,wRow+2,h,color_black_transparent);
 			draw.RoundedBox(0,x,1,wRow,h-2,colorItemBG);
 
 			draw.RoundedBoxEx(0,x,1,wRow,48,(self.headColors[i] or headColor),false,false,true,true)
-
-			--draw.RoundedBoxEx(0,x+1,2,wRow-2,48-2,colorWhiteAlpha,false,false,true,true);
-			draw.RoundedBoxEx(0,x+2,3,wRow-3,(46-2)/2,colorWhiteAlpha,false,false,true,true);
-			draw.SimpleTextOutlined(self.rows[i][1],"ESDefaultBold",x+(wRow/2),5,COLOR_WHITE,1,0,1,colorOutline)
+			
+			draw.SimpleText(self.rows[i][1],"ES.VIPTableFont",x+(wRow/2)+1,5+1,color_shadow,1,0)
+			draw.SimpleText(self.rows[i][1],"ES.VIPTableFont",x+(wRow/2),5,COLOR_BLACK,1,0)
+			
 
 			if self.itemPrice[i] > 0 then
-				surface.SetDrawColor(COLOR_WHITE);
-				surface.SetMaterial(mat);
-				surface.DrawTexturedRect(x+15,25,16,16)
-
-				draw.SimpleText(self.itemPrice[i] or 0,"esFontTableItemCost",x+(wRow/2),24,COLOR_BLACK,1,0)
+				draw.SimpleText((self.itemPrice[i] or 0).." Bananas","ES.VIPTableFont",x+(wRow/2)+1,24+1,color_shadow,1,0)
+				draw.SimpleText((self.itemPrice[i] or 0).." Bananas","ES.VIPTableFont",x+(wRow/2),24,COLOR_BLACK,1,0)
 			else
-				draw.SimpleText("Already bought","esFontTableItemCost",x+(wRow/2),24,COLOR_BLACK,1,0)
+				draw.SimpleText("Already bought","ES.VIPTableFont",x+(wRow/2)+1,24+1,color_shadow,1,0)
+				draw.SimpleText("Already bought","ES.VIPTableFont",x+(wRow/2),24,COLOR_BLACK,1,0)
 			end
 		end
 
@@ -94,7 +91,7 @@ function PANEL:Paint(w,h)
 				if (i == 1 and j == 1) or j == 1 then continue end
 				local y = 50+5 + ((j-2) * 24 );
 				if i == 1 and (j == 3 or j == 5 or j == 7 or j == 9 or j == 11) then
-					draw.RoundedBoxEx(0,0,y-2,w,24,colorOutline);
+					draw.RoundedBoxEx(0,0,y-2,w,24,color_black_transparent);
 				end
 
 				if i == 1 then

@@ -1,3 +1,4 @@
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Admin chat","Chat private to admins.","Excl")
 PLUGIN:AddCommand("adminchat",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
@@ -31,3 +32,4 @@ net.Receive("exclAdminChat",function()
 	ES:ChatAddText("medal",Color(255,255,255),"# ",exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255),": "..msg);
 	chat.PlaySound()
 end)
+PLUGIN();

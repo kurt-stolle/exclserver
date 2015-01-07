@@ -17,8 +17,7 @@ vgui.Register( "esPanel", {
 		self.color = color;
 	end,
 	Init = function(self)
-		local a,b,c = ES.GetColorScheme();
-		self.color = b;
+		self.color = ES.GetColorScheme(2);
 		self.PaintHook = function(w,h) end
 	end
 }, "Panel" );

@@ -1,6 +1,7 @@
 -- tp
 -- tp people
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Teleport","Allows you to teleport.","Excl")
 local function findLocation( from, to, force )
 	if not to:IsInWorld() and not force then return false end
@@ -65,6 +66,7 @@ PLUGIN:AddCommand("tp",teleport,10);
 PLUGIN:AddCommand("teleport",teleport,10);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
+PLUGIN();
 
 if SERVER then 
 	util.AddNetworkString("exclTP");

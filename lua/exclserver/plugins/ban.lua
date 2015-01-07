@@ -1,5 +1,6 @@
 --ban
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Ban","Allows you to ban people from your server if you have the right rank.","Excl")
 PLUGIN:AddCommand("ban",function(p,a)
 	if !IsValid(p) or !a or !a[1] or !a[2] or !a[3] then
@@ -59,105 +60,9 @@ PLUGIN:AddCommand("unban",function(p,a)
 	end
 end,40);
 
---[[PLUGIN:AddCommand("ban",function(p,a)
-	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" or not a[2] or tonumber(a[2]) < 0 then return end
-	
-	if string.lower(string.Left(a[1],6)) != string.lower("steam_") then
-		local vTbl = exclPlayerByName(a[1])
-		if not vTbl then return end
-		local r;
-		if a[3] and a[3] != "" then
-			r = table.concat(a," ",3)
-		else
-			r = "";
-		end
-		r = ES.DBEscape(r);
-		for k,v in pairs(vTbl)do
-			if !v:ESIsImmuneTo(p) or v == p then 
-				local admin = ES.DBEscape(p:Nick());
-				local date = os.date("*t").min.."|"..os.date("*t").hour.."|"..os.date("*t").yday.."|"..os.date("*t").year;
-				local time = tonumber(a[2]);
-				local endtime = math.Round(os.time()/60) + time;
-				if time == 0 then
-					endtime = 0;
-				end
-				
-				ES.DBQuery("INSERT INTO es_bans_log SET time = "..tonumber(a[2])..", nick = '"..ES.DBEscape(v:Nick()).."', date = '"..date.."', steamid = '"..v:SteamID().."', reason = '"..r.."', admin = '"..admin.."', adminSteamID = '"..p:SteamID().."';", function() end);
-				ES.DBQuery("INSERT INTO es_bans_active SET time = "..tonumber(a[2])..", endtime = "..endtime..", reason = '"..r.."', admin = '"..p:SteamID().."', date = '"..date.."', steamid = '"..v:SteamID().."', id = "..v:NumSteamID().." ON DUPLICATE KEY UPDATE time = "..tonumber(a[2])..", endtime = "..endtime..", reason = '"..r.."', admin = '"..p:SteamID().."', date = '"..date.."', steamid = '"..v:SteamID().."';");
-				
-				net.Start("exclBP");
-				net.WriteEntity(p);
-				net.WriteString(v:Nick());
-				net.WriteInt(tonumber(a[2]),32);
-				net.WriteString(r or "No reason given.");
-				net.Broadcast();
-				
-				game.ConsoleCommand( "banid ".. time .." ".. v:SteamID() .."\n" );
-				if time > 0 then
-					v:Kick( "Banned for "..time.." minutes ("..(r or "No reason given.")..")")
-				else
-					v:Kick( "Permabanned ("..(r or "No reason given.")..")")
-				end
-			else
-				net.Start("exclNoBP");
-				net.WriteEntity(p);
-				net.WriteString(v:Nick());
-				net.Broadcast();
-			end
-		end
-	else
-		local r;
-		if a[3] and a[3] != "" then
-			r = table.concat(a," ",3)
-		else
-			r = "";
-		end
-		local steamid = string.upper(a[1]);
-		local admin = ES.DBEscape(p:Nick());
-		local date = os.date("*t").min.."|"..os.date("*t").hour.."|"..os.date("*t").yday.."|"..os.date("*t").year;
-		local time = tonumber(a[2]);
-		local endtime = math.Round(os.time()/60) + time;
-		if time == 0 then
-			endtime = 0;
-		end
-				
-		ES.DBQuery("INSERT INTO es_bans_log SET time = "..tonumber(a[2])..", nick = '"..steamid.."', date = '"..date.."', steamid = '"..steamid.."', reason = '"..r.."', admin = '"..admin.."', adminSteamID = '"..p:SteamID().."';", function() end);
-		ES.DBQuery("INSERT INTO es_bans_active SET time = "..tonumber(a[2])..", endtime = "..endtime..", reason = '"..r.."', admin = '"..p:SteamID().."', date = '"..date.."', steamid = '"..steamid.."' ON DUPLICATE KEY UPDATE time = "..tonumber(a[2])..", endtime = "..endtime..", reason = '"..r.."', admin = '"..p:SteamID().."', date = '"..date.."', steamid = '"..steamid.."';");
-				
-		net.Start("exclBP");
-		net.WriteEntity(p);
-		net.WriteString(steamid);
-		net.WriteInt(tonumber(a[2]),32);
-		net.WriteString(r or "No reason given.");
-		net.Broadcast();
-				
-		game.ConsoleCommand( "banid ".. time .." ".. steamid .."\n" );
-	end
-end,20);
-
-PLUGIN:AddCommand("unban",function(p,a)
-	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
-	local steamid = string.upper(a[1]);
-	if string.Left(steamid,6) != string.upper("STEAM_") then return end           
-	ES.DBQuery("SELECT * FROM es_bans_active WHERE steamid = '"..steamid.."';",function(r)
-		if r and r[1] and r[1].steamid then
-			r[1].steamid = string.upper(r[1].steamid);
-			game.ConsoleCommand( "removeid ".. r[1].steamid .."\n" );
-			
-			local endtime = math.Round(os.time()/60) + 3;
-			
-			ES.DBQuery("UPDATE es_bans_active SET endtime = "..endtime..",  WHERE steamid = '"..r[1].steamid.."';"); -- ban for 1 min so the ban goes through on all servers
-			
-			net.Start("exclUBP");
-			net.WriteEntity(p);
-			net.WriteString(steamid);
-			net.Broadcast();
-		end
-	end);
-end,20);--]]
-
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
+PLUGIN();
 
 if SERVER then
 	util.AddNetworkString("exclBP");

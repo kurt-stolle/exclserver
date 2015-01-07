@@ -1,6 +1,7 @@
 -- votekick
 -- kick off people
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Vote kick","Create a vote to kick a certain user from the server.","Excl")
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
@@ -140,3 +141,4 @@ elseif CLIENT then
 end
 
 PLUGIN:AddCommand("votekick",votekick,0);
+PLUGIN();

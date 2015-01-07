@@ -1,6 +1,7 @@
 -- kick
 -- kicks people
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Freeze","Freeze ppl lel.","Excl")
 PLUGIN:AddCommand("freeze",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
@@ -50,6 +51,7 @@ PLUGIN:AddCommand("unfreeze",function(p,a)
 end,10);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
+PLUGIN();
 
 if SERVER then 
 	util.AddNetworkString("exclFP");

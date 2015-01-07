@@ -54,24 +54,15 @@ local matShading = Material("exclserver/scanlines.png");
 function PANEL:Paint(w,h)
 	local a,b,c = ES.GetColorScheme();
 
-	draw.RoundedBoxEx(4,0,0,w,30,COLOR_BLACK,true,true) 
-	draw.RoundedBoxEx(4,1,1,w-2,29,b,true,true) 
-	draw.RoundedBoxEx(4,2,2,w-4,29/2,Color(255,255,255,5),true,true) 
+	draw.RoundedBoxEx(2,0,0,w,30,COLOR_BLACK,true,true) 
+	draw.RoundedBoxEx(2,1,1,w-2,29,b,true,true) 
+	--draw.RoundedBoxEx(4,2,2,w-4,29/2,Color(255,255,255,5),true,true) 
 
 	surface.SetDrawColor(Color(0,0,0,150));
 	surface.DrawRect(0,0,w,1);
 	surface.DrawRect(0,30-1,w,1);
 	surface.DrawRect(0,1,1,30-2);
 	surface.DrawRect(w-1,1,1,30-2)
-
-	surface.SetDrawColor(Color(0,0,0,100));
-	surface.SetMaterial(matShading);
-	for x=0,math.ceil(w-2/4) do
-		for y=0,math.floor(29/4) do
-			surface.DrawTexturedRect(1 + x*4,1 + y*4,4,4)
-		end
-	end
-
 
 	surface.SetDrawColor(Color(30,30,30));
 	surface.DrawRect(0,30,w,h-30) 
@@ -83,7 +74,7 @@ function PANEL:Paint(w,h)
 	surface.DrawRect(0,31,1,h-32);
 	surface.DrawRect(w-1,31,1,h-32)
 
-	draw.SimpleText(self.Title,"ESFrameTextBlur",10,3,COLOR_BLACK,0,0);
+	draw.SimpleText(self.Title,"ESFrameTextBlur",10,4,COLOR_BLACK,0,0);
 	draw.SimpleText(self.Title,"ESFrameText",10,3,COLOR_WHITE,0,0);
 
 	if self.showCloseBut then

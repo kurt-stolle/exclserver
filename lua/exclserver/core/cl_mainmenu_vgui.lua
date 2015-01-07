@@ -70,9 +70,10 @@ function PNL:OpenFrame(w,h)
 	if self.ActiveFrame and IsValid(self.ActiveFrame) then self.ActiveFrame:Remove() end
 	
 	self.ActiveFrame = self:Add("ES.MainMenu.Frame");
-	if not w then w = (self:GetWide()-(256+64+64)) end
-
-	if w > (self:GetWide()-(256+64+64)) then w = (self:GetWide()-(256+64+64)) end
+	local width_max = (self:GetWide()-(256+10+64+10+10))
+	if not w or w > width_max then 
+		w = width_max
+	end
 	
 	self.ActiveFrame:SetSize(w,h and h+70 or (self:GetTall()-20));
 	self.ActiveFrame.y = 10;
@@ -110,7 +111,7 @@ function PNL:OpenChoisePanel(tblOptions)
 	end
 end
 function PNL:AddButton(name,icon,func)
-	local b = vgui.Create("ESMainMenuElementMainItem",self);
+	local b = vgui.Create("ES.MainMenu.NavigationItem",self);
 	b:SetSize(256,32);
 	b:SetPos(self.ElementMainX,self.yCreateMainButtons);
 	b.Title = name;
@@ -249,14 +250,12 @@ vgui.Register("ESMainMenu",PNL,"EditablePanel");
 
 surface.CreateFont("ES.MainMenu.MainElementButtonShad",{
 	font = "Roboto",
-	weight = 400,
 	size = 16,
 	weight = 700,
 	blursize=2,
 })
 surface.CreateFont("ES.MainMenu.MainElementButton",{
 	font = "Roboto",
-	weight = 400,
 	size = 16,
 	weight = 700,
 })
@@ -286,7 +285,7 @@ function PNL:Paint(w,h)
 	if self.Hover then
 		surface.SetDrawColor(ES.GetColorScheme(2))
 	else
-		surface.SetDrawColor(Color(255,255,255,255));
+		surface.SetDrawColor(ES.Color["#DDD"]);
 	end
 	surface.SetMaterial(self.bg);
 	surface.DrawTexturedRect(0,0,w,h);
@@ -301,29 +300,26 @@ function PNL:Paint(w,h)
 
 	ES.UIDrawRippleEffect(self,w,h);
 
-	local col = Color(0,0,0,210);
+	local col = ES.Color["#444"]
 	if self.Hover then
 		col = color_white;
-	else
-		draw.SimpleText(self.Title,"ES.MainMenu.MainElementButton",42 + 10+1,h/2+1,color_white,0,1);
 	end
 	draw.SimpleText(self.Title,"ES.MainMenu.MainElementButton",42 + 10,h/2,col,0,1);
 end
-vgui.Register("ESMainMenuElementMainItem",PNL,"Panel");
+vgui.Register("ES.MainMenu.NavigationItem",PNL,"Panel");
 
 
 surface.CreateFont("ES.MainMenu.FrameHead",{
 	font = "Roboto",
-	size = 64,
-	weight = 200,
+	size = 48,
+	weight = 300,
 })
 surface.CreateFont("ES.MainMenu.FrameHeadBlur",{
 	font = "Roboto",
-	size = 64,
-	weight = 200,
+	size = 48,
+	weight = 300,
 	blursize = 2,
 })
-local matShading = Material("exclserver/scanlines.png");
 local PNL = {}
 function PNL:Init()
 	--surface.PlaySound("ambient/levels/canals/drip3.wav");
@@ -337,8 +333,8 @@ function PNL:PerformLayout()
 	local w=self:GetWide();
 	local h=self:GetTall();
 
-	self.context:SetSize(w,h-70);
-	self.context:SetPos(0,70);
+	self.context:SetSize(w-2,h-72);
+	self.context:SetPos(1,71);
 end
 function PNL:Think(w,h)
 	if not self.x or self.x <= self.xDesired then return end
@@ -485,15 +481,12 @@ function PNL:PerformLayout()
 	self.dummy:SetSize(w,h)
 	self.dummy:SetPos(0,-1);
 end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
-end
 function PNL:Paint(w,h)
 	if not self.item or not ES.Items[self.item] then  return end
-	if self.Hover then
+
+	self.BaseClass.Paint(self,w,h);
+
+	if self:GetHover() then
 		surface.SetDrawColor(Color(0,0,0,100));	
 		surface.DrawRect(0,0,w,h);
 	end
@@ -525,72 +518,7 @@ function PNL:Paint(w,h)
 		
 	draw.SimpleText(ES.Items[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
 end
-vgui.Register("esMMItemBuyTile",PNL,"Panel");
-
---### HAT PURCHASE TILE
-
-local colHatBuyTileText = Color(255,255,255,50);
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("Spawnicon",self);
-	self.icon:SetToolTip(nil)
-	self.Title = "Un defined"
-	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
-end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
-
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(45,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
-end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.Hats[self.item] then  return end
-	if self.Hover then
-		surface.SetDrawColor(Color(0,0,0,100));	
-		surface.DrawRect(0,0,w,h);
-	end
-	if ES.Hats[self.item]:GetVIPOnly() then
-		surface.SetDrawColor(Color(255,255,0,40));	
-	else
-		surface.SetDrawColor(Color(255,255,255,20));	
-	end
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));		
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
-
-	local s = string.gsub(self.Title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = color_white;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
-	if ES.Hats[self.item]:GetVIPOnly() then
-		draw.SimpleText("VIP","ES.MainMenu.MainElementHeader",w-8,h-42,Color(255,255,255,10),2);
-	end
-	if LocalPlayer():ESHasItem(self.item,ITEM_HAT) then
-		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
-	else
-		draw.SimpleText(ES.Hats[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
-	end
-end
-vgui.Register("esMMHatBuyTile",PNL,"Panel");
-
+vgui.Register("esMMItemBuyTile",PNL,"ES.ItemTile");
 
 --#### Trail preview
 
@@ -621,6 +549,9 @@ function PNL:OnCursorExited()
 end
 function PNL:Paint(w,h)
 	if not self.item or not ES.TrailsBuy[self.item] then  return end
+
+	self.BaseClass.Paint(self,w,h);
+
 	if self.Hover then
 		surface.SetDrawColor(Color(0,0,0,100));
 		surface.DrawRect(0,0,w,h);
@@ -647,7 +578,7 @@ function PNL:Paint(w,h)
 	end
 	
 end
-vgui.Register("esMMTrailBuyTile",PNL,"Panel");
+vgui.Register("esMMTrailBuyTile",PNL,"ES.ItemTile");
 --#### Trail preview
 
 

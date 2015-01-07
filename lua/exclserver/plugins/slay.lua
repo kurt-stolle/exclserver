@@ -1,3 +1,4 @@
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Slay","Allows you to slay people if you have the right rank.","Excl")
 PLUGIN:AddCommand("slay",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end

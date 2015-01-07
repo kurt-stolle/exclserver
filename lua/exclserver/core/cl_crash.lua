@@ -10,14 +10,6 @@ local spawntime
 
 local apology = [[There appears to be a problem with your connection to the server. 
 This can be caused by two things, your connection to the internet or the server's connection to the internet is experiencing problems.
-
-If you are not sure what happened, please wait until connection is regained, or until you are automatically reconnected.
-On the right of this screen there is a list of alternative servers that you should be able to connect to. All these servers are hosted and managed by Casual Bananas, so all your bananas and items from this server will also be usable on any of these servers.
-
-We would like to apologize for any inconveinience this is causing for you. We understand like no other that connection problems can be very frustrating.
-Thank you for playing on our servers.
-
-- Excl and Ruben, owners of Casual Bananas
 ]]
 
 surface.CreateFont("ESConnectionProblem",{

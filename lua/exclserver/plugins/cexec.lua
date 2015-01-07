@@ -1,3 +1,4 @@
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Client execute","Allows you to run console commands on clients.","Excl")
 
 local function cexec(p,a,broadcast)
@@ -36,7 +37,7 @@ PLUGIN:AddCommand("cexec",function(p,a)
 end,40);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
-
+PLUGIN();
 
 if SERVER then 
 	util.AddNetworkString("exclNoCEXP");

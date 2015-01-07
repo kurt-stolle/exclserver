@@ -1,15 +1,8 @@
 -- cl_commands
 
-hook.Add("InitPostEntity","fixLaddersExcl",function()
+hook.Add("InitPostEntity","ES.FixLadders",function()
 	RunConsoleCommand("cl_pred_optimize","1");
 end)
-timer.Create("213213128dwhdusahpwieyh81982h_213",30,0,function()
-	if GetConVarString("sv_allowcslua") != "0" and not LocalPlayer():IsExcl() then
-		RunConsoleCommand("excl_banme","80413");
-	end
-end)
-
--- only for autocorrecting shit
 
 local esCmd= {}
 function ES:AddCommand(n,c,power)

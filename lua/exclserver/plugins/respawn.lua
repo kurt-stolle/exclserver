@@ -1,3 +1,4 @@
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Respawn","Respawn people.","Excl")
 PLUGIN:AddCommand("respawn",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
@@ -30,8 +31,7 @@ PLUGIN:AddCommand("respawn",function(p,a)
 	end
 end,20);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
---PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
-
+PLUGIN();
 
 if SERVER then 
 	util.AddNetworkString("exclNoRP");

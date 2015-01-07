@@ -1,3 +1,4 @@
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Observer","Observes stuff.","Excl")
 PLUGIN:AddCommand("observer",function(p,a)
 	if not p or not p:IsValid() then return end
@@ -16,7 +17,7 @@ PLUGIN:AddCommand("observer",function(p,a)
 end,20);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE);
-
+PLUGIN();
 
 if SERVER then 
 	util.AddNetworkString("exclObsAnn");

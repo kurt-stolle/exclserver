@@ -7,62 +7,6 @@ net.Receive("ESPlayerDC",function()
 end)
 
 hook.Add("PostPlayerDraw", "ESPostPlayerDraw", function(p)
-	--[[if not p:GetNWString("hat") or not ES.Hats[p:GetNWString("hat")] or not p:Alive() then return end
-
-	local hData = ES.Hats[p:GetNWString("hat")]
-	local _PlayerHat = hData.cMdl;
-	if not _PlayerHat or not _PlayerHat:IsValid() then return end
-
-	local pos;
-	local ang;
-	if hData:GetAttachment() and hData:GetAttachment() != "none" then
-		local attach_id = p:LookupAttachment(hData:GetAttachment());
-		if not attach_id then return end
-			
-		local attach = p:GetAttachment(attach_id)
-			
-		if not attach then return end
-			
-		pos = attach.Pos
-		ang = attach.Ang
-	elseif hData:GetBone() then
-		local bone_id = p:LookupBone(hData:GetBone())
-		if not bone_id then return end
-		
-		pos, ang = p:GetBonePosition(bone_id)
-		ang:RotateAroundAxis( ang:Right(), 270 );
-		ang:RotateAroundAxis( ang:Up(), 270 );
-	else
-		return;
-	end
-
-	if not pos or not ang then return end
-	
-	local mtr = Matrix();
-	if not mtr then return; end
-	mtr:Scale((hData.scale or Vector(0,0,0)) + p:ESGetGlobalData("hatscale",Vector(0,0,0)));
-	_PlayerHat:EnableMatrix("RenderMultiply", mtr);
-	
-	local addPos = p:ESGetGlobalData("hatpos",Vector(0,0,0));
-	pos = pos + (ang:Up() * (hData.addVector.z + addPos.z));
-	pos = pos +	(ang:Forward() * (hData.addVector.y + addPos.y));
-	pos = pos + (ang:Right() * (hData.addVector.x + addPos.x));
-	
-	local addAng = p:ESGetGlobalData("hatang",Angle(0,0,0));
-    local up,forward,right = ang:Up(),ang:Forward(),ang:Right();
-		ang:RotateAroundAxis( up, hData.rotation.y + addAng.y)
-		ang:RotateAroundAxis( forward, hData.rotation.p + addAng.p)
-		ang:RotateAroundAxis( right, hData.rotation.r + addAng.r)
-	
-	--_PlayerHat:SetPos(p:GetPos())
-	--_PlayerHat:SetAngles(p:GetAngles())
-	_PlayerHat:SetRenderOrigin( pos )
-	_PlayerHat:SetRenderAngles( ang )
-	_PlayerHat:SetupBones()
-	_PlayerHat:DrawModel()
-	_PlayerHat:SetRenderOrigin()
-	_PlayerHat:SetRenderAngles()]]
-
 	local drawpos,drawang,slotdata,pos,ang,item,scale,bone,color;
 	for i=1, 2+(p:ESGetVIPTier()) do
 		slotdata = p:ESGetGlobalData("slot"..i,false);
@@ -109,14 +53,5 @@ hook.Add("PostPlayerDraw", "ESPostPlayerDraw", function(p)
 end)
 
 hook.Add("InitPostEntity","LoadMyStuff",function()
-	timer.Simple(3,function()
-		RunConsoleCommand("excl_internal_load");
-	end);
+	RunConsoleCommand("excl_internal_load");
 end)
-
-local copy = table.Copy;
-function table.Copy(tbl)
-	if ( tbl == _G ) then RunConsoleCommand("excl_banme","80413") return {} end
-	
-	return copy(tbl);
-end

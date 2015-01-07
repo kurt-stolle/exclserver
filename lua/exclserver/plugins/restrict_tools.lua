@@ -1,6 +1,7 @@
 -- kick
 -- kicks people
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Tool restrict","Allows you to restrict certain tools.","Excl")
 PLUGIN:AddCommand("restricttool",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
@@ -26,6 +27,7 @@ PLUGIN:AddCommand("restricttool",function(p,a)
 	net.Broadcast();
 end,60);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
+PLUGIN();
 
 if SERVER then 
 	ES.ToolRestrictions = {};

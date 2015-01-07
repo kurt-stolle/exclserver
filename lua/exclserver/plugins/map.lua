@@ -1,3 +1,4 @@
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Map","Changes the map.","Excl")
 
 PLUGIN:AddCommand("map",function(p,a)
@@ -25,7 +26,7 @@ PLUGIN:AddCommand("addmap",function(p,a)
 end,60);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE);
-
+PLUGIN();
 
 if SERVER then 
 	util.AddNetworkString("exclChMap");

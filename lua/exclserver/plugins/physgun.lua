@@ -1,5 +1,6 @@
 -- physgun
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Physgun","Gives the admin a physgun.","Excl")
 PLUGIN:AddCommand("physgun",function(p)
 	if IsValid(p) then
@@ -8,3 +9,4 @@ PLUGIN:AddCommand("physgun",function(p)
 	end
 end,40);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
+PLUGIN();

@@ -1,3 +1,4 @@
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Blockades","Block off parts of a map to prevent exploits.","Excl")
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED);
 
@@ -82,3 +83,4 @@ PLUGIN:AddCommand("confirmblockade",function(p,a)
 	e:Spawn();
 
 end,60);
+PLUGIN();

@@ -55,28 +55,7 @@ net.Receive("ESUploadSnapshotProg",function(len,p)
 	end
 	file.Write("exclsnapshots/"..requesters[p:UniqueID()].."_"..p:NumSteamID().."_"..os.time().."_base64.txt", util.Base64Encode(data));
 end);
---[[
-
-net.Receive("ESUploadSnapshot",function(len,p)
-	local data = net.ReadData(net.ReadInt(32));
-	if not data then return end
-
-	if !file.Exists("exclsnapshots", "DATA") then
-		file.CreateDir("exclsnapshots");
-	end
-	file.Write("exclsnapshots/"..p:SteamID().."_"..string.gsub(os.date()," ","_")..".txt", util.Base64Encode(data))
-
-	if not requesters[p:UniqueID()] then return end
-
-	net.Start("ESShowSnapshot");
-	net.WriteInt(data:len(),32);
-	net.WriteData(data,data:len())
-	net.WriteString(p:Nick().."\n"..p:SteamID())
-	net.Send(requesters[p:UniqueID()]);
-
-	requesters[p:UniqueID()] = nil;
-end)]]
-
+	
 ES:AddCommand("snapshot",function(p,a) 
 	if not IsValid(p) or not a or not a[1] then return end
 	if  (p.exclNextSnap and p.exclNextSnap > CurTime()) then p:ChatPrint("This command is currently on cooldown. Please wait " .. math.Round(p.exclNextSnap - CurTime()) .." more seconds.") return end

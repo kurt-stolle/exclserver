@@ -1,5 +1,6 @@
 local muted = {};
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Voice mute","Allows you to mute people if you have the right rank.","Excl")
 PLUGIN:AddCommand("voicemute",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
@@ -57,7 +58,7 @@ PLUGIN:AddCommand("unvoicemute",function(p,a)
 end,10);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
-
+PLUGIN();
 
 if SERVER then 
 	util.AddNetworkString("exclNoVMuP");

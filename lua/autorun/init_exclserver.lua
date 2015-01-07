@@ -93,9 +93,7 @@ local function InitializePlugins()
 	ES.DebugPrint("Initializing plugins")
 
 	for k,v in pairs(file.Find("exclserver/plugins/*.lua","LUA")) do
-		PLUGIN = ES:Plugin();
 		ES.Include(v, "plugins", "sh");
-		PLUGIN(string.gsub(v,".lua",""));
 	end	
 	_G.PLUGIN = nil;
 end

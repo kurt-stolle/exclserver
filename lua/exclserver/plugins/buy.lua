@@ -3,6 +3,7 @@ if SERVER then
 	util.AddNetworkString("ESToggleMenu");
 end
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Buy","Allows users to buy stuff in the ExclServer shop, and activate items bought. This command is mostly called internally.","Excl")
 PLUGIN:AddCommand("buy",function(p,a)
 	if not (IsValid(p) and p.excl and type(p.excl.invaura) == "table" and a[1] and a[2]) then return end
@@ -136,6 +137,7 @@ PLUGIN:AddCommand("buyvip",function(p,a)
 end)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
+PLUGIN();
 
 if SERVER then
 	util.AddNetworkString("ESNoBuy");

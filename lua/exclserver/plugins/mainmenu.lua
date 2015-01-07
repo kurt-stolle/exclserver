@@ -3,6 +3,7 @@ if SERVER then
 	util.AddNetworkString("ESToggleMenu");
 end
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Mainmenu","Opens the ExclServer main menu.","Excl")
 PLUGIN:AddCommand("shop",function(p,a)
 	net.Start("ESToggleMenu"); net.Send(p);
@@ -23,10 +24,11 @@ PLUGIN:AddCommand("store",function(p,a)
 	net.Start("ESToggleMenu"); net.Send(p);
 end);
 PLUGIN:AddCommand("motd",function(p,a)
-	p:SendLua("ES:ToggleMotd()");
+	p:SendLua("ES.OpenMOTD()");
 end);
 PLUGIN:AddCommand("rules",function(p,a)
-	p:SendLua("ES:ToggleMotd()");
+	p:SendLua("ES.OpenMOTD()");
 end);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
+PLUGIN();

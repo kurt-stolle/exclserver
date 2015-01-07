@@ -1,4 +1,5 @@
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Prop restrict","Handles prop restrictions.","Excl")
 PLUGIN:AddCommand("restrictmodelname",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or not a[2] then return end
@@ -26,6 +27,7 @@ PLUGIN:AddCommand("restrictmodel",function(p,a)
 
 end,60);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
+PLUGIN();
 
 if SERVER then
 	util.AddNetworkString("ESTellPropBlocked");

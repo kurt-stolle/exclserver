@@ -1,6 +1,7 @@
 -- kick
 -- kicks people
 
+local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Kick","Allows you to kick people from your server if you have the right rank.","Excl")
 PLUGIN:AddCommand("kick",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
@@ -30,6 +31,7 @@ PLUGIN:AddCommand("kick",function(p,a)
 end,10);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
+PLUGIN();
 
 if SERVER then 
 	util.AddNetworkString("exclKP");

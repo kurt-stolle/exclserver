@@ -36,28 +36,6 @@ function pmeta:ESLoadPlayer()
 					end
 				end
 			end
-
-			--[[if self.excl.hatpos then
-				local tab = string.Explode( "|",self.excl.hatpos);
-				tab = Vector(tonumber(tab[1]) or 0,tonumber(tab[2]) or 0,tonumber(tab[3]) or 0)
-				self:ESSetGlobalData("hatpos",tab);
-			end
-			if self.excl.hatang then
-				local tab = string.Explode( "|",self.excl.hatang);
-				tab = Angle(tonumber(tab[1]) or 0,tonumber(tab[2]) or 0,tonumber(tab[3]) or 0)
-				self:ESSetGlobalData("hatang",tab);
-			end
-			if self.excl.hatscale then
-				local tab = string.Explode( "|",self.excl.hatscale);
-				tab = Vector(tonumber(tab[1]) or 0,tonumber(tab[2]) or 0,tonumber(tab[3]) or 0)
-				self:ESSetGlobalData("hatscale",tab);
-			end
-			if self.excl.hateffect then
-				self:ESSetGlobalData("hateffect",self.excl.hateffect);
-			end
-			if self.excl.hatskin then
-				self:ESSetGlobalData("hatskin",self.excl.hatskin);
-			end]]
 		else
 			ES.DBQuery("INSERT INTO es_player SET bananas = 0, steamid = '"..self:SteamID().."', id = "..self:NumSteamID()..";", function() end);
 
@@ -79,41 +57,6 @@ function pmeta:ESLoadPlayer()
 	end)
 
 end
---[[function pmeta:PushHatCustomization(pos,ang,scale)
-	pos = pos or self:ESGetGlobalData("hatpos",Vector(0,0,0));
-	ang = ang or self:ESGetGlobalData("hatang",Angle(0,0,0));
-	scale = scale or self:ESGetGlobalData("hatscale",Vector(0,0,0));
-
-	posString = table.concat({pos.x,pos.y,pos.z},"|");
-	angString = table.concat({ang.p,ang.y,ang.r},"|");
-	scaleString = table.concat({scale.x,scale.y,scale.z},"|");
-
-	ES.DBQuery("UPDATE es_player SET hatpos = '"..posString.."', hatang = '"..angString.."', hatscale = '"..scaleString.."' WHERE id = "..tonumber(self:NumSteamID())..";")
-
-	self:ESSetGlobalData("hatpos",pos);
-	self:ESSetGlobalData("hatang",ang);
-	self:ESSetGlobalData("hatscale",scale);
-end
-concommand.Add("excl_hat_edit",function(p,c,arg)
-	if not p or not IsValid(p) or not p.excl or not arg or (p.esNextHatCustomize and p.esNextHatCustomize > CurTime()) then return end
-		
-	p.esNextHatCustomize = CurTime() + 2;
-
-	local a = {};
-	for k,v in pairs(arg)do
-		a[k] =  tonumber(v); -- only numbers
-	end
-
-	local pos = Vector(math.Clamp(a[1] or 0,-5,5),math.Clamp(a[2] or 0,-5,5),math.Clamp(a[3] or 0,-5,5));
-	local ang = Angle(math.Clamp(a[4] or 0,-180,180), math.Clamp(a[5] or 0,-180,180), math.Clamp(a[6] or 0,-180,180));
-	local scale = tonumber(math.Clamp(a[7] or 0,-.8,.2));
-	scale = Vector(scale,scale,scale);
-
-	ES.DebugPrint("Pushing hat customization for "..p:Nick());
-
-	p:PushHatCustomization(pos,ang,scale);
-
-end)]]
 
 util.AddNetworkString("ESSynchGlobalPlayerData");
 util.AddNetworkString("ESSynchGlobalPlayerDataSingle")
@@ -165,9 +108,6 @@ function ES:PreformGlobalPlayerDataSynch(p)
 	end
 	net.Broadcast();
 end
---[[timer.Create("ESSynchGlobalPlayerDataJustToBeSure",600,0,function()
-	ES:GenerateSynchKey()
-end)]]
 function pmeta:ESSetGlobalData(name,var)
 	if not self.exclGlobal then self.exclGlobal = {} end
 	if not self.exclSynchTable then self.exclSynchTable = {} end
@@ -200,13 +140,20 @@ function pmeta:ESSetGlobalData(name,var)
 	end)
 end
 
+-- Send a notification 
+function pmeta:ESSendNotification(kind,msg)
+	net.Start("ES.SendNotification");
+		net.WriteString(kind);
+		net.WriteString(msg)
+	net.Send(self);
+end
+
 gameevent.Listen("player_connect")
 
 hook.Add("player_connect", "ESHandlePlayerConnect", function(data)
 	if ES:CheckBans(data.networkid,data.userid) then return end
 end)
-  
---hook.Add("PlayerInitialSpawn", "ESHandlePlayerInitialSpawn", function(p)
+ 
 concommand.Add("excl_internal_load",function(p)
     p:ESLoadPlayer();
 end)
@@ -240,11 +187,6 @@ hook.Add("PlayerDisconnected","NotifyDisconnects",function(p)
 	net.WriteString(p:Nick().."("..p:SteamID()..")");
 	net.Broadcast();
 end)
---[[
-function pmeta:ChatPrint(msg)
-	self:ESChatPrint("server",msg)
-end]]
-
 concommand.Add("es_outfit_customize",function(p,c,a)
 	if not p or not p:IsValid() then return end
 	

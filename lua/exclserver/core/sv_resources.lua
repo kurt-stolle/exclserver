@@ -2,7 +2,6 @@
 function ES:ResourceDir(dir)
 	local fils,dirs = file.Find(dir.."/*","GAME")
 	for k,v in pairs(fils) do
-		--ES.DebugPrint("Excl dir resource resourced: "..string.gsub(string.gsub(dir,"addons/exclserver/",""),"//","/").."/"..v)
 		resource.AddSingleFile( string.gsub(string.gsub(dir,"addons/exclserver/",""),"//","/").."/"..v )
 	end
 	for k,v in pairs(dirs)do
