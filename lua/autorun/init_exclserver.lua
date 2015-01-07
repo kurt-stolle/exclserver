@@ -29,7 +29,7 @@ function ES.DebugPrint(s)
 	if not cvarDebug:GetBool() or not s then return end
 	
 	MsgC(SERVER and COLOR_EXCLSERVER_DEBUG_SERVER or COLOR_EXCLSERVER_DEBUG_CLIENT," [ExclServer] ");
-	MsgC(COLOR_EXCLSERVER_DEBUG,s.."\n");
+	MsgC(COLOR_EXCLSERVER_DEBUG,tostring(s).."\n");
 end
 ES.DebugPrint("Initializing ExclServer @ version "..ES.version);
 
