@@ -1,8 +1,6 @@
 -- the custom chat
 COLOR_BLACK = COLOR_BLACK or Color(0,0,0);
-local adverts = {
-	"This is an advert."
-}
+
 local lineIconsDefault = { -- for ranks see the ranks file
 	player = Material("icon16/user_comment.png"),
 	error = Material("icon16/error.png"),
@@ -410,12 +408,4 @@ hook.Add("ChatText","esChatTextHooks", function( id, n , text , typ )
 	ES:ChatAddText( "default", chatColorDefault,text);
 	
 	return false;
-end)
-timer.Create("ESAdvertiseInChat",70,0,function()
-	if ES:IsCasualFriday() and math.random(0,5) == 1 then
-		ES:ChatAddText("star",COLOR_WHITE,"Today is casual Friday, which means you will have several benefits, including 50% off bronze VIP!")
-		return;
-	end
-	if LocalPlayer():ESGetVIPTier() > 1 then return end
-	ES:ChatAddText("announce",COLOR_WHITE,adverts[math.random(1,#adverts)]);
 end)

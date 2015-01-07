@@ -3,8 +3,14 @@ hook.Add("ESPreCreateDatatables","ESlgoiwjhdiuwaaw",function()
 	ES:DefineDataTable("logs",false,"steamid varchar(100), ip varchar(100), nick varchar(100), text varchar(255), type varchar(100), time int(32), serverid int(32)");
 end)
 
+ES.LOG_DEBUG = 1;
+ES.LOG_COMMAND = 2;
+ES.LOG_CHAT = 4;
+ES.LOG_ERROR = 8;
+ES.LOG_OTHER = 16;
+
 local logfile;
-function ES:Log(text)
+function ES.Log(logtype,text)
 	if not logfile then
 		if not file.IsDir("es_logs", "DATA") then
 			file.CreateDir("es_logs")
@@ -33,7 +39,7 @@ end
 
 hook.Add("PlayerSay","exclIsWatchingYouChatLogs",function(p,t)
 	if IsValid(p) and t then
-		ES:Log(p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..string.gsub(t,"\\","/"));
+		ES.Log(p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..string.gsub(t,"\\","/"));
 		ES:LogDB(p,t,"chat");
 	end
 end);

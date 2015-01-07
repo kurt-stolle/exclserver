@@ -48,10 +48,6 @@ surface.CreateFont("ESAdvertFontBlur",{
 function ENT:Draw()
 	if not self:GetText() or not self:GetTextScale() or not self:GetXAlignment() then self:DrawModel() return end
 
-	if ES.Debug then
-		self:DrawModel();
-	end
-
 	local dist = self:GetPos():Distance(LocalPlayer():EyePos());
 	if dist > 1200 then return end
 
@@ -78,7 +74,7 @@ hook.Add("HUDPaint","debugddDrawAdIDs",function()
 
 		for k,v in pairs(ents.FindByClass("es_advert"))do
 			local pos = v:GetPos():ToScreen();
-			draw.SimpleTextOutlined("advert "..(v:GetID() or '0'), "ESDefaultBold",pos.x,pos.y,COLOR_WHITE,1,1,1,COLOR_BLACK);
+			draw.SimpleTextOutlined("Ad "..(v:GetID() or '0'), "ESDefault",pos.x,pos.y,COLOR_WHITE,1,1,1,COLOR_BLACK);
 		end
 
 	end

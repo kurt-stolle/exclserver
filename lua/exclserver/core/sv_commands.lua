@@ -36,7 +36,7 @@ concommand.Add("excl",function(p,c,a)
 				stringCmd = stringCmd.." "..v;
 			end end
 			stringCmd = stringCmd.." )";
-			ES:Log("[ES CMD] "..p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..stringCmd);
+			ES.Log(ES.LOG_COMMAND, p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..stringCmd);
 			ES:LogDB(p,stringCmd,"command");
 		end
 end)
@@ -87,7 +87,7 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 					end 
 				end
 				stringCmd = stringCmd.." )";
-				ES:Log("[ES CMD] "..p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..stringCmd);
+				ES.Log(ES.LOG_COMMAND,p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..stringCmd);
 				ES:LogDB(p,stringCmd,"command");
 
 				return false

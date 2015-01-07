@@ -9,16 +9,15 @@ local DATABASE_PASSWORD = "rordrmew";   -- (String) Password
 
 -- Do not edit anything under this line, unless you're a competent Lua developer.
 
-ES.ServerID = 0;
-
 require "mysqloo"
+
+ES.ServerID = 0;
 
 if not mysqloo then 
 	ES:DebugPrint("MySQLOO module not found. Please install the MySQLOO module before using ExclServer.");
 	return;
 end
 
-local db;
 local db = mysqloo.connect( DATABASE_HOST, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_SCHEMA, DATABASE_PORT );
 
 local function mysqlError(q,e)
@@ -64,7 +63,6 @@ function ES:CheckDataTablesInDatabase()
 	if not postSetup then return end
 
 	for k,v in pairs(esDataTables)do
-		ES.DebugPrint("Checking/Creating validation of table "..v.name);
 		ES.DBQuery("CREATE TABLE IF NOT EXISTS es_"..v.name.." ( id int(16) NOT NULL AUTO_INCREMENT,"..v.vars.." PRIMARY KEY (id) );",function() end);
 	end	
 end

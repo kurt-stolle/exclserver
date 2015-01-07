@@ -361,7 +361,7 @@ function ES:CreateMainMenu()
 						end
 						if not first then first = k end
 						local icon = vgui.Create("esMMItemBuyTile",p);
-						icon.delay=CurTime() + (k-1-((page-1)*rowsTotal))*.01;
+						icon.delay=CurTime() + (k-1-((page-1)*rowsTotal))*.02;
 
 						curNum = curNum + 1;
 
@@ -374,7 +374,7 @@ function ES:CreateMainMenu()
 						icon:SetPos(15 + (curNum-1)*105,15 + curRow*105);
 						icon:PerformLayout();
 						icon.icon:SetModel(v.model);
-						icon.Title = v.name;
+						icon.text = v.name;
 						icon.item = v.id;
 						icon.OnMouseReleased = function()
 							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
@@ -525,7 +525,7 @@ function ES:CreateMainMenu()
 						end
 						if not first then first = k end
 						local icon = vgui.Create("esMMTrailBuyTile",p);
-						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.01;
+						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.02;
 
 						curNum = curNum + 1;
 
@@ -538,7 +538,7 @@ function ES:CreateMainMenu()
 						icon:SetPos(15 + (curNum-1)*105,10 + curRow*105);
 						icon:PerformLayout();
 						icon.icon:SetImage(v.text);
-						icon.Title = v.name;
+						icon.text = v.name;
 						icon.item = k;
 						icon.OnMouseReleased = function()
 							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
@@ -687,6 +687,7 @@ function ES:CreateMainMenu()
 						end
 						if not first then first = k end
 						local icon = vgui.Create("esMMMeleeBuyTile",p);
+						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.02;
 
 						curNum = curNum + 1;
 
@@ -699,7 +700,7 @@ function ES:CreateMainMenu()
 						icon:SetPos(15 + (curNum-1)*105,15 + curRow*105);
 						icon:PerformLayout();
 						icon.icon:SetModel(v.model);
-						icon.Title = v.name;
+						icon.text = v.name;
 						icon.item = k;
 						icon.OnMouseReleased = function()
 							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
@@ -866,7 +867,7 @@ function ES:CreateMainMenu()
 						end
 						if not first then first = k end
 						local icon = vgui.Create("esMMModelBuyTile",p);
-
+						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.02;
 						curNum = curNum + 1;
 
 						if curNum > rowsX then
@@ -878,7 +879,7 @@ function ES:CreateMainMenu()
 						icon:SetPos(15 + (curNum-1)*105,15 + curRow*105);
 						icon:PerformLayout();
 						icon.icon:SetModel(v.model);
-						icon.Title = v.name;
+						icon.text = v.name;
 						icon.item = k;
 						icon.OnMouseReleased = function()
 							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
@@ -1038,7 +1039,7 @@ function ES:CreateMainMenu()
 						end
 						if not first then first = k end
 						local icon = vgui.Create("esMMAuraBuyTile",p);
-
+						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.02;
 						curNum = curNum + 1;
 
 						if curNum > rowsX then
@@ -1050,7 +1051,7 @@ function ES:CreateMainMenu()
 						icon:SetPos(15 + (curNum-1)*105,15 + curRow*105);
 						icon:PerformLayout();
 						icon.icon:SetMaterial(v.text);
-						icon.Title = v.name;
+						icon.text = v.name;
 						icon.item = k;
 						icon.OnMouseReleased = function()
 							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
@@ -1080,13 +1081,7 @@ function ES:CreateMainMenu()
 				buyBtn:SetVisible(true);
 				mdl:SetMaterial(info.text);
 
-			end},
-			--[[{icon = Material("exclserver/effects.png"), name = "Effects",func = function()
-				openWorkingOnIt()
-			end},
-			{icon = Material("exclserver/editor.png"), name = "Taunts",func = function()
-				openWorkingOnIt()
-			end},]]		
+			end}
 		}) 
 	end)
 	mm:AddButton("Inventory",Material("icon16/plugin.png"),function() 
@@ -1238,7 +1233,7 @@ function ES:CreateMainMenu()
 						icon:SetPos(15 + (curNum-1)*105,15 + curRow*105);
 						icon:PerformLayout();
 						icon.icon:SetModel(ES.Items[k].model);
-						icon.Title = ES.Items[k].name;
+						icon.text = ES.Items[k].name;
 						icon.item = k;
 						icon.OnMouseReleased = function()
 							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
@@ -1368,62 +1363,7 @@ function ES:CreateMainMenu()
 					surface.DrawTexturedRectRotated(w/2,w/2,w,w,0);
 
 				end
---[[
-				local btnEditor = vgui.Create("esButton",p);
-				btnEditor:SetPos(pnlmdl.x,15);
-				btnEditor:SetSize(pnlmdl:GetWide(),30);
-				btnEditor:SetText("Open editor");
-				btnEditor.DoClick = function() end]]
-
-				--[[local invHats = vgui.Create("esMMInventory",p);
-				invHats:SetSize(p:GetWide()-30-230,200);
-				invHats.Title = "Hats";
-				invHats:SetPos(15,15);
-				invHats.rm.typ = "hat";
-
-				local iconHat = invHats.PanelCurrent:Add("Spawnicon");
-
-				if LocalPlayer().excl then
-					local y = 0;
-					local x = 0;
-					for k,v in pairs(LocalPlayer().excl.invhat)do
-						if not ES:ValidItem(v,ITEM_HAT) then continue end
-						
-						local ic = invHats.PanelInventory:Add("esMMHatInventoryTile");
-						ic:SetPos(x*100,y*100);
-						ic:SetSize(100,100);
-						ic.item = v;
-						ic.icon:SetModel(ES.Hats[v].model);
-						ic.Title = ES.Hats[v].info.name
-						ic.OnMouseReleased = function()
-							iconHat:SetModel(ES.Hats[v].model);
-							iconHat:SetVisible(true);
-							invHats.rm:SetVisible(true);
-							
-							
-							LocalPlayer().excl.activehat = v;
-							RunConsoleCommand("excl","activate",v,"hat");
-						end
-
-						table.insert(invHats.PanelInventory.items,ic);
-
-						y = y + 1;
-						if y >= 2 then
-							y = 0;
-							x = x + 1;
-						end
-					end
-				end
-				iconHat:SetSize(90,90);
-				iconHat:SetPos(5,5);
-
-				if LocalPlayer().excl.activehat and ES.Hats[LocalPlayer().excl.activehat] then
-					iconHat:SetModel(ES.Hats[LocalPlayer().excl.activehat].model);
-					invHats.rm:SetVisible(true);
-				else
-					iconHat:SetVisible(false);
-				end]]
-
+				
 				local invAuras = vgui.Create("esMMInventory",p);
 				invAuras:SetSize(p:GetWide()-30-230,200);
 				invAuras.Title = "Auras";
@@ -1443,7 +1383,7 @@ function ES:CreateMainMenu()
 						ic:SetSize(100,100);
 						ic.item = v;
 						ic.icon:SetMaterial(ES.AurasBuy[v].text);
-						ic.Title = ES.AurasBuy[v].name
+						ic.text = ES.AurasBuy[v].name
 						ic.OnMouseReleased = function()
 							iconAura:SetMaterial(ES.AurasBuy[v].text);
 							iconAura:SetVisible(true);
@@ -1485,7 +1425,7 @@ function ES:CreateMainMenu()
 						ic:SetSize(100,100);
 						ic.item = v;
 						ic.icon:SetImage(ES.TrailsBuy[v].text);
-						ic.Title = ES.TrailsBuy[v].name
+						ic.text = ES.TrailsBuy[v].name
 						ic.OnMouseReleased = function()
 							iconTrail:SetImage(ES.TrailsBuy[v].text);
 							iconTrail:SetVisible(true);
@@ -1531,7 +1471,7 @@ function ES:CreateMainMenu()
 						ic:SetSize(100,100);
 						ic.item = v;
 						ic.icon:SetModel(ES.MeleeBuy[v].model);
-						ic.Title = ES.MeleeBuy[v].name
+						ic.text = ES.MeleeBuy[v].name
 						ic.OnMouseReleased = function()
 							iconMelee:SetModel(ES.MeleeBuy[v].model);
 							iconMelee:SetVisible(true);
@@ -1830,7 +1770,7 @@ function ES:CreateMainMenu()
 							icon:SetPos((curNum-1)*105,100 + curRow*105);
 							icon:PerformLayout();
 							icon.icon:SetModel(it.model);
-							icon.Title = it.name;
+							icon.text = it.name;
 							icon.item = it.id;
 							icon.OnMouseReleased = function()
 								itemname:SetText(it.name);
@@ -2175,7 +2115,7 @@ Because today is Casual Friday, bronze VIP is 50% off!]]
 				cnt = cnt+1;
 			end
 		end
-		local lbl = Label(cnt.." / "..table.Count(ES.Achievements).." Achievements unlocked",stat);
+		local lbl = Label(cnt.." / "..table.Count(ES.Achievements).." Unlocked",stat);
 		lbl:SetFont("ES.MainMenu.MainElementInfoBnns")
 		lbl:SizeToContents();
 		lbl:SetPos(12,12);

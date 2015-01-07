@@ -466,52 +466,13 @@ local PNL = {};
 function PNL:Init()
 	self.icon = vgui.Create("Spawnicon",self);
 	self.icon:SetToolTip(nil)
-	self.Title = "Un defined"
-	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
-end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
-
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(45,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
+	self.BaseClass.Init(self);
 end
 function PNL:Paint(w,h)
 	if not self.item or not ES.Items[self.item] then  return end
 
 	self.BaseClass.Paint(self,w,h);
 
-	if self:GetHover() then
-		surface.SetDrawColor(Color(0,0,0,100));	
-		surface.DrawRect(0,0,w,h);
-	end
-	if ES.Items[self.item]:GetVIPOnly() then
-		surface.SetDrawColor(Color(255,255,0,40));	
-	else
-		surface.SetDrawColor(Color(255,255,255,20));	
-	end
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));		
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
-
-	local s = string.gsub(self.Title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = color_white;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
-	if ES.Items[self.item]:GetVIPOnly() then
-		draw.SimpleText("VIP","ES.MainMenu.MainElementHeader",w-8,h-42,Color(255,255,255,20),2);
-	end
 	if LocalPlayer():ESGetInventory():ContainsItem(self.item) then
 		draw.SimpleText(LocalPlayer():ESGetInventory():GetAmount(self.item).. " owned","ESDefaultSmall",8,h-14-16,color_white);
 	end
@@ -526,51 +487,13 @@ vgui.Register("esMMItemBuyTile",PNL,"ES.ItemTile");
 local PNL = {};
 function PNL:Init()
 	self.icon = vgui.Create("DImage",self);
-	self.Title = "Un defined"
-	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
-end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
-
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(45,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
-end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
+	self.BaseClass.Init(self);
 end
 function PNL:Paint(w,h)
 	if not self.item or not ES.TrailsBuy[self.item] then  return end
 
 	self.BaseClass.Paint(self,w,h);
 
-	if self.Hover then
-		surface.SetDrawColor(Color(0,0,0,100));
-		surface.DrawRect(0,0,w,h);
-	end
-	surface.SetDrawColor(Color(255,255,255,20));
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
-
-	local s = string.gsub(self.Title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = color_white;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
 	if LocalPlayer():ESHasItem(self.item,ITEM_TRAIL) then
 		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
 	else
@@ -585,48 +508,13 @@ vgui.Register("esMMTrailBuyTile",PNL,"ES.ItemTile");
 local PNL = {};
 function PNL:Init()
 	self.icon = vgui.Create("DImage",self);
-	self.Title = "Un defined"
-	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
-end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
-
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(45,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
-end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
+	self.BaseClass.Init(self);
 end
 function PNL:Paint(w,h)
 	if not self.item or not ES.AurasBuy[self.item] then  return end
-	if self.Hover then
-		surface.SetDrawColor(Color(0,0,0,100));
-		surface.DrawRect(0,0,w,h);
-	end
-	surface.SetDrawColor(Color(255,255,255,20));
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
+	
+	self.BaseClass.Paint(self,w,h);
 
-	local s = string.gsub(self.Title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = color_white;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
 	if LocalPlayer():ESHasItem(self.item,ITEM_TRAIL) then
 		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
 	else
@@ -634,7 +522,7 @@ function PNL:Paint(w,h)
 	end
 	
 end
-vgui.Register("esMMAuraBuyTile",PNL,"Panel");
+vgui.Register("esMMAuraBuyTile",PNL,"ES.ItemTile");
 
 --### MODEL PURCHASE TILE
 
@@ -643,110 +531,33 @@ local PNL = {};
 function PNL:Init()
 	self.icon = vgui.Create("Spawnicon",self);
 	self.icon:SetToolTip(nil)
-	self.Title = "Un defined"
-	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
-end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
-
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(45,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
-end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
+	
+	self.BaseClass.Init(self);
 end
 function PNL:Paint(w,h)
 	if not self.item or not ES.ModelsBuy[self.item] then  return end
-	if self.Hover then
-		surface.SetDrawColor(Color(0,0,0,100));	
-		surface.DrawRect(0,0,w,h);
-	end
+	
+	self.BaseClass.Paint(self,w,h);
 
-	surface.SetDrawColor(Color(255,255,255,20));	
-
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));		
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
-
-	local s = string.gsub(self.Title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = color_white;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
-
-	if ES.ModelsBuy[self.item].VIPOnly then
-		draw.SimpleText("VIP","ES.MainMenu.MainElementHeader",w-8,h-42,Color(255,255,255,20),2);
-	end
 	if LocalPlayer():ESHasItem(self.item,ITEM_MODEL) then
 		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
 	else
 		draw.SimpleText(ES.ModelsBuy[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
 	end
 end
-vgui.Register("esMMModelBuyTile",PNL,"Panel");
+vgui.Register("esMMModelBuyTile",PNL,"ES.ItemTile");
 
 --#### melee  preview
-
-
 local PNL = {};
 function PNL:Init()
 	self.icon = vgui.Create("Spawnicon",self);
-	self.Title = "Un defined"
 	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
-end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
-
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(40,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
-end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
 end
 function PNL:Paint(w,h)
 	if not self.item or not ES.MeleeBuy[self.item] then  return end
-	if self.Hover then
-		surface.SetDrawColor(Color(0,0,0,100));
-		surface.DrawRect(0,0,w,h);
-	end
-	surface.SetDrawColor(Color(255,255,255,20));
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
 
-	local s = string.gsub(self.Title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = color_white;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
+	self.BaseClass.Paint(self,w,h);
+
 	if LocalPlayer():ESHasItem(self.item,ITEM_MELEE) then
 		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
 	else
@@ -754,14 +565,13 @@ function PNL:Paint(w,h)
 	end
 	
 end
-vgui.Register("esMMMeleeBuyTile",PNL,"Panel");
+vgui.Register("esMMMeleeBuyTile",PNL,"ES.ItemTile");
 
 --#### Inventory
-
-
 surface.CreateFont("esMMInventoryTitle",{
-	font = "Arial Narrow",
+	font = "Roboto",
 	size = 36,
+	weight=400
 })
 
 local PNL = {};
@@ -938,156 +748,29 @@ vgui.Register("esMMHatInventoryTile",PNL,"Panel");
 local PNL = {};
 function PNL:Init()
 	self.icon = vgui.Create("DImage",self);
-	self.Title = "Un defined"
-	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
+	self.BaseClass.Init(self);
 end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
-
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(40,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
-end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.TrailsBuy[self.item] then  return end
-	if self.Hover then
-		surface.SetDrawColor(Color(0,0,0,100));
-		surface.DrawRect(0,0,w,h);
-	end
-	surface.SetDrawColor(Color(255,255,255,20));
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
-
-	local s = string.gsub(self.Title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = color_white;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
-	draw.SimpleText("Click to activate","ESDefaultSmall",8,h-14-3,color_white);	
-end
-vgui.Register("esMMTrailInventoryTile",PNL,"Panel");
+vgui.Register("esMMTrailInventoryTile",PNL,"ES.ItemTile");
 
 
 -- ### INVENTORY TRAILS
 local PNL = {};
 function PNL:Init()
 	self.icon = vgui.Create("DImage",self);
-	self.Title = "Un defined"
-	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
+	self.BaseClass.Init(self);
 end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
 
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(40,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
-end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.AurasBuy[self.item] then  return end
-	if self.Hover then
-		surface.SetDrawColor(Color(0,0,0,100));
-		surface.DrawRect(0,0,w,h);
-	end
-	surface.SetDrawColor(Color(255,255,255,20));
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
-
-	local s = string.gsub(self.Title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = color_white;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
-	draw.SimpleText("Click to activate","ESDefaultSmall",8,h-14-3,color_white);	
-end
-vgui.Register("esMMAuraInventoryTile",PNL,"Panel");
+vgui.Register("esMMAuraInventoryTile",PNL,"ES.ItemTile");
 
 
 --#### melee preview in inventory
-
-local colHatBuyTileText = Color(255,255,255,50);
 local PNL = {};
 function PNL:Init()
 	self.icon = vgui.Create("Spawnicon",self);
-	self.icon:SetToolTip(nil)
-	self.Title = "Un defined"
-	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
+	self.icon:SetToolTip(nil);
+	self.BaseClass.Init(self);
 end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
-
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(45,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
-end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.MeleeBuy[self.item] then  return end
-	if self.Hover then
-		surface.SetDrawColor(Color(0,0,0,100));
-		surface.DrawRect(0,0,w,h);
-	end
-	surface.SetDrawColor(Color(255,255,255,20));
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
-
-	local s = string.gsub(self.Title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = color_white;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
-	draw.SimpleText("Click to activate","ESDefaultSmall",8,h-14-3,color_white);
-end
-vgui.Register("esMMMeleeInventoryTile",PNL,"Panel");
+vgui.Register("esMMMeleeInventoryTile",PNL,"ES.ItemTile");
 
 
 --### FUCKING PLAYER ROWS
