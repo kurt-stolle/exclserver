@@ -180,7 +180,7 @@ AccessorFunc(itemmeta,"cost","Cost",FORCE_NUMBER);
 AccessorFunc(itemmeta,"viponly","VIPOnly",FORCE_BOOL);
 AccessorFunc(itemmeta,"buyable","Buyable",FORCE_BOOL);
 AccessorFunc(itemmeta,"scale","Scale",FORCE_NUMBER);
-function ES:Item()
+function ES.Item()
 	local item = {};
 	setmetatable(item,itemmeta);
 	itemmeta.__index =  itemmeta;

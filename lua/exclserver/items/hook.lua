@@ -1,5 +1,5 @@
 
-local ITEM = ES:Item();
+local ITEM = ES.Item();
 ITEM:SetName("Hook");
 ITEM:SetDescription("Hooking up stuff");
 ITEM:SetModel("models/props_junk/meathook001a.mdl")
