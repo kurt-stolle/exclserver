@@ -1,6 +1,6 @@
 -- handles all bans
-hook.Add("ESPreCreateDatatables","ESRanksDatatableSetup",function()
-	ES:DefineDataTable("bans",false,"steamid varchar(100),steamidAdmin varchar(100), name varchar(100), nameAdmin varchar(100), serverid int(8), unbanned tinyint(1), time int(32), timeStart int(32), reason varchar(255)")
+hook.Add("ESDBDefineTables","ESRanksDatatableSetup",function()
+	ES.DBDefineTable("bans",false,"steamid varchar(100),steamidAdmin varchar(100), name varchar(100), nameAdmin varchar(100), serverid int(8), unbanned tinyint(1), time int(32), timeStart int(32), reason varchar(255)")
 end)
 
 local bansLoaded = false;

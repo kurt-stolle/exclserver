@@ -58,12 +58,12 @@ pmeta.IsUserGroup = pmeta.ESIsRankOrHigher;
 
 if SERVER then
 
-	hook.Add("ESPreCreateDatatables","esCreateRankTables",function() 
-		ES:DefineDataTable( "ranks_config",false,"name varchar(100), prettyname varchar(200), power int(16)");
-		ES:DefineDataTable( "ranks",false,	"steamid varchar(50), serverid int(10), rank varchar(100)" );
+	hook.Add("ESDBDefineTables","esCreateRankTables",function() 
+		ES.DBDefineTable( "ranks_config",false,"name varchar(100), prettyname varchar(200), power int(16)");
+		ES.DBDefineTable( "ranks",false,	"steamid varchar(50), serverid int(10), rank varchar(100)" );
 	end)
 
-	hook.Add("ESOnDatabaseConnected","esGetDBRanksConfig",function()
+	hook.Add("Initialize","esGetDBRanksConfig",function()
 		ES.DBQuery("SELECT * FROM es_ranks_config;",function(r)
 			if not r or not r[1] then return end
 			for k,v in pairs(r)do

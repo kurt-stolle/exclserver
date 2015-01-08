@@ -35,8 +35,8 @@ if SERVER then
 
 	ES.RestrictedProps = {};
 	ES:CreateSetting("props_blacklist_is_whitelist",0,true);
-	hook.Add("ESPreCreateDatatables","w0wu9uwddwdwdwdwdww09dy0928y09h2",function()
-		ES:DefineDataTable("restrictions_props",false,"model varchar(255), serverid varchar(255), req int(8)");
+	hook.Add("ESDBDefineTables","w0wu9uwddwdwdwdwdww09dy0928y09h2",function()
+		ES.DBDefineTable("restrictions_props",false,"model varchar(255), serverid varchar(255), req int(8)");
 	end)
 
 	local loadedGlobal = {}

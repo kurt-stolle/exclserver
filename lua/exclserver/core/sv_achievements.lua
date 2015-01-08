@@ -4,13 +4,13 @@ util.AddNetworkString("ESAchSynch");
 util.AddNetworkString("ESAchProgr");
 util.AddNetworkString("ESAchEarned");
 
-hook.Add("ESPreCreateDatatables","ESAchiesDatatableSetup",function()
+hook.Add("ESDBDefineTables","ESAchiesDatatableSetup",function()
 	local str = "";
 	for k,v in pairs(ES.Achievements)do
 		str = str..", "..k.." int(9) NOT NULL";
 	end
 
-	ES:DefineDataTable("achievements",false,"steamid varchar(100)"..str);
+	ES.DBDefineTable("achievements",false,"steamid varchar(100)"..str);
 end)
 
 local pmeta = FindMetaTable("Player");

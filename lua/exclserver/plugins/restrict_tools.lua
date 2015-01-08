@@ -34,8 +34,8 @@ if SERVER then
 
 	util.AddNetworkString("exclRestrTool");
 	util.AddNetworkString("exclNoTool");
-	hook.Add("ESPreCreateDatatables","w0wu9uw09dy0928y09h2",function()
-		ES:DefineDataTable("restrictions_tools",false,"toolmode varchar(255), req int(9), serverid int(16)")
+	hook.Add("ESDBDefineTables","w0wu9uw09dy0928y09h2",function()
+		ES.DBDefineTable("restrictions_tools",false,"toolmode varchar(255), req int(9), serverid int(16)")
 	end)
 
 	PLUGIN:AddHook("ESPostGetServerID",function()

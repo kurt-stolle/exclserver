@@ -1,8 +1,8 @@
 -- sv_adverts.lua
 
 ES.Adverts = {};
-hook.Add("ESPreCreateDatatables","ESAdsDatatableSetup",function()
-	ES:DefineDataTable("adverts",function(serverid)
+hook.Add("ESDBDefineTables","ESAdsDatatableSetup",function()
+	ES.DBDefineTable("adverts",function(serverid)
 		ES.DBQuery("SELECT * FROM es_adverts WHERE map = '"..game.GetMap().."';",function(res)
 			if res and res[1] then
 				for k,v in pairs(res)do

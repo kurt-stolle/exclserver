@@ -6,8 +6,8 @@ ES.MapvoteEnabled = false;
 
 local mapVoteMaps = {};
 local mapsPicked = {};
-hook.Add("ESPreCreateDatatables","ESCreateDTableMapvotes",function()
-	ES:DefineDataTable( "mapvote", false, "map varchar(120), serverid int(10), enabled tinyint(1)" );
+hook.Add("ESDBDefineTables","ESCreateDTableMapvotes",function()
+	ES.DBDefineTable( "mapvote", false, "map varchar(120), serverid int(10), enabled tinyint(1)" );
 end)
 hook.Add("ESPostGetServerID","ESLoadThisServerMapVoteMaps",function()
 

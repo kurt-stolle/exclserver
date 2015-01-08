@@ -1,7 +1,7 @@
 -- sv_settings.lua
 -- handles the setting system
-hook.Add("ESPreCreateDatatables","ESSettingsDatatableSetup",function()
-	ES:DefineDataTable("settings",false,"value int(32), name varchar(255), serverid int(8)");
+hook.Add("ESDBDefineTables","ESSettingsDatatableSetup",function()
+	ES.DBDefineTable("settings",false,"value int(32), name varchar(255), serverid int(8)");
 end)
 
 ES.Settings = {};

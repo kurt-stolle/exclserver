@@ -1,6 +1,6 @@
 -- sv_log.lua
-hook.Add("ESPreCreateDatatables","ESlgoiwjhdiuwaaw",function()
-	ES:DefineDataTable("logs",false,"steamid varchar(100), ip varchar(100), nick varchar(100), text varchar(255), type varchar(100), time int(32), serverid int(32)");
+hook.Add("ESDBDefineTables","ES.DataDefine.Logs",function()
+	ES.DBDefineTable("logs",false,"steamid varchar(100), ip varchar(100), nick varchar(100), text varchar(255), type varchar(100), time int(32), serverid int(32)");
 end)
 
 ES.LOG_DEBUG = 1;
