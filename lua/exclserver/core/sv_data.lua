@@ -99,7 +99,7 @@ hook.Add("Initialize","ES.Data.InitializeServer",function()
 			ES.DBWait()
 		end
 	end)
-	ES.DBWait()
+	ES.DBWait() 
 end);
 
 
@@ -111,4 +111,4 @@ hook.Add("ESPostGetServerID","ES.Data.PostServerID",function()
 			v.onLoad(ES.ServerID);
 		end
 	end
-end
+end)
