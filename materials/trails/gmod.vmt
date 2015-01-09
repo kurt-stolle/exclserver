@@ -1,8 +1,0 @@
-"UnlitGeneric"
-{
-	"$baseTexture" "trails/gmod"
-	
-	"$additive" 0
-	"$vertexcolor" 1
-	"$vertexalpha" 1
-}

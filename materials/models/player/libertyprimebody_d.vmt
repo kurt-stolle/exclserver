@@ -1,7 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture" "models\player\libertyprimebody_d"
-	"$bumpmap" "models\player\libertyprimebody_n"
-	"$model" 1
-	"$envmapmode" 1
-}

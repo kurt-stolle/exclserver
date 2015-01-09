@@ -260,20 +260,6 @@ hook.Add("Think" , "ESCrashReconnect" , function()
 		if not crashed and IsCrashed() and not pending then
 			pending = true
 			RunConsoleCommand("excl_ping")
-			--[[timer.Simple(3.5 , function()
-				if lastmovetime + crashtime < CurTime() then
-					ES.DebugPrint("Connection lost!")
-					crashed = true
-					shouldretry = true
-					pending = false
-
-					createMenu()
-				else
-					ES.DebugPrint("Connection regained")
-					pending = false
-					crashed = false
-				end
-			end )]]
 		
 			test = CurTime() + 3.5;
 

@@ -1,8 +1,0 @@
-"eyes"
-{
-	"$basetexture" "models/faith/eyeball_l"
-	"$bumpmap" "models\faith/Eye_Normal"
-	"$iris" "models/faith/pupil"
-	"$halflambert" 1
-	
-}

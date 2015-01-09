@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	// Original shader: VertexLitTexture
-	"$basetexture" "models/Hevsuit/gordon_facemap"
-	"$halflambert" 1
-}

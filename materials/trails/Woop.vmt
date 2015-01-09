@@ -1,8 +1,0 @@
-"UnlitGeneric"
-{
-	"$baseTexture" "trails/Woop"
-	
-	"$additive" 1
-	"$vertexcolor" 0
-	"$vertexalpha" 1
-}

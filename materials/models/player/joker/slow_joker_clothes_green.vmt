@@ -1,7 +1,0 @@
-"VertexlitGeneric"
-{
-	"$basetexture" "models/player/joker/slow_joker"
-	"$bumpmap" "models/player/joker/slow_joker_bump"
-
-
-}
