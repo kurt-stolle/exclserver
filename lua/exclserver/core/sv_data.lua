@@ -26,24 +26,26 @@ db.onConnectionFailed = function(Q,e)
 	ES.DebugPrint("Could not connect to mysql, "..e);
 end
 
-function ES.DBQuery(q,c,cError)
+local function MySQLError(q,e)
+	e = string.gsub(e,"You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near","Syntax error at");
+	ES:DebugPrint("MySQL error:")
+	ES:DebugPrint("   > "..tostring(q));
+	ES:DebugPrint("   < error: "..e);
+end
+
+function ES.DBQuery(request,fn,fnError)
 	if db:status() != mysqloo.DATABASE_CONNECTED then 
-		ES.DebugPrint("Lost connection to MySQL server, reconnecting...");
+		ES.DebugPrint("No connection to MySQL server active, (re)connecting.");
 		db:connect();
 		db:wait();
 	end
 		
-	local query = db:query(q);
+	local query = db:query(request);
 	query:setOption(mysqloo.OPTION_CACHE,true);
-	query.onError = cError or (function(q,e) 
-		e = string.gsub(e,"You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near","Syntax error at");
-		ES:DebugPrint("MySQL error:")
-		ES:DebugPrint("   > "..q);
-		ES:DebugPrint("   < error: "..e);
-	end)
-	query.onSuccess = function()
-		if not c or type(c) != "function" then return end
-		c( query:getData() )
+	query.onError = fnError or (MySQLError)
+	query.onSuccess = function(self,dt)
+		if not fn or type(fn) != "function" then return end
+		fn( dt )
 	end
 	query:start()
 end
