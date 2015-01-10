@@ -6,7 +6,7 @@ local oldUniqueID = pmeta.UniqueID;
 function pmeta:UniqueID()
 	return CacheID[self] or ( rawset( CacheID,self,oldUniqueID(self) ) )[self];
 end
-pmeta.NumSteamID = pmeta.UniqueID;
+pmeta.ESID = pmeta.UniqueID;
 
 function pmeta:ESGetVIPTier()
 	return tonumber(self:ESGetGlobalData("VIP",0) or 0);

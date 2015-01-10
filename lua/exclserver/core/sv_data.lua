@@ -28,9 +28,9 @@ end
 
 local function MySQLError(q,e)
 	e = string.gsub(e,"You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near","Syntax error at");
-	ES:DebugPrint("MySQL error:")
-	ES:DebugPrint("   > "..tostring(q));
-	ES:DebugPrint("   < error: "..e);
+	ES.DebugPrint("MySQL error:")
+	ES.DebugPrint("   > "..tostring(q));
+	ES.DebugPrint("   < error: "..e);
 end
 
 function ES.DBQuery(request,fn,fnError)
@@ -76,7 +76,7 @@ function ES:AddPlayerData(p,k,v,nosave)
 
 	if nosave then return end
 	
-	ES.DBQuery("UPDATE es_player SET "..k.." = '"..ES.DBEscape(v).."' WHERE id = "..tonumber(p:NumSteamID())..";", function() end);
+	ES.DBQuery("UPDATE es_player SET "..k.." = '"..ES.DBEscape(v).."' WHERE id = "..tonumber(p:ESID())..";", function() end);
 end
 
 hook.Add("Initialize","ES.Data.InitializeServer",function()

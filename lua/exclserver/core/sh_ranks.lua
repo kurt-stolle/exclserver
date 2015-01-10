@@ -1,5 +1,10 @@
 -- sh_ranks
 -- the rank system.
+hook.Add("ES.DefineNetworkedVariables","ES.RankVariables",function()
+	ES.DefineNetworkedVariable("rank","String",nil,true);
+end);
+
+
 local pmeta = FindMetaTable("Player");
 
 local ranks = {};

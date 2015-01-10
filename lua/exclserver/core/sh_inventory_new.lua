@@ -56,7 +56,7 @@ function invmeta:AddItem(name,amount,nosynch)
 						virtual = virtual - 1;
 						if virtual < 1 then
 							self.Player:ESSetGlobalData("slot"..i,"");
-							ES.DBQuery("UPDATE es_player SET slot"..i.." = '' WHERE id = "..self.Player:NumSteamID()..";");
+							ES.DBQuery("UPDATE es_player SET slot"..i.." = '' WHERE id = "..self.Player:ESID()..";");
 						end
 					end
 				end
@@ -79,7 +79,7 @@ if SERVER then
 			end
 		end
 		bits = table.concat(bits,"|")
-		ES.DBQuery("UPDATE es_player SET inventory = '"..(bits or "").."' WHERE id = "..self.Player:NumSteamID());
+		ES.DBQuery("UPDATE es_player SET inventory = '"..(bits or "").."' WHERE id = "..self.Player:ESID());
 
 		ES.DebugPrint("Inventory saved");
 	end

@@ -57,7 +57,7 @@ local function makeFrame(data,ply,p)
 		if !file.Exists("exclsnapshots", "DATA") then
 			file.CreateDir("exclsnapshots");
 		end
-		file.Write("exclsnapshots/"..p:NumSteamID().."_"..os.time()..".txt", data)
+		file.Write("exclsnapshots/"..p:ESID().."_"..os.time()..".txt", data)
 	end
 
 	local bsave2 = frame:Add("esButton");
@@ -68,7 +68,7 @@ local function makeFrame(data,ply,p)
 		if !file.Exists("exclsnapshots", "DATA") then
 			file.CreateDir("exclsnapshots");
 		end
-		file.Write("exclsnapshots/"..p:NumSteamID().."_"..os.time().."_base64.txt", util.Base64Encode(data));
+		file.Write("exclsnapshots/"..p:ESID().."_"..os.time().."_base64.txt", util.Base64Encode(data));
 	end
 
 	local btrack = frame:Add("esButton");

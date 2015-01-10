@@ -183,7 +183,7 @@ if SERVER then
 		--	self:ESSynchInventory();
 		--end
 
-		ES.DBQuery("UPDATE es_player SET invtrail = '"..invtrail.."', invmelee = '"..invmelee.."', invmodel = '"..invmodel.."', invaura = '"..invaura.."' WHERE id = "..self:NumSteamID()..";", function() end);
+		ES.DBQuery("UPDATE es_player SET invtrail = '"..invtrail.."', invmelee = '"..invmelee.."', invmodel = '"..invmodel.."', invaura = '"..invaura.."' WHERE id = "..self:ESID()..";", function() end);
 	end
 	function pmeta:ESGiveItem(name,itemtype,nosynch)
 		if not self.excl or self:ESHasItem(name,itemtype) then return false end

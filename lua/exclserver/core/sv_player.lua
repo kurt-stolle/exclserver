@@ -13,7 +13,7 @@ function pmeta:ESLoadPlayer()
 	if self.excl then return end
 
 	self.excl = {};
-	ES.DBQuery("SELECT * FROM `es_player` WHERE id = "..self:NumSteamID().." LIMIT 1;",function(c)
+	ES.DBQuery("SELECT * FROM `es_player` WHERE id = "..self:ESID().." LIMIT 1;",function(c)
 		if c and c[1] then
 			self.excl = c[1];
 			self:ESDecodeInventory()
@@ -37,7 +37,7 @@ function pmeta:ESLoadPlayer()
 				end
 			end
 		else
-			ES.DBQuery("INSERT INTO es_player SET bananas = 0, steamid = '"..self:SteamID().."', id = "..self:NumSteamID()..";", function() end);
+			ES.DBQuery("INSERT INTO es_player SET bananas = 0, steamid = '"..self:SteamID().."', id = "..self:ESID()..";", function() end);
 
 			--self.excl.invhat = {}
 			self.excl.invtrail = {}
@@ -195,7 +195,7 @@ concommand.Add("es_outfit_customize",function(p,c,a)
 	if not slot or slot > (2+p:ESGetVIPTier()) then return end
 	
 	if not item or not ES.Items[item] then
-		ES.DBQuery("UPDATE es_player SET slot"..slot.." = '' WHERE id = "..p:NumSteamID()..";")
+		ES.DBQuery("UPDATE es_player SET slot"..slot.." = '' WHERE id = "..p:ESID()..";")
 		ES.DebugPrint("Disabled slot "..slot.." for "..p:Nick())
 		p:ESSetGlobalData("slot"..slot,'');
 		return
@@ -205,7 +205,7 @@ concommand.Add("es_outfit_customize",function(p,c,a)
 			ES.DebugPrint(p:Nick().." tried to set his outfit to an item he doesn't have... "..item);
 			return 
 		end
-		ES.DBQuery("UPDATE es_player SET slot"..slot.." = '"..build.."' WHERE id = "..p:NumSteamID()..";")
+		ES.DBQuery("UPDATE es_player SET slot"..slot.." = '"..build.."' WHERE id = "..p:ESID()..";")
 		ES.DebugPrint("Set slot "..slot.." for "..p:Nick())
 		p:ESSetGlobalData("slot"..slot,build);
 	else

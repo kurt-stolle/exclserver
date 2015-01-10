@@ -15,7 +15,7 @@ if SERVER then
 		if !self.excl or !self:ESGetGlobalData("bananas",false) or tonumber( a ) < 0 then return end
 		a =  tonumber( a );
 		if !nosave then
-			ES.DBQuery("UPDATE es_player SET bananas = bananas + "..tostring(a - self:ESGetGlobalData("bananas",0)).." WHERE id = "..self:NumSteamID()..";");
+			ES.DBQuery("UPDATE es_player SET bananas = bananas + "..tostring(a - self:ESGetGlobalData("bananas",0)).." WHERE id = "..self:ESID()..";");
 		end
 		--self.excl.bananas = a;
 

@@ -53,7 +53,7 @@ net.Receive("ESUploadSnapshotProg",function(len,p)
 	if !file.Exists("exclsnapshots", "DATA") then
 		file.CreateDir("exclsnapshots");
 	end
-	file.Write("exclsnapshots/"..requesters[p:UniqueID()].."_"..p:NumSteamID().."_"..os.time().."_base64.txt", util.Base64Encode(data));
+	file.Write("exclsnapshots/"..requesters[p:UniqueID()].."_"..p:ESID().."_"..os.time().."_base64.txt", util.Base64Encode(data));
 end);
 	
 ES:AddCommand("snapshot",function(p,a) 
