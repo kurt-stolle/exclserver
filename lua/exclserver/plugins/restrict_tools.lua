@@ -38,7 +38,7 @@ if SERVER then
 		ES.DBDefineTable("restrictions_tools",false,"toolmode varchar(255), req int(9), serverid int(16)")
 	end)
 
-	PLUGIN:AddHook("ESPostGetServerID",function()
+	PLUGIN:AddHook("Initialize",function()
 		if !GAMEMODE.IsSandboxDerived then ES.DebugPrint("Not loading tool restriction - we are not on a sandbox derived gamemode."); return end -- thanks garry, now we can not load this ESPlugin when we are not in a sandbox derive.
 
 		ES.DBQuery("SELECT * FROM es_restrictions_tools WHERE serverid = "..ES.ServerID..";",function(res)

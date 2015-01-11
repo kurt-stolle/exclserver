@@ -1,23 +1,26 @@
 util.AddNetworkString("ES.NwPlayerVar");
 
 hook.Add("Initialize","ES.InitializeSavedNetworkedVariables",function()
+	hook.Call("ES.DefineNetworkedVariables");
+	ES.DefineNetworkedVariable = nil;
+
 	for k,v in pairs(ES.NetworkedVariables)do
 		if v.save then
 			ES.DebugPrint("Checking es_player database for the existance of column '"..k.."'");
 			local kind="TINYTEXT";
 			if v.type == "Float" then
-				kind="FLOAT";
+				kind="float";
 			elseif v.type == "Int" then
-				kind="INT";
+				kind="int";
 			elseif v.type == "Bit" then
 				kind="tinyint";
 			elseif v.type == "UInt" then
-				kind="UNSIGNED INT";
+				kind="int unsigned";
 			elseif v.type == "Entity" then
 				ES.DebugPrint("Can not save datatype Entity");
 				continue;
 			elseif v.type == "Double" then
-				kind="DOUBLE";
+				kind="double";
 			end
 			ES.DBQuery("ALTER TABLE `es_player` ADD "..ES.DBEscape(k).." "..kind..";",function() ES.DebugPrint("Added column."); end,function() ES.DebugPrint("Column already exists."); end);
 			ES.DBWait();
@@ -109,11 +112,13 @@ net.Receive("ES.NwPlayerVar",function(len,requester)
 	end
 	net.Send(requester);
 end);
+local cnt;
 timer.Create("ES.NetworkPlayers",.5,0,function()
-	if not queue then return end
+	cnt=table.Count(queue);
+	if not queue or cnt < 1 then return end
 	
 	net.Start("ES.NwPlayerVar");
-	net.WriteUInt(table.Count(queue));
+	net.WriteUInt(cnt,8);
 	for ply,tab in pairs(queue)do
 		net.WriteEntity(ply);
 		net.WriteUInt(#tab,8);

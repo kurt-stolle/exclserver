@@ -15,11 +15,6 @@ function ES.DefineNetworkedVariable(var,kind,size,shouldSave)
 		save = (shouldSave or false)
 	});
 end
-hook.Add("Initialize","ES.DisallowNWVariables",function()
-	hook.Call("ES.DefineNetworkedVariables");
-	ES.DefineNetworkedVariable = nil;
-end);
-
 local pmeta=FindMetaTable("Player");
 function pmeta:ESGetNetworkedVariable(key)
 	return (ply._es_networked and ply._es_networked[key]) or nil;

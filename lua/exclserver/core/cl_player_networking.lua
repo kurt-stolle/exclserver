@@ -47,6 +47,9 @@ net.Receive("ES.NwPlayerVar",function(len)
 end)
 
 hook.Add("Initialize","ES.InitNetworkedVariables.Sync",function()
+	hook.Call("ES.DefineNetworkedVariables");
+	ES.DefineNetworkedVariable = nil;
+
 	net.Start("ES.NwPlayerVar");
 	net.SendToServer();
 end);

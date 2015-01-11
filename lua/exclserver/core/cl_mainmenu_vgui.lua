@@ -866,7 +866,7 @@ function PNL:Setup(p,plain)
 	self.LblNick:SetText(p:Nick() or "Undefined");
 	self.LblNick:SetColor(colOozyGreenB);
 
-	if p:ESGetRankName() != "user" and p:ESGetRank() and p:ESGetRank().pretty and self.LblRank then
+	if p:ESGetRank() != "user" and p:ESGetRank() and p:ESGetRank().pretty and self.LblRank then
 		self.LblRank:SetText("("..(p:ESGetRank().pretty or p:ESGetRank().name or "Unknown")..")");
 	elseif self.LblRank then
 		self.LblRank:SetVisible(false);

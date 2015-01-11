@@ -42,7 +42,7 @@ function ES:SetSetting(name,value,serverid)
 	end
 end
 
-hook.Add("ESPostGetServerID","INTIWFYUCKIUNGSETTINGESEXLCSEVRER",function()
+hook.Add("Initialize","INTIWFYUCKIUNGSETTINGESEXLCSEVRER",function()
 	ES.DBQuery("SELECT * FROM es_settings WHERE serverid = "..ES.ServerID.." OR serverid = 0;",function(res)
 		ES.DebugPrint("Attempting to load settings...")
 		if res and res[1] then

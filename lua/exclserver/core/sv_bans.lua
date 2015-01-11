@@ -1,8 +1,4 @@
 -- handles all bans
-hook.Add("ESDBDefineTables","ESRanksDatatableSetup",function()
-	ES.DBDefineTable("bans",false,"steamid varchar(100),steamidAdmin varchar(100), name varchar(100), nameAdmin varchar(100), serverid int(8), unbanned tinyint(1), time int(32), timeStart int(32), reason varchar(255)")
-end)
-
 local bansLoaded = false;
 local bans = {};
 
@@ -64,16 +60,15 @@ function ES:LoadBans()
 		end
 	end)
 end
-hook.Add("ESPostGetServerID","InitThemDamnBansFROMESLolDWDUWW",function()
+hook.Add("Initialize","ES.InitializeBans",function()
 	ES:LoadBans();
-end)
-timer.Create("ESRefreshBans",600,0,function()
-	ES:LoadBans()
+	timer.Create("ES.RefreshBans",600,0,function()
+		ES:LoadBans()
+	end)
 end)
 
 function ES:CheckBans(steamid,userid)
 	if !bansLoaded then
-		ES.DebugPrint("Ignoring player banned check; Bans not yet loaded.");
 		return false;
 	end
 

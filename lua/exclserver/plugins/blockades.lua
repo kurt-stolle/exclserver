@@ -18,7 +18,7 @@ util.AddNetworkString("ESBlockConfirm");
 hook.Add("ESDBDefineTables","ESBlockadesDatatableSetup",function()
 	ES.DBDefineTable("blockades",false,"mapname varchar(255), startX int(16), startY int(16), startZ int(16), endX int(16), endY int(16), endZ int(16)")
 end)
-hook.Add("ESPostGetServerID","WDAGHGINITBLOCKADESEXCLWASHEREESS",function()
+hook.Add("Initialize","WDAGHGINITBLOCKADESEXCLWASHEREESS",function()
 	ES.DBQuery("SELECT * FROM es_blockades WHERE mapname = '"..game.GetMap().."';",function(r) 
 		ES.DebugPrint("Attempting to spawn blockades");
 
