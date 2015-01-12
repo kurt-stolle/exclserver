@@ -32,10 +32,10 @@ db.onConnectionFailed = function(Q,e)
 	ES.DebugPrint("Could not connect to mysql, "..e);
 end
 
-local function MySQLError(q,e)
+local function MySQLError(q,e,sql)
 	e = string.gsub(e,"You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near","Syntax error at");
 	ES.DebugPrint("MySQL error:")
-	ES.DebugPrint("   > "..tostring(q));
+	ES.DebugPrint("   > "..tostring(sql));
 	ES.DebugPrint("   < error: "..e);
 end
 
@@ -54,6 +54,8 @@ function ES.DBQuery(request,fn,fnError)
 		fn( dt )
 	end
 	query:start()
+
+	return query
 end
 function ES.DBEscape(t)
  	return db:escape(t);
@@ -69,7 +71,6 @@ function ES.DBDefineTable(name,onLoad,vars)
 
 	table.insert(esDataTables,{name = name,onLoad = (onLoad or false),vars = (vars or "")});
 end
-ES.DBDefineTable( "player",false,	"steamid varchar(32), bananas int(32) unsigned, inventory varchar(255), invmodel char(255), invtrail char(255), invmelee char(255), invtaunt char(255), invaura char(255), activehat varchar(64), activeaura varchar(64), activetrail varchar(64), activemelee varchar(255), activemodel varchar(255), viptier int(8), trailcolor varchar(255), trailscale varchar(255), slot1 varchar(255), slot2 varchar(255), slot3 varchar(255), slot4 varchar(255), slot5 varchar(255), slot6 varchar(255), slot7 varchar(255), slot8 varchar(255)")
 
 function ES:AddPlayerData(p,k,v,nosave)
 	v=tostring(v);
@@ -92,10 +93,27 @@ hook.Add("Initialize","ES.Data.OnLoadFunctions",function()
 end)
 
 -- Some important queries.
-ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_bans` (`id` int(8) unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100),steamidAdmin varchar(100), name varchar(100), nameAdmin varchar(100), serverid int(8), unbanned tinyint(1), time int(32), timeStart int(32), reason varchar(255), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;")
-ES.DBWait();
-ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_servers` ( `id` int(8) unsigned NOT NULL AUTO_INCREMENT, ip varchar(100), prettyname varchar(100), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;")
-ES.DBWait();
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_settings` (`id` SMALLINT(5) unsigned NOT NULL, value int(10), name varchar(22), serverid tinyint(3) unsigned, PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
+
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player` (`id` int(10) unsigned NOT NULL, steamid varchar(100), inventory varchar(255), models varchar(255), trails varchar(255), meleeweapons varchar(255), auras varchar(255), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;"):wait();
+
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_outfit` (`id` int(10) unsigned NOT NULL, slot int(8) unsigned NOT NULL, item varchar(255), x float(8,4), y float(8,4), z float(8,4), pitch float(8,5), yaw float(8,5), roll float(8,5), scale float(8,4), red int(3), green int(3), blue int(3), UNIQUE KEY (`id`, `slot`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
+
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_ranks_config` ( `id` int(10) unsigned NOT NULL AUTO_INCREMENT, name varchar(100), prettyname varchar(200), power int(16), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
+
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_ranks` ( `id` int(10) unsigned NOT NULL AUTO_INCREMENT, steamid varchar(50), serverid int(10), rank varchar(100), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;" ):wait();
+
+ES.DBQuery("SELECT * FROM es_ranks_config;",function(data)
+	if not data or not data[1] then return end
+	for k,v in pairs(data)do
+		ES.SetupRank(v.name,v.prettyname,tonumber(v.power));
+	end
+end):wait();
+
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_bans` (`ban_id` int(10) unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), steamidAdmin varchar(100), name varchar(100), nameAdmin varchar(100), serverid int(8), unbanned tinyint(1), time int(32), timeStart int(32), reason varchar(255), PRIMARY KEY (`ban_id`), UNIQUE KEY (`ban_id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;"):wait();
+
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_servers` ( `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT, ip varchar(100), prettyname varchar(100), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
+
 ES.DBQuery("SELECT id FROM es_servers WHERE ip = '"..exclGetIP().."' LIMIT 1;",function(r)
 	if r and r[1] then
 		ES.ServerID = r[1].id;
@@ -105,10 +123,7 @@ ES.DBQuery("SELECT id FROM es_servers WHERE ip = '"..exclGetIP().."' LIMIT 1;",f
 				if r and r[1] then
 					ES.ServerID = r[1].id;
 				end
-			end);
-			ES.DBWait();
-		end)
-		ES.DBWait()
+			end):wait();
+		end):wait();
 	end
-end)
-ES.DBWait() 
+end):wait();

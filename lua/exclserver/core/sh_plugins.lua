@@ -73,8 +73,8 @@ function meta:AddCommand(n,f,rank)
 	self.commands[string.lower(n)] = {func = f, rank = rank};
 end
 
-hook.Add("ExclServerLoaded","ExclPluginsLoad",function()
-	ES.DebugPrint("Loading plugins");
+hook.Add("Initialize","ExclPluginsLoad",function()
+	ES.DebugPrint("Loading plugins...");
 	for k,v in pairs(plugins) do
 		v:Load();
 	end

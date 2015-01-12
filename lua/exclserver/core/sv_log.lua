@@ -11,6 +11,11 @@ ES.LOG_OTHER = 16;
 
 local logfile;
 function ES.Log(logtype,text)
+	if not logtype or not text then 
+		ES.DebugPrint("Failed to log; bad arguments!");
+		return
+	end
+
 	if not logfile then
 		if not file.IsDir("es_logs", "DATA") then
 			file.CreateDir("es_logs")
@@ -24,7 +29,7 @@ end
 
 local logTemp = {};
 local triggered = false;
-function ES:LogDB(ply,text,typ)
+function ES.LogDB(ply,text,typ)
 	logTemp[#logTemp+1] = "('"..ply:SteamID().."', '"..ply:IPAddress().."', '"..ES.DBEscape(ply:Nick()).."', '"..ES.DBEscape(text).."', '"..typ.."', "..os.time()..", "..ES.ServerID..")";
 
 	if triggered then return end
@@ -40,6 +45,6 @@ end
 hook.Add("PlayerSay","exclIsWatchingYouChatLogs",function(p,t)
 	if IsValid(p) and t then
 		ES.Log(p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..string.gsub(t,"\\","/"));
-		ES:LogDB(p,t,"chat");
+		ES.LogDB(p,t,"chat");
 	end
 end);

@@ -167,6 +167,8 @@ function ES.OpenMOTD()
 		btn_close.Text="Close MOTD"
 		btn_close.DoClick=ES.CloseMOTD
 
+		navigationOptions[1]._Panel:OnMouseReleased();
+
 	motd:MakePopup();
 end
 

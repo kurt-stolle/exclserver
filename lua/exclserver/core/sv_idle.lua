@@ -1,5 +1,5 @@
 -- sv_idle.lua
-ES.AntiIdle = ES.AntiIdle or false;
+ES.AntiIdle = true;
 
 util.AddNetworkString("ESIdleMessage")
 

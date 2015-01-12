@@ -79,29 +79,25 @@ function makePurchaseConfirmer(cost,item,typ)
 			if pnlConfirm and IsValid(pnlConfirm) then pnlConfirm:Remove() end
 			
 			local sType = "trail"
-			--[[if typ == ITEM_HAT then
-				sType = "hat"
-				LocalPlayer().excl.activehat = item;
-				table.insert(LocalPlayer().excl.invhat,item);`]]
 			if typ == ITEM_TRAIL then
 				sType = "trail"
-				LocalPlayer().excl.activetrail = item;
-				table.insert(LocalPlayer().excl.invtrail,item);
+				--LocalPlayer().excl.activetrail = item;
+				--table.insert(LocalPlayer()._es_inventory_trails,item);
 			elseif typ == ITEM_MELEE then
 				sType = "melee"
-				LocalPlayer().excl.activemelee = item;
-				table.insert(LocalPlayer().excl.invmelee,item);
+				--LocalPlayer().excl.activemelee = item;
+				--table.insert(LocalPlayer()._es_inventory_meleeweapons,item);
 			elseif typ == ITEM_MODEL then
 				sType = "model"
-				LocalPlayer().excl.activemodel = item;
-				table.insert(LocalPlayer().excl.invmodel,item);
+				--LocalPlayer().excl.activemodel = item;
+				--table.insert(LocalPlayer()._es_inventory_models,item);
 			elseif typ == ITEM_AURA then
 				sType = "aura"
-				LocalPlayer().excl.activeaura = item;
-				table.insert(LocalPlayer().excl.invaura,item);
+				--LocalPlayer().excl.activeaura = item;
+				--table.insert(LocalPlayer()._es_inventory_auras,item);
 			elseif typ == ITEM_PROP then
 				sType = "prop"
-				LocalPlayer():ESGetInventory():AddItem(item,1);
+				--LocalPlayer():ESGetInventory():AddItem(item,1);
 			end
 
 
@@ -1085,7 +1081,6 @@ function ES:CreateMainMenu()
 		}) 
 	end)
 	mm:AddButton("Inventory",Material("icon16/plugin.png"),function() 
-		if not LocalPlayer():ESIsInitialized() then return end
 		mm:OpenChoisePanel({
 			{icon = Material("exclserver/bananas.png"), name = "Items",func = function()
 				local p = mm:OpenFrame();
@@ -1268,7 +1263,7 @@ function ES:CreateMainMenu()
 				mdl:SetLookAt(Vector(0,0,62));
 				mdl:SetCamPos(Vector(38,18,64));
 
-				local models = LocalPlayer().excl.invmodel;
+				local models = LocalPlayer()._es_inventory_models or {};
 				local function modelbykey(k)
 					if k < 1 then
 						return "models/player/Group01/Male_02.mdl"
@@ -1372,10 +1367,9 @@ function ES:CreateMainMenu()
 
 				local iconAura = invAuras.PanelCurrent:Add("DImage");
 
-				if LocalPlayer().excl then
 					local y = 0;
 					local x = 0;
-					for k,v in pairs(LocalPlayer().excl.invaura) do
+					for k,v in pairs(LocalPlayer()._es_inventory_auras or {}) do
 						if not ES:ValidItem(v,ITEM_AURA) then continue end
 						
 						local ic = invAuras.PanelInventory:Add("esMMAuraInventoryTile");
@@ -1402,7 +1396,6 @@ function ES:CreateMainMenu()
 							x = x + 1;
 						end
 					end
-				end
 				iconAura:SetSize(90,90);
 				iconAura:SetPos(5,5);
 				
@@ -1414,10 +1407,9 @@ function ES:CreateMainMenu()
 
 				local iconTrail = invTrails.PanelCurrent:Add("DImage");
 
-				if LocalPlayer().excl then
 					local y = 0;
 					local x = 0;
-					for k,v in pairs(LocalPlayer().excl.invtrail)do
+					for k,v in pairs(LocalPlayer()._es_inventory_trails or {})do
 						if not ES:ValidItem(v,ITEM_TRAIL) then continue end
 						
 						local ic = invTrails.PanelInventory:Add("esMMTrailInventoryTile");
@@ -1443,7 +1435,6 @@ function ES:CreateMainMenu()
 							x = x + 1;
 						end
 					end
-				end
 				iconTrail:SetSize(90,90);
 				iconTrail:SetPos(5,5);
 
@@ -1460,10 +1451,9 @@ function ES:CreateMainMenu()
 
 				local iconMelee = invMelee.PanelCurrent:Add("Spawnicon");
 
-				if LocalPlayer().excl then
 					local y = 0;
 					local x = 0;
-					for k,v in pairs(LocalPlayer().excl.invmelee)do
+					for k,v in pairs(LocalPlayer()._es_inventory_meleeweapons or {})do
 						if not ES:ValidItem(v,ITEM_MELEE) then continue end
 						
 						local ic = invMelee.PanelInventory:Add("esMMMeleeInventoryTile");
@@ -1489,7 +1479,6 @@ function ES:CreateMainMenu()
 							x = x + 1;
 						end
 					end
-				end
 				iconMelee:SetSize(90,90);
 				iconMelee:SetPos(5,5);
 
@@ -1500,79 +1489,7 @@ function ES:CreateMainMenu()
 					iconMelee:SetVisible(false);
 				end
 
-				
-
-				--[[if LocalPlayer().excl.activeaura and ES.AurasBuy[LocalPlayer().excl.activeaura] then
-					iconAura:SetMaterial(ES.AurasBuy[LocalPlayer().excl.activeaura].text);
-					invAuras.rm:SetVisible(true);
-				else
-					iconAura:SetVisible(false);
-				end
-
-				invAuras:SetVisible(false);
-
-				local page = 1
-				local maxPages = 2;
-				local lblPage = Label("Page "..page.."/"..maxPages,p)
-				local butPrev = vgui.Create("esIconButton",p)
-				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butPrev:SetSize(32,32);
-				butPrev:SetPos(15 + invAuras:GetWide() +10,15);
-				butPrev.DoClick = function(self)
-					page = 1;
-
-					lblPage:SetText("Page "..page.."/"..maxPages)
-
-					invAuras:SetVisible(false);
-					invHats:SetVisible(true);
-					invTrails:SetVisible(true);
-					invMelee:SetVisible(true);
-
-				end
-				butPrev.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page-1 < 1 then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,180);
-
-				end
-				local butNext = vgui.Create("esIconButton",p)
-				butNext:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butNext:SetSize(32,32);
-				butNext:SetPos(butPrev.x + 32 + 15,15);
-				butNext.DoClick = function(self)
-					page = 2;
-
-					lblPage:SetText("Page "..page.."/"..maxPages)
-
-					invAuras:SetVisible(true);
-					invHats:SetVisible(false);
-					invTrails:SetVisible(false);
-					invMelee:SetVisible(false);
-				end
-				butNext.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page+1 > maxPages then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,0);
-
-				end
-				lblPage:SetColor(COLOR_WHITE);
-				lblPage:SetFont("ESDefaultBold");
-				lblPage:SetPos(butPrev.x, butPrev.y + butPrev:GetTall() + 15);
-				lblPage:SizeToContents();
-]]
+	
 			end},
 			{icon = Material("exclserver/editor.png"), name = "Outfit",func = function()
 				local p = mm:OpenFrame(860); p:SetTitle("Outfit");

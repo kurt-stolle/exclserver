@@ -102,7 +102,7 @@ hook.Add("HUDPaint","ESDrawBananasToHUD",function()
 	setMaterial(icon_bananas);
 	drawTexturedRect(x-16,y-16,64,64);
 
-	if not (IsValid(p) and p.excl ) then
+	if not (IsValid(p) and p:ESGetNetworkedVariable("bananas") ) then
 		x=x+32+16
 		drawText("Loading...");
 	else

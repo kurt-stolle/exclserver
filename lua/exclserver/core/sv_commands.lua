@@ -18,31 +18,34 @@ function ES:RemoveCommand(n)
 end
 concommand.Add("excl",function(p,c,a)
 	if p.esNextCmd and p.esNextCmd > CurTime() then return end
-	p.esNextCmd = CurTime()+1;
+	p.esNextCmd = CurTime()+.5;
 	
 	c = a[1];
 
-	if not esCmd or not esCmd[c] then return end
-		if p.excl and p.ESIsRankOrHigher and p.ESIsRank and esCmd[c] and esCmd[c] then
-			if esCmd[c].power and (esCmd[c].power > 0 and !p:ESHasPower(esCmd[c].power)) then
-				net.Start("ESNoRunRank"); net.Send(p);
-				return;
-			end
-			table.remove(a,1);
-			esCmd[c].func(p,a);
-
-			local stringCmd = c.." (";
-			if a and a[1] then for k,v in pairs(a)do
-				stringCmd = stringCmd.." "..v;
-			end end
-			stringCmd = stringCmd.." )";
-			ES.Log(ES.LOG_COMMAND, p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..stringCmd);
-			ES:LogDB(p,stringCmd,"command");
+	if not esCmd or not esCmd[c] then 
+		ES.DebugPrint(p:Nick().." attempted to run invalid command "..c);
+		return 
+	end
+	if esCmd[c] then
+		if esCmd[c].power and (esCmd[c].power > 0 and !p:ESHasPower(esCmd[c].power)) then
+			net.Start("ESNoRunRank"); net.Send(p);
+			return;
 		end
+		table.remove(a,1);
+		esCmd[c].func(p,a);
+
+		local stringCmd = c.." (";
+		if a and a[1] then for k,v in pairs(a)do
+			stringCmd = stringCmd.." "..v;
+		end end
+		stringCmd = stringCmd.." )";
+		ES.Log(ES.LOG_COMMAND, p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..stringCmd);
+		ES.LogDB(p,stringCmd,"command");
+	end
 end)
 hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 	if (p.esNextCmd and p.esNextCmd > CurTime()) or not p or not t then return end
-	p.esNextCmd = CurTime()+1;
+	p.esNextCmd = CurTime()+.5;
 	--t = string.lower(t);
 	if t and string.Left(t,4) == "### " and p:ESHasPower(20) then
 
@@ -88,7 +91,7 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 				end
 				stringCmd = stringCmd.." )";
 				ES.Log(ES.LOG_COMMAND,p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..stringCmd);
-				ES:LogDB(p,stringCmd,"command");
+				ES.LogDB(p,stringCmd,"command");
 
 				return false
 			end

@@ -1,10 +1,4 @@
--- sh_protected
--- the rank system.
-hook.Add("ES.DefineNetworkedVariables","ES.RankVariables",function()
-	ES.DefineNetworkedVariable("rank","String");
-end);
-
--- Meta tables for protected.
+-- Meta tables for ES.Ranks.
 local rankMeta = {};
 AccessorFunc(rankMeta,"simpleName","SimpleName",FORCE_STRING);
 AccessorFunc(rankMeta,"prettyName","PrettyName",FORCE_STRING);
@@ -16,30 +10,31 @@ function rankMeta:__eq(compare)
 	return false;
 end
 function rankMeta:__lt(compare)
-	if me:GetPower() < compare:GetPower() then
+	if self:GetPower() < compare:GetPower() then
 		return true;
 	end
 	return false;
 end
 function rankMeta:__le(compare)
-	return (me < compare or me == compare);
+	return (self < compare or self == compare);
 end
 function rankMeta:__tostring()
 	return self:GetSimpleName();
 end
 
--- Function to add ranks, protected.
-local protected={};
+-- Function to add ranks, ES.Ranks.
 ES.Ranks = {};
 setmetatable(ES.Ranks,{
 	__index=function(self,key)
-		return rawget(protected,key);
-	end,
-	__newindex=function(self)
-		return nil;
+		for num,rank in ipairs(self)do
+			if rank:GetSimpleName() == key or rank:GetPrettyName() == key then
+				return rank;
+			end
+		end
+		return self[1] or nil;
 	end,
 })
-function ES:SetupRank(name,pretty,power)
+function ES.SetupRank(name,pretty,power)
 	local rank = {}
 	setmetatable(rank,rankMeta);
 	rankMeta.__index = rankMeta;
@@ -48,44 +43,46 @@ function ES:SetupRank(name,pretty,power)
 	rank:SetPrettyName(pretty);
 	rank:SetPower(power);
 
-	table.insert(protected,rank);
+	table.insert(ES.Ranks,rank);
+
+	ES.DebugPrint("Setup rank: "..pretty.." (power "..power..")");
 end
 
-ES:SetupRank("user","User"						,0); -- Do not delete or edit any of these protected! 
-ES:SetupRank("admin","Administrator"			,20) -- Do not add protected in the code, use MySQL instead! See the protected table.
-ES:SetupRank("superadmin","Super Administrator"	,40) -- Editing any of these protected will cause some plugins to stop functioning correctly!
-ES:SetupRank("operator","Server Operator"		,60) -- 
-ES:SetupRank("owner","Server Owner"				,80) --
+ES.SetupRank("user","User"						,0); -- Do not delete or edit any of these ES.Ranks! 
+ES.SetupRank("admin","Administrator"			,20) -- Do not add ES.Ranks in the code, use MySQL instead! See the ES.Ranks table.
+ES.SetupRank("superadmin","Super Administrator"	,40) -- Editing any of these ES.Ranks will cause some plugins to stop functioning correctly!
+ES.SetupRank("operator","Server Operator"		,60) -- 
+ES.SetupRank("owner","Server Owner"				,80) --
 
 -- grabbers
-local pmeta = FindMetaTable("Player");
+local PLAYER = FindMetaTable("Player");
 function ES:RankExists(name)
-	return !(not protected[name]);
+	return !(not ES.Ranks[name]);
 end
-function pmeta:ESIsRank(r)
+function PLAYER:ESIsRank(r)
 	return (tostring(self:ESGetRank()) == string.lower(r));
 end
-function pmeta:ESIsRankOrHigher(r)
-	return (protected[r] and self:GetRank() >= protected[r]);
+function PLAYER:ESIsRankOrHigher(r)
+	return (ES.Ranks[r] and self:ESGetRank() >= ES.Ranks[r]);
 end
-function pmeta:ESIsImmuneTo(p)
+function PLAYER:ESIsImmuneTo(p)
 	return ( IsValid(p) and p != self and self:ESIsRankOrHigher( tostring(self:ESGetRank()) ) );
 end
-function pmeta:ESGetRank()
-	return self:ESGetNetworkedVariable("rank");
+function PLAYER:ESGetRank()
+	return ES.Ranks[self:ESGetNetworkedVariable("rank","user")];
 end
-function pmeta:ESHasPower(pwr)
-	return (self:ESGetRank().power >= pwr);
+function PLAYER:ESHasPower(pwr)
+	return (self:ESGetRank():GetPower() >= pwr);
 end
 
 -- Compatability functions
-local oldIsAdmin = pmeta.IsAdmin;
-function pmeta:IsAdmin()
+local oldIsAdmin = PLAYER.IsAdmin;
+function PLAYER:IsAdmin()
 	return (self:ESIsRankOrHigher("admin") or oldIsAdmin(self));
 end
 
-local oldIsSAdmin = pmeta.IsSuperAdmin;
-function pmeta:IsSuperAdmin()
+local oldIsSAdmin = PLAYER.IsSuperAdmin;
+function PLAYER:IsSuperAdmin()
 	return (self:ESIsRankOrHigher("superadmin") or oldIsSAdmin(self));
 end
-pmeta.IsUserGroup = pmeta.ESIsRankOrHigher;
+PLAYER.IsUserGroup = PLAYER.ESIsRankOrHigher;

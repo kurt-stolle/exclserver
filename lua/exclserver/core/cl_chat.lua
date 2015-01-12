@@ -1,4 +1,4 @@
--- the custom chat
+--[[ the custom chat
 COLOR_BLACK = COLOR_BLACK or Color(0,0,0);
 
 local lineIconsDefault = { -- for ranks see the ranks file
@@ -408,4 +408,4 @@ hook.Add("ChatText","esChatTextHooks", function( id, n , text , typ )
 	ES:ChatAddText( "default", chatColorDefault,text);
 	
 	return false;
-end)
+end)]]

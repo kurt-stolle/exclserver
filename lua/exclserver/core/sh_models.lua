@@ -1,4 +1,35 @@
---- default models
+-- sh_models.lua
+-- gets a player's desired model.
+ES.ModelsBuy = {}
+
+function ES:AddModel(n,d,p,model,bVip)
+	ES.ModelsBuy[string.lower(n)] = {name = n, descr = d, cost = p, model = Model(model), VIPOnly = (bVip or false)}; 
+end
+
+ES.DefaultModels = {
+	Model("models/player/Group01/Male_01.mdl"),
+	Model("models/player/Group01/Male_02.mdl"),
+	Model("models/player/Group01/Male_03.mdl"),
+	Model("models/player/Group01/Male_04.mdl"),
+	Model("models/player/Group01/Male_05.mdl"),
+	Model("models/player/Group01/Male_06.mdl"),
+	Model("models/player/Group01/Male_07.mdl"),
+	Model("models/player/Group01/Male_08.mdl"),
+	Model("models/player/Group01/Male_09.mdl"),
+	Model("models/player/group01/female_06.mdl"),
+	Model("models/player/group01/female_04.mdl"),
+	Model("models/player/group01/female_02.mdl"),
+	Model("models/player/group01/female_01.mdl"),
+}
+
+local PLAYER = FindMetaTable("Player");
+function PLAYER:ESGetActiveModel()
+	if not self.excl or not self.excl.activemodel or not ES.ModelsBuy[self.excl.activemodel] then
+		return table.Random(ES.DefaultModels);
+	end
+
+	return ES.ModelsBuy[self.excl.activemodel].model;
+end
 
 ES:AddModel("Dr. Breen","The city administrator",4000,"models/player/breen.mdl")
 ES:AddModel("Father","...",4000,"models/player/monk.mdl")

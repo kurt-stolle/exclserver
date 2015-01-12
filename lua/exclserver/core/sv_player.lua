@@ -1,16 +1,16 @@
 -- sv_player.lua
-local pmeta = FindMetaTable("Player");
+local PLAYER = FindMetaTable("Player");
 
 
 util.AddNetworkString("ESSynchPlayer");
-function pmeta:ESSynchPlayer()
+function PLAYER:ESSynchPlayer()
 	if not self.excl then return end
 	net.Start("ESSynchPlayer");
 	net.WriteTable(self.excl);
 	net.Send(self);
 end
-function pmeta:ESLoadPlayer()
-	if self.excl then return end
+function PLAYER:ESLoadPlayer()
+	--[[
 
 	self.excl = {};
 	ES.DBQuery("SELECT * FROM `es_player` WHERE id = "..self:ESID().." LIMIT 1;",function(c)
@@ -19,16 +19,16 @@ function pmeta:ESLoadPlayer()
 			self:ESDecodeInventory()
 			self:ESLoadRank()
 			self:ESHandleActiveItems()
-			self:ESSetGlobalData("bananas",c[1].bananas or 0)
+
 			if self.excl.viptier and self.excl.viptier > 0 then 
 				self:ESSetGlobalData("VIP",self.excl.viptier);
 			end
 
 			self:LoadAchievements()
 
-			if self.excl.inventory then
-				self:ESLoadInventory(self.excl.inventory)
-				self.excl.inventory=nil;
+			if self._es_inventory_entory then
+				self:ESLoadInventory(self._es_inventory_entory)
+				self._es_inventory_entory=nil;
 
 				for i=1,2+self:ESGetVIPTier()do
 					if self.excl["slot"..i] and #self.excl["slot"..i] > 10 then
@@ -37,13 +37,13 @@ function pmeta:ESLoadPlayer()
 				end
 			end
 		else
-			ES.DBQuery("INSERT INTO es_player SET bananas = 0, steamid = '"..self:SteamID().."', id = "..self:ESID()..";", function() end);
+			ES.DBQuery("INSERT INTO es_player SET steamid = '"..self:SteamID().."', id = "..self:ESID()..";", function() end);
 
-			--self.excl.invhat = {}
-			self.excl.invtrail = {}
-			self.excl.invmelee = {}
-			self.excl.invmodel = {}
-			self.excl.invtaunt = {}
+			--self._es_inventory_hat = {}
+			self._es_inventory_trails = {}
+			self._es_inventory_meleeweapons = {}
+			self._es_inventory_models = {}
+			self._es_inventory_taunt = {}
 			self:ESLoadRank()
 			self:ESHandleActiveItems()
 			self:ESSetGlobalData("bananas",0)
@@ -55,93 +55,11 @@ function pmeta:ESLoadPlayer()
 		self:ESSynchRankConfig();
 
 	end)
-
-end
-
-util.AddNetworkString("ESSynchGlobalPlayerData");
-util.AddNetworkString("ESSynchGlobalPlayerDataSingle")
-
-local queuedSynch = false;
-local peopleSynch = {};
-function ES:QueueGlobalPlayerDataSynch(p)
-
-	ES.DebugPrint("Queueing global player data synch for "..p:Nick());
-
-	if !table.HasValue(peopleSynch,p) then
-		peopleSynch[#peopleSynch + 1] = p;
-	end
-	if queuedSynch then return end
-
-	queuedSynch = true;
-	timer.Simple(5,function()
-		for k,v in pairs(peopleSynch)do
-			v.exclMadeGlobalSynch = true;
-		end
-
-		ES:PreformGlobalPlayerDataSynch(peopleSynch);
-
-		queuedSynch = false;
-		peopleSynch = nil;
-		peopleSynch = {};
-	end)
-end
-function ES:PreformGlobalPlayerDataSynch(p)
-
-	ES.DebugPrint("Performing global player data synch")
-
-	local tbl = {}
-	for k,v in pairs(player.GetAll())do
-		if v.exclGlobal then
-			tbl[v] = {}
-			for a,b in pairs(v.exclGlobal)do
-				tbl[v][a] = b;
-			end
-		end
-	end
-
-	net.Start("ESSynchGlobalPlayerData");
-	net.WriteTable(tbl);
-	net.WriteInt(ES.SynchronizationKey,32);
-	if p then
-		net.Send(p)
-		return
-	end
-	net.Broadcast();
-end
-function pmeta:ESSetGlobalData(name,var)
-	if not self.exclGlobal then self.exclGlobal = {} end
-	if not self.exclSynchTable then self.exclSynchTable = {} end
-	
-	ES.DebugPrint("Added global variable for "..self:Nick()..": "..name.." = "..tostring(var));
-
-	self.exclGlobal[name] = var;
-	self.exclSynchTable[name] = var;
-
-	if self.exclIsSynching then return end
-
-	ES.DebugPrint("Created new globaldata synch timer for "..self:Nick());
-
-	self.exclIsSynching = true;
-
-	timer.Simple(0.5,function()
-		if not self or not IsValid(self) or not self.exclSynchTable then return end
-
-		ES:GenerateSynchKey();
-
-		net.Start("ESSynchGlobalPlayerDataSingle");
-		net.WriteEntity(self);
-		net.WriteTable(self.exclSynchTable);
-		net.WriteInt(ES.SynchronizationKey,32);
-		net.Broadcast();
-
-		self.exclIsSynching = false;
-
-		ES.DebugPrint("Synched "..self:Nick());
-	end)
+]]
 end
 
 -- Send a notification 
-function pmeta:ESSendNotification(kind,msg)
+function PLAYER:ESSendNotification(kind,msg)
 	net.Start("ES.SendNotification");
 		net.WriteString(kind);
 		net.WriteString(msg)
@@ -172,7 +90,7 @@ hook.Add( "PhysgunDrop", "ESHandlePlayerDrop", function(p,e)
 end)
 
 util.AddNetworkString("ESChatPrint");
-function pmeta:ESChatPrint(icon,...)
+function PLAYER:ESChatPrint(icon,...)
 	if not IsValid(self) then return end
 
 	net.Start("ESChatPrint");

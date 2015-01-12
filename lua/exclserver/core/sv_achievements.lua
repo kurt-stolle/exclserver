@@ -13,8 +13,8 @@ hook.Add("ESDBDefineTables","ESAchiesDatatableSetup",function()
 	ES.DBDefineTable("achievements",false,"steamid varchar(100)"..str);
 end)
 
-local pmeta = FindMetaTable("Player");
-function pmeta:ESAddAchievementProgress(id,number)
+local PLAYER = FindMetaTable("Player");
+function PLAYER:ESAddAchievementProgress(id,number)
 	if not self.excl or self:ESHasCompletedAchievement(id) then return end
 
 	if not self.excl.achievements then 
@@ -48,7 +48,7 @@ function pmeta:ESAddAchievementProgress(id,number)
 	net.Send(self);
 end
 
-function pmeta:LoadAchievements()
+function PLAYER:LoadAchievements()
 	ES.DBQuery("SELECT * FROM es_achievements WHERE steamid = '"..self:SteamID().."' LIMIT 1;",function(res)
 		if res and res[1] then
 			self.excl.achievements = {};

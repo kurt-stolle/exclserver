@@ -80,33 +80,10 @@ local function initializeFolder(folder,runtype)
 	end	
 end
 
-local function InitializeItems()
-	ES.DebugPrint("Initializing items")
-
-	for k,v in pairs(file.Find("exclserver/items/*.lua","LUA")) do
-		ES.Include(v, "items", "sh");
-	end	
-	_G.ITEM = nil;
-end
-
-local function InitializePlugins()
-	ES.DebugPrint("Initializing plugins")
-
-	for k,v in pairs(file.Find("exclserver/plugins/*.lua","LUA")) do
-		ES.Include(v, "plugins", "sh");
-	end	
-	_G.PLUGIN = nil;
-end
-
 initializeFolder ("util");
 initializeFolder ("core");
 initializeFolder ("vgui", "cl");
-initializeFolder ("trails", "sh");
-initializeFolder ("melee", "sh");
-initializeFolder ("models", "sh");
-initializeFolder ("auras", "sh");
-InitializeItems  ();
-InitializePlugins();
+initializeFolder ("items", "sh");
+initializeFolder ("plugins", "sh");
 
-hook.Call("ExclServerLoaded");
 ES.PostInitialize = true;

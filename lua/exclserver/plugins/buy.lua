@@ -6,7 +6,7 @@ end
 local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Buy","Allows users to buy stuff in the ExclServer shop, and activate items bought. This command is mostly called internally.","Excl")
 PLUGIN:AddCommand("buy",function(p,a)
-	if not (IsValid(p) and p.excl and type(p.excl.invaura) == "table" and a[1] and a[2]) then return end
+	if not (IsValid(p) and a[1] and a[2]) then return end
 	
 	local name		= a[1];
 	local itemtype	= a[2];
@@ -24,14 +24,8 @@ PLUGIN:AddCommand("buy",function(p,a)
 		itemtype = ITEM_MELEE;
 	elseif itemtype == "prop" then
 		itemtype = ITEM_PROP;
-	else--if itemtype == "aura" then
+	else
 		itemtype = ITEM_AURA;
-	--[[else
-		itemtype = ITEM_HAT;
-
-		if ES.Hats[name] and ES.Hats[name]:GetVIPOnly() and p:ESGetVIPTier() < 1 then
-			return false;
-		end]]
 	end
 	if itemtype != ITEM_PROP then
 		local iprice = tonumber(ES:GetItemPrice(name,itemtype));
@@ -69,7 +63,7 @@ PLUGIN:AddCommand("sell",function(p,a)
 		end
 end)
 PLUGIN:AddCommand("activate",function(p,a)
-	if not (IsValid(p) and p.excl and type(p.excl.invaura) == "table" and a[1] and a[2]) then return end
+	if not (IsValid(p) and type(p._es_inventory_auras) == "table" and a[1] and a[2]) then return end
 	
 	local name		= a[1];
 	local itemtype	= a[2];
@@ -81,16 +75,14 @@ PLUGIN:AddCommand("activate",function(p,a)
 		itemtype = ITEM_TRAIL;
 	elseif itemtype == "aura" then
 		itemtype = ITEM_AURA;
-	else--if itemtype == "melee" then
+	else
 		itemtype = ITEM_MELEE;
-	--[[else
-		itemtype = ITEM_HAT;]]
 	end
 
 	p:ESActivateItem(name,itemtype)
 end);
 PLUGIN:AddCommand("deactivate",function(p,a)
-	if not (IsValid(p) and p.excl and type(p.excl.invaura) == "table" and a[1]) then return end
+	if not (IsValid(p) and type(p._es_inventory_auras) == "table" and a[1]) then return end
 	local itemtype	= a[1];
 	if itemtype == "taunt" then
 		itemtype = ITEM_TAUNT;
@@ -100,16 +92,14 @@ PLUGIN:AddCommand("deactivate",function(p,a)
 		itemtype = ITEM_TRAIL;
 	elseif itemtype == "aura" then
 		itemtype = ITEM_AURA;
-	else--if itemtype == "melee" then
+	else
 		itemtype = ITEM_MELEE;
-	--[[else
-		itemtype = ITEM_HAT;]]
 	end
 	
 	p:ESDeactivateItem(itemtype)
 end);
 PLUGIN:AddCommand("buyvip",function(p,a)
-	if not p or not IsValid(p) or not p.excl or not p:ESGetBananas() or p:ESGetBananas() < 2500 then return end
+	if not p or not IsValid(p) or not p:ESGetBananas() or p:ESGetBananas() < 2500 then return end
 	local tier = tonumber( a[1] );
 	local curtier = p:ESGetVIPTier();
 	if not tier or tier > 4 or tier <= curtier then return end

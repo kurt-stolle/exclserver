@@ -17,8 +17,6 @@ net.Receive("ESUploadSnapshotProg",function(len,p)
 	
 	build[p:UniqueID()].ss[net.ReadInt(8)] = net.ReadData(net.ReadInt(32));
 
-	--PrintTable(build);
-
 	local complete= true;
 	for i=1,build[p:UniqueID()].frag do
 		if not build[p:UniqueID()].ss[i] then

@@ -1,7 +1,7 @@
 -- sh_inventory_new.lua
 ES.Items = {};
 
-local pmeta = FindMetaTable("Player");
+local PLAYER = FindMetaTable("Player");
 local invmeta = {};
 function invmeta:ContainsItem(name)
 	if not ES.Items[name] then return false end
@@ -83,21 +83,21 @@ if SERVER then
 
 		ES.DebugPrint("Inventory saved");
 	end
-	function pmeta:ESLoadInventory(str)
+	function PLAYER:ESLoadInventory(str)
 		local inv = string.Explode("|",str,false);
-		self.excl.inventoryitems = {};
-		setmetatable(self.excl.inventoryitems,invmeta);
+		self._es_inventory_entoryitems = {};
+		setmetatable(self._es_inventory_entoryitems,invmeta);
 		invmeta.__index =  invmeta;
 		for k,v in pairs(inv)do
 			local temp = string.Explode("_",v);
-			self.excl.inventoryitems[temp[1]] = tonumber(temp[2]);
+			self._es_inventory_entoryitems[temp[1]] = tonumber(temp[2]);
 		end
-		self.excl.inventoryitems.Player = self;
+		self._es_inventory_entoryitems.Player = self;
 
 		ES.DebugPrint("Inventory items loaded");
 		
 		--[[net.Start("ESSynchInventoryNew");
-		net.WriteTable(self.excl.inventoryitems);
+		net.WriteTable(self._es_inventory_entoryitems);
 		net.Send(self);]]
 	end
   
@@ -120,19 +120,19 @@ elseif CLIENT then
 end
 
 
-function pmeta:ESGetInventory()
+function PLAYER:ESGetInventory()
 	if not self.excl then
 		self.excl = {};
 	end
 
-	if not self.excl.inventoryitems then
-		self.excl.inventoryitems = {};
+	if not self._es_inventory_entoryitems then
+		self._es_inventory_entoryitems = {};
 
-		self.excl.inventoryitems.Player = self;
+		self._es_inventory_entoryitems.Player = self;
 	end
-	setmetatable(self.excl.inventoryitems,invmeta);
+	setmetatable(self._es_inventory_entoryitems,invmeta);
 	invmeta.__index =  invmeta;
-	return self.excl.inventoryitems;
+	return self._es_inventory_entoryitems;
 end
 
 function ES:GetBuyableItems()

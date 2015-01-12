@@ -9,8 +9,8 @@ end
 
 ES.MeleeBaseClass = "excl_crowbar";
 
-local pmeta = FindMetaTable("Player");
-function pmeta:ESGetMeleeWeapon()
+local PLAYER = FindMetaTable("Player");
+function PLAYER:ESGetMeleeWeapon()
 	if not self.excl or not self.excl.activemelee then return false end
 	return ES.MeleeBuy[self.excl.activemelee];
 end
@@ -18,12 +18,12 @@ local emeta = FindMetaTable("Weapon");
 function emeta:ESIsMelee()
 	return (self:GetClass() == ES.MeleeBaseClass or string.Left(self:GetClass(),8) == "es_melee")
 end
-function pmeta:ESGetMeleeWeaponClass()
+function PLAYER:ESGetMeleeWeaponClass()
 	if not self:ESGetMeleeWeapon() then return ES.MeleeBaseClass end
 	return "es_melee_"..string.gsub(string.lower(self:ESGetMeleeWeapon().name)," ","_");
 end
 
-function pmeta:ESReplaceMelee()
+function PLAYER:ESReplaceMelee()
 	for k,v in pairs(self:GetWeapons())do
 		if !IsValid(v) or !v:ESIsMelee() then continue end
 
@@ -58,3 +58,5 @@ hook.Add("Initialize","exclInitCustomMelee",function()
 		},"es_melee_"..string.gsub(string.lower(v.name)," ","_"))
 	end
 end)
+
+ES:AddMelee("Sword","A katana from ancient times",3000,"models/weapons/w_katana.mdl","models/weapons/v_katana.mdl","melee2")
