@@ -1,13 +1,16 @@
 local PANEL = {}
 surface.CreateFont( "ESFrameText", { 
-font = "Arial Narrow", 
-size = 22 } 
+font = "Roboto", 
+size = 20,
+weight=500 } 
 )
-surface.CreateFont( "ESFrameTextBlur", { 
-font = "Arial Narrow", 
-size = 22,
-blursize =2, } 
+surface.CreateFont( "ESFrameTextShadow", { 
+font = "Roboto", 
+size = 20,
+weight=500,
+blursize=2 } 
 )
+
 local tex = Material("exclserver/gradient.png")
 function PANEL:Init()
 	self.PaintHook = false;
@@ -41,7 +44,7 @@ function PANEL:OnMouseReleased()
 
     local x, y = gui.MousePos();	
 	local xPanel,yPanel = self:GetPos();
-	if x > xPanel+self:GetWide()-45 and x < xPanel+self:GetWide()-15 and y > yPanel and y < yPanel+20 then
+	if x > xPanel+self:GetWide()-24 and x < xPanel+self:GetWide()-1 and y > yPanel and y < yPanel+30 then
 		if self and self:IsValid() then
 			if self.OnClose then
 				self.OnClose();
@@ -50,35 +53,31 @@ function PANEL:OnMouseReleased()
 		end
 	end
 end
-local matShading = Material("exclserver/scanlines.png");
+--local matShading = Material("exclserver/scanlines.png");
+local mat_close = Material("exclserver/close.png")
 function PANEL:Paint(w,h)
 	local a,b,c = ES.GetColorScheme();
 
-	draw.RoundedBoxEx(2,0,0,w,30,COLOR_BLACK,true,true) 
-	draw.RoundedBoxEx(2,1,1,w-2,29,b,true,true) 
+	draw.RoundedBoxEx(4,0,0,w,h,ES.Color["#000000AA"],true,true) 
+	draw.RoundedBoxEx(4,1,1,w-2,30,a,true,true) 
 	--draw.RoundedBoxEx(4,2,2,w-4,29/2,Color(255,255,255,5),true,true) 
 
-	surface.SetDrawColor(Color(0,0,0,150));
+	--[[surface.SetDrawColor(Color(0,0,0,255));
 	surface.DrawRect(0,0,w,1);
 	surface.DrawRect(0,30-1,w,1);
 	surface.DrawRect(0,1,1,30-2);
-	surface.DrawRect(w-1,1,1,30-2)
+	surface.DrawRect(w-1,1,1,30-2)]]
 
-	surface.SetDrawColor(Color(30,30,30));
-	surface.DrawRect(0,30,w,h-30) 
-	surface.SetDrawColor(Color(255,255,255,4));
-	surface.DrawRect(1,31,w-2,h-32) 
+	draw.RoundedBoxEx(4,1,30,w-2,h-31,ES.Color["#1E1E1E"],false,false,true,true);
+	--surface.SetDrawColor(Color(255,255,255,4));
+	--surface.DrawRect(1,31,w-2,h-32) 
 
-	surface.SetDrawColor(Color(0,0,0,150));
-	surface.DrawRect(0,h-1,w,1);
-	surface.DrawRect(0,31,1,h-32);
-	surface.DrawRect(w-1,31,1,h-32)
-
-	draw.SimpleText(self.Title,"ESFrameTextBlur",10,4,COLOR_BLACK,0,0);
-	draw.SimpleText(self.Title,"ESFrameText",10,3,COLOR_WHITE,0,0);
+	--draw.SimpleText(self.Title,"ESFrameTextBlur",10,4,COLOR_BLACK,0,0);
+	draw.SimpleText(string.upper(self.Title),"ESFrameTextShadow",11,30/2+1,ES.Color["#00000022"],0,1);
+	draw.SimpleText(string.upper(self.Title),"ESFrameText",10,30/2,COLOR_WHITE,0,1);
 
 	if self.showCloseBut then
-		draw.RoundedBoxEx(2,self:GetWide()-45,1,30, 20, Color(255,61,61,255),false,false,true,true)	
+		--[[draw.RoundedBoxEx(2,self:GetWide()-45,1,30, 20, Color(255,61,61,255),false,false,true,true)	
 		draw.RoundedBoxEx(2,self:GetWide()-44,1,28, 19, Color(255,255,255,40),false,false,true,true)
 
 		local x, y = gui.MousePos();	
@@ -88,8 +87,12 @@ function PANEL:Paint(w,h)
 		else
 			draw.RoundedBoxEx(2,self:GetWide()-43,2,26, 17, Color(100,50,50,50),false,false,true,false)
 		end
+]
+		draw.SimpleText("x","ESDefaultBold",self:GetWide()-30,2,COLOR_WHITE,1,0);]]
 
-		draw.SimpleText("x","ESDefaultBold",self:GetWide()-30,2,COLOR_WHITE,1,0);
+		surface.SetMaterial(mat_close);
+		surface.SetDrawColor(ES.Color.White);
+		surface.DrawTexturedRect(self:GetWide()-24,15-8,16,16);
 	end
 
 
