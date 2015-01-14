@@ -68,7 +68,7 @@ local function createMenu()
  			
  			draw.SimpleText(string.format("You will automatically try a reconnect in %d seconds", retrytime - CurTime()),"ESDefaultBold",15,95,COLOR_WHITE);
 
- 			local txt = exclFormatLine( apology, "ESDefault", wideText );
+ 			local txt = ES.FormatLine( apology, "ESDefault", wideText );
 
  			draw.DrawText(txt,"ESDefault",15,95+100,COLOR_WHITE);
 

@@ -1,4 +1,4 @@
-function exclFormatLine(str,font,size) --note to self: size equals width in pixes
+function ES.FormatLine(str,font,size) --note to self: size equals width in pixes
 	surface.SetFont( font );
 	
 	local start = 1;

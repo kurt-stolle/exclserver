@@ -45,7 +45,7 @@ local navigationOptions={
 				local y=20;
 
 				local text;
-				text=Label(exclFormatLine("Below is a list of all rules that apply to this server. Not following any of the rules stated below may result in receiving a punishment or penalty.\n","ESDefault",pnl:GetWide()-40),pnl);
+				text=Label(ES.FormatLine("Below is a list of all rules that apply to this server. Not following any of the rules stated below may result in receiving a punishment or penalty.\n","ESDefault",pnl:GetWide()-40),pnl);
 				text:SetPos(20,y);
 				text:SizeToContents();
 
@@ -54,7 +54,7 @@ local navigationOptions={
 				for k,v in ipairs(ES.ServerRules)do
 
 
-					text=Label(exclFormatLine(k..". "..v,"ESDefault",pnl:GetWide()-40),pnl);
+					text=Label(ES.FormatLine(k..". "..v,"ESDefault",pnl:GetWide()-40),pnl);
 					text:SetPos(20,y);
 					text:SizeToContents();
 
@@ -66,7 +66,7 @@ local navigationOptions={
 			title="About",
 			icon=Material("exclserver/motd/info.png"),
 			fn=function(pnl)
-				local text=Label(exclFormatLine("This server is running ExclServer. ExclServer is a all-in-one server system that includes a shop, donation system, motd, administration, group management and an elaborate plugin system.\n\nPlayers can use ExclServer by pressing F6. From this menu the player can choose a number of different actions.\n\nItems can be bought with the Bananas currency. Bananas are earned through playing and achieving in-game goals. Completing achievements, listed in the F6 menu, also award Bananas.\n\nExclServer is made by Casual Bananas Software Development.\nPlease report any bugs to info@casualbananas.com.\n\n\n\nCOPYRIGHT (c) 2011-2015 CASUALBANANAS.COM","ESDefault",pnl:GetWide()-40),pnl);
+				local text=Label(ES.FormatLine("This server is running ExclServer. ExclServer is a all-in-one server system that includes a shop, donation system, motd, administration, group management and an elaborate plugin system.\n\nPlayers can use ExclServer by pressing F6. From this menu the player can choose a number of different actions.\n\nItems can be bought with the Bananas currency. Bananas are earned through playing and achieving in-game goals. Completing achievements, listed in the F6 menu, also award Bananas.\n\nExclServer is made by Casual Bananas Software Development.\nPlease report any bugs to info@casualbananas.com.\n\n\n\nCOPYRIGHT (c) 2011-2015 CASUALBANANAS.COM","ESDefault",pnl:GetWide()-40),pnl);
 				text:SetPos(20,20);
 				text:SizeToContents();
 			end
@@ -75,7 +75,7 @@ local navigationOptions={
 			title="Donate",
 			icon=Material("exclserver/motd/donate.png"),
 			fn=function(pnl)
-				local text=Label(exclFormatLine("This page is currently being worked on. Check back later!","ESDefault",pnl:GetWide()-40),pnl);
+				local text=Label(ES.FormatLine("This page is currently being worked on. Check back later!","ESDefault",pnl:GetWide()-40),pnl);
 				text:SetPos(20,20);
 				text:SizeToContents();
 			end

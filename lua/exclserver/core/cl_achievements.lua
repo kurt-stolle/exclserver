@@ -120,7 +120,7 @@ net.Receive("ESAchEarned",function()
 		LocalPlayer().excl.achievements[id] = ES.Achievements[id].progressNeeded;
 
 		local pnl = ES:CreateAchievementPopup("Achievement unlocked!",ES.Achievements[id].name,ES.Achievements[id].icon)
-		local lbl = Label(exclFormatLine(ES.Achievements[id].descr,"ESDefault",ach:GetWide() - 80 - 4 - 4),pnl);
+		local lbl = Label(ES.FormatLine(ES.Achievements[id].descr,"ESDefault",ach:GetWide() - 80 - 4 - 4),pnl);
 		lbl:SetFont("ESDefault");
 		lbl:SizeToContents();
 		lbl:SetPos(ach.name.x+2,ach.name.y + ach.name:GetTall()+3);

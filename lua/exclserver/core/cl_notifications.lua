@@ -35,13 +35,13 @@
 surface.CreateFont("ES.Notification",{
 	font = "roboto",
 	weight = 400,
-	size = 26
+	size = 22
 });
 
 surface.CreateFont("ES.Notification.Shadow",{
 	font = "roboto",
 	weight = 400,
-	size = 26,
+	size = 22,
 	blursize = 2,
 });
 

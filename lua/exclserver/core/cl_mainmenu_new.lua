@@ -2058,7 +2058,7 @@ Because today is Casual Friday, bronze VIP is 50% off!]]
 			lb2:SizeToContents();
 			lb2:SetColor(COLOR_WHITE);
 
-			local lbl = Label(v.hidden and !LocalPlayer():ESHasCompletedAchievement(k) and "<secret>" or exclFormatLine(v.descr,"ESDefault",ach:GetWide() - 80 - 4 - 4) or "Unknown",ach);
+			local lbl = Label(v.hidden and !LocalPlayer():ESHasCompletedAchievement(k) and "<secret>" or ES.FormatLine(v.descr,"ESDefault",ach:GetWide() - 80 - 4 - 4) or "Unknown",ach);
 			lbl:SetFont("ESDefault");
 			lbl:SizeToContents();
 			lbl:SetPos(lb2.x+2,lb2.y + lb2:GetTall()+3);

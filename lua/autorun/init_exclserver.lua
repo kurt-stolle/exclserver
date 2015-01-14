@@ -42,7 +42,7 @@ function ES.Include(name, folder, runtype)
 
 	if not runtype or ( runtype ~= "sv" and runtype ~= "sh" and runtype ~= "cl" ) then ErrorNoHalt("Could not include file, no prefix!"); return false; end
 	
-	path = "exclserver/";
+	path = "";
 
 	if folder then
 		path = path .. folder .. "/";
@@ -72,18 +72,20 @@ function ES.Include(name, folder, runtype)
 end
 
 
-local function initializeFolder(folder,runtype)
+function ES.IncludeFolder(folder,runtype)
 	ES.DebugPrint("Initializing "..folder)
+
+	local exp=(string.Explode("/",folder,false))[1];
 	
-	for k,v in pairs(file.Find("exclserver/"..folder.."/*.lua","LUA")) do
+	for k,v in pairs(file.Find(folder.."/*.lua","LUA")) do
 		ES.Include(v, folder, runtype);
 	end	
 end
 
-initializeFolder ("util");
-initializeFolder ("core");
-initializeFolder ("vgui", "cl");
-initializeFolder ("items", "sh");
-initializeFolder ("plugins", "sh");
+ES.IncludeFolder ("exclserver/util");
+ES.IncludeFolder ("exclserver/core");
+ES.IncludeFolder ("exclserver/vgui", "cl");
+ES.IncludeFolder ("exclserver/items", "sh");
+ES.IncludeFolder ("exclserver/plugins", "sh");
 
 ES.PostInitialize = true;
