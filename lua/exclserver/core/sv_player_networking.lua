@@ -28,7 +28,9 @@ hook.Add("PlayerInitialSpawn","ES.NetworkVars.LoadPlayerData",function(ply)
 
 			if not data[1] then 
 				ES.DBQuery("INSERT INTO `es_player` (id,steamid) VALUES("..ply:ESID()..",'"..ply:SteamID().."');");
-				ply:ESSetNetworkedVariable("bananas",100,true);
+				ply:ESSetNetworkedVariable("bananas",100);
+
+				ES.DebugPrint("Created an ExclServer profile for "..ply:Nick());
 				return 
 			end
 
@@ -214,7 +216,7 @@ timer.Create("ES.NetworkPlayers",.2,0,function()
 				net.WriteBit(v.value);
 				continue;
 			elseif kind == "UInt" then
-				net.ReadUInt(v.value,ES.NetworkedVariables[v.key].size);
+				net.WriteUInt(v.value,ES.NetworkedVariables[v.key].size);
 				continue;
 			elseif kind == "Entity" then
 				net.WriteEntity(v.value);

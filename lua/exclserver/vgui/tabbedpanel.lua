@@ -2,7 +2,7 @@ local PNL = {};
 
 local icon_car = Material("icon16/car.png");
 function PNL:Init()
-	self.Title = "Unnamed";
+	self.title = "Unnamed";
 	self.Icon = icon_car;
 	self.Position = 1;
 	self.Selected = false;
@@ -12,11 +12,11 @@ function PNL:Paint(w,h)
 
 	if not self.Selected then
 		draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-1,ES.GetColorScheme(3));
-		draw.SimpleText(self.Title,"ESDefaultBold",6 + 16 + 6,self:GetTall()/2,ES.Color["#EEE"],0,1);
+		draw.SimpleText(self.title,"ESDefaultBold",6 + 16 + 6,self:GetTall()/2,ES.Color["#EEE"],0,1);
 	end
 	if self:GetHover() or self.Selected then
 		draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-1,ES.GetColorScheme(1));
-		draw.SimpleText(self.Title,"ESDefaultBold",6 + 16 + 6,self:GetTall()/2,Color(255,255,255,255),0,1);
+		draw.SimpleText(self.title,"ESDefaultBold",6 + 16 + 6,self:GetTall()/2,Color(255,255,255,255),0,1);
 	end
 
 	surface.SetMaterial(self.Icon);
@@ -44,7 +44,7 @@ function PNL:AddTab(title,icon)
 	b.Position = #self._tabs;
 	b.Selected = (#self._tabs == 1);
 	b.Icon = icon and Material(icon) or icon_car;
-	b.Title = title or "Untitled";
+	b.title = title or "Untitled";
 	b.OnMouseReleased= function(btn)
 		for k,v in pairs(self._tabs)do
 			if b.Position != v.button.Position then
@@ -59,8 +59,8 @@ function PNL:AddTab(title,icon)
 	p.button = b;
 
 	surface.SetFont("ESDefaultBold");
-	local w,h=surface.GetTextSize(b.Title)
-	b:SetSize(6+16+6+w+6,24);
+	local w,h=surface.GetTextSize(b.title)
+	b:SetSize(6+16+6+w+8,24);
 	b:SetPos(self._x_tab-1,0);
 
 	self._x_tab=b.x+b:GetWide();

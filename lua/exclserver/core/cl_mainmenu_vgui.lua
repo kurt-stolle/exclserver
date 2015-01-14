@@ -114,7 +114,7 @@ function PNL:AddButton(name,icon,func)
 	local b = vgui.Create("ES.MainMenu.NavigationItem",self);
 	b:SetSize(256,32);
 	b:SetPos(self.ElementMainX,self.yCreateMainButtons);
-	b.Title = name;
+	b.title = name;
 	b.icon = icon;
 	b.OnMouseReleased = func;
 
@@ -263,7 +263,7 @@ local PNL = {};
 function PNL:Init()
 	self.bg = Material("exclserver/mmmainitem.png");
 	self.icon = Material("icon16/car.png")
-	self.Title = "Undefined";
+	self.title = "Undefined";
 	self.Hover = false;
 	self.rot = 0;
 	self.tick = 0;
@@ -304,7 +304,7 @@ function PNL:Paint(w,h)
 	if self.Hover then
 		col = color_white;
 	end
-	draw.SimpleText(self.Title,"ES.MainMenu.MainElementButton",42 + 10,h/2,col,0,1);
+	draw.SimpleText(self.title,"ES.MainMenu.MainElementButton",42 + 10,h/2,col,0,1);
 end
 vgui.Register("ES.MainMenu.NavigationItem",PNL,"Panel");
 
@@ -325,8 +325,8 @@ function PNL:Init()
 	--surface.PlaySound("ambient/levels/canals/drip3.wav");
 
 	self.context = self:Add("Panel");
-	self.context.SetTitle = function(self,title) self:GetParent().Title = title end
-	self.Title = "Undefined Panel";
+	self.context.SetTitle = function(self,title) self:GetParent().title = title end
+	self.title = "Undefined Panel";
 	self.xDesired = 0;
 end
 function PNL:PerformLayout()
@@ -354,8 +354,8 @@ function PNL:Paint(w,h)
 	surface.SetDrawColor(Color(0,0,0,20));
 	surface.DrawRect(1,1,w,math.floor(69/4)*4 + 4);
 
-	draw.SimpleText(self.Title,"ES.MainMenu.FrameHeadBlur",15,(70/2),ES.Color["#00000044"],0,1);
-	draw.SimpleText(self.Title,"ES.MainMenu.FrameHead",15,70/2,color_white,0,1);
+	draw.SimpleText(self.title,"ES.MainMenu.FrameHeadBlur",15,(70/2),ES.Color["#00000044"],0,1);
+	draw.SimpleText(self.title,"ES.MainMenu.FrameHead",15,70/2,color_white,0,1);
 end
 vgui.Register("ES.MainMenu.Frame",PNL,"Panel")
 
@@ -576,7 +576,7 @@ surface.CreateFont("esMMInventoryTitle",{
 
 local PNL = {};
 function PNL:Init()
-	self.Title = "Undefined"
+	self.title = "Undefined"
 	self.PanelCurrent = vgui.Create("Panel",self);
 	function self.PanelCurrent:Paint(w,h) 
 		surface.SetDrawColor(Color(0,0,0,70)); 
@@ -685,7 +685,7 @@ end
 function PNL:Paint(w,h)
 	surface.SetDrawColor(ES.GetColorScheme(3));
 	surface.DrawRect(0,0,w,h);
-	draw.SimpleText(self.Title,"esMMInventoryTitle",10,5,color_white);
+	draw.SimpleText(self.title,"esMMInventoryTitle",10,5,color_white);
 end
 vgui.Register("esMMInventory",PNL,"Panel");
 
@@ -697,7 +697,7 @@ local PNL = {};
 function PNL:Init()
 	self.icon = vgui.Create("Spawnicon",self);
 	self.icon:SetToolTip(nil)
-	self.Title = "Un defined"
+	self.title = "Un defined"
 	self.dummy = self:Add("Panel");
 	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
 	self.dummy.OnCursorExited = function() self:OnCursorExited() end
@@ -733,7 +733,7 @@ function PNL:Paint(w,h)
 	end
 	surface.DrawRect(3,3,w-6,h-6);
 
-	local s = string.gsub(self.Title," ","\n");
+	local s = string.gsub(self.title," ","\n");
 	local col = colHatBuyTileText;
 	if self.Hover then
 		col = color_white;

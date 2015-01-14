@@ -35,7 +35,7 @@ local navPaintButton=function(self,w,h)
 	surface.SetMaterial(self.Icon);
 	surface.DrawTexturedRect(w/2-(64/2),0,64,64);
 
-	draw.DrawText(self.Title,"ESDefault",w/2,h-22,ES.Color.White,1,1);
+	draw.DrawText(self.title,"ESDefault",w/2,h-22,ES.Color.White,1,1);
 end
 local navigationOptions={
 	{
@@ -105,10 +105,10 @@ function ES.OpenMOTD()
 		local master=motd:Add("esFrame");
 		master:SetSize(w,h);
 		--[[master:SetPos(ScrW(),(ScrH()/2)-(h/2));
-		master.Title="Welcome";
+		master.title="Welcome";
 		master.xDesired=(ScrW()/2)-(w/2)
 		master:PerformLayout();]]
-		master.Title="Welcome";
+		master.title="Welcome";
 		master:Center();
 
 		local oldRemove=master.Remove;
@@ -135,7 +135,7 @@ function ES.OpenMOTD()
 				local btn=navigation:Add("Panel");
 				btn:SetSize(74,74);
 				btn:SetPos(0,i*74);
-				btn.Title=v.title;
+				btn.title=v.title;
 				btn.Icon=v.icon;
 				btn.Paint = navPaintButton
 				btn.OnMouseReleased=function(self)

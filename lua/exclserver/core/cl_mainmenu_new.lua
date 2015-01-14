@@ -1361,7 +1361,7 @@ function ES:CreateMainMenu()
 				
 				local invAuras = vgui.Create("esMMInventory",p);
 				invAuras:SetSize(p:GetWide()-30-230,200);
-				invAuras.Title = "Auras";
+				invAuras.title = "Auras";
 				invAuras:SetPos(15,15);
 				invAuras.rm.typ = "aura";
 
@@ -1401,7 +1401,7 @@ function ES:CreateMainMenu()
 				
 				local invTrails = vgui.Create("esMMInventory",p);
 				invTrails:SetSize(p:GetWide()-30-230,200);
-				invTrails.Title = "Trails";
+				invTrails.title = "Trails";
 				invTrails:SetPos(15,invAuras.y + invAuras:GetTall() + 15);
 				invTrails.rm.typ = "trail";
 
@@ -1445,7 +1445,7 @@ function ES:CreateMainMenu()
 
 				local invMelee = vgui.Create("esMMInventory",p);
 				invMelee:SetSize(p:GetWide()-30-230,200);
-				invMelee.Title = "Melee";
+				invMelee.title = "Melee";
 				invMelee:SetPos(15,invTrails.y + invTrails:GetTall() + 15);
 				invMelee.rm.typ = "melee";
 
