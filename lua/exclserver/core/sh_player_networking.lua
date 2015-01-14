@@ -17,7 +17,10 @@ function PLAYER:ESGetNetworkedVariable(key,default)
 end
 
 -- Some essential NWVars;
+ES.DefineNetworkedVariable("typing","Bit");
+
 ES.DefineNetworkedVariable("rank","String");
+
 ES.DefineNetworkedVariable("bananas","Int",32,"int(10) unsigned not null default 100");
 
 ES.DefineNetworkedVariable("active_trail","String",nil,"varchar(22)");

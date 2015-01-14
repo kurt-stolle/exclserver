@@ -1,13 +1,15 @@
-function ES.UIAddHoverListener(tab)
-	AccessorFunc(tab,"hover","Hover",FORCE_BOOL);
-	tab.OnCursorEntered = function(self)
+function ES.UIAddHoverListener(panel)
+	AccessorFunc(panel,"hover","Hover",FORCE_BOOL);
+	panel.OnCursorEntered = function(self)
 		self:SetHover(true);
+		self:SetCursor("hand")
 	end
-	tab.OnCursorExited = function(self)
+	panel.OnCursorExited = function(self)
 		self:SetHover(false);
+		self:SetCursor("arrow")
 	end
 
-	return tab;
+	return panel;
 end
 
 -- The ripple effect

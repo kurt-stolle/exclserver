@@ -102,14 +102,26 @@ function ES.OpenMOTD()
 	motd:SetPos(0,0);
 	motd.Paint=motdPaint;
 
-		local master=motd:Add("ES.MainMenu.Frame");
+		local master=motd:Add("esFrame");
 		master:SetSize(w,h);
-		master:SetPos(ScrW(),(ScrH()/2)-(h/2));
+		--[[master:SetPos(ScrW(),(ScrH()/2)-(h/2));
 		master.Title="Welcome";
 		master.xDesired=(ScrW()/2)-(w/2)
-		master:PerformLayout();
+		master:PerformLayout();]]
+		master.Title="Welcome";
+		master:Center();
 
-		local frame=master.context;
+		local oldRemove=master.Remove;
+		function master:Remove()
+			oldRemove(self);
+			motd:Remove();
+		end
+
+		local frame=master:Add("Panel");
+		frame:SetSize(w-2,h-31);
+		frame:SetPos(1,30);
+
+
 		local context=frame:Add("Panel");
 		local navigation=frame:Add("Panel");
 		local btn_close=frame:Add("esButton");

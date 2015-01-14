@@ -4,7 +4,7 @@ EXCL_PLUGIN_FLAG_NOCANDISABLE = 4;
 
 local meta = {} -- functions applied to all tables on creation.
 
-local plugins = {} -- table to store all plugins
+ES.Plugins = {} -- table to store all ES.Plugins
 
 AccessorFunc(meta,"name","Name",FORCE_STRING);
 AccessorFunc(meta,"description","Description",FORCE_STRING);
@@ -36,7 +36,7 @@ function meta:__call()
 
 	self.id = util.CRC(sql.SQLStr(string.gsub(string.lower(self.name)," ","-"),true));
 	
-	plugins[self.id] = self;	
+	ES.Plugins[self.id] = self;	
 end
 function meta:Load()
 	self.disabled = false;
@@ -74,8 +74,8 @@ function meta:AddCommand(n,f,rank)
 end
 
 hook.Add("Initialize","ExclPluginsLoad",function()
-	ES.DebugPrint("Loading plugins...");
-	for k,v in pairs(plugins) do
+	ES.DebugPrint("Loading ES.Plugins...");
+	for k,v in pairs(ES.Plugins) do
 		v:Load();
 	end
 end)
