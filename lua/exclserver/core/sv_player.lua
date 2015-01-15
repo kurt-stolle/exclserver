@@ -1,6 +1,10 @@
 -- sv_player.lua
-local PLAYER = FindMetaTable("Player");
+util.AddNetworkString("ES.PlayerReady");
+net.Receive("ES.PlayerReady",function(len,ply)
+	hook.Call("ESPlayerReady",GAMEMODE,ply);
+end);
 
+local PLAYER = FindMetaTable("Player");
 
 util.AddNetworkString("ESSynchPlayer");
 function PLAYER:ESSynchPlayer()
@@ -70,10 +74,6 @@ gameevent.Listen("player_connect")
 
 hook.Add("player_connect", "ESHandlePlayerConnect", function(data)
 	if ES:CheckBans(data.networkid,data.userid) then return end
-end)
- 
-concommand.Add("excl_internal_load",function(p)
-    p:ESLoadPlayer();
 end)
 
 hook.Add( "PhysgunPickup", "ESHandlePlayerPickup", function( p, e )

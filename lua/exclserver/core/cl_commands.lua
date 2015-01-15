@@ -1,9 +1,5 @@
 -- cl_commands
 
-hook.Add("InitPostEntity","ES.FixLadders",function()
-	RunConsoleCommand("cl_pred_optimize","1");
-end)
-
 local esCmd= {}
 function ES:AddCommand(n,c,power)
 	table.insert(esCmd,{name = n, power = power});

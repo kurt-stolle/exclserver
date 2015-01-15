@@ -1,11 +1,4 @@
 -- cl_player_hooks
-net.Receive("ESPlayerDC",function()
-	local name = net.ReadString();
-	if not name then return end
-	MsgC(COLOR_EXCLSERVER,name);
-	MsgC(COLOR_WHITE," has left the server.\n");
-end)
-
 hook.Add("PostPlayerDraw", "ESPostPlayerDraw", function(p)
 	local drawpos,drawang,slotdata,pos,ang,item,scale,bone,color;
 	for i=1, 2+(p:ESGetVIPTier()) do
@@ -50,6 +43,10 @@ hook.Add("PostPlayerDraw", "ESPostPlayerDraw", function(p)
 		end
 	end
 
+end)
+
+hook.Add("InitPostEntity","ES.FixLadders",function()
+    RunConsoleCommand("cl_pred_optimize","1");
 end)
 
 hook.Add("InitPostEntity","LoadMyStuff",function()

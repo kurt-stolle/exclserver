@@ -6,13 +6,13 @@ hook.Add("Initialize","ES.InitializeSavedNetworkedVariables",function()
 
 	for k,v in pairs(ES.NetworkedVariables)do
 		if v.save then
-			ES.DBQuery("ALTER TABLE `es_player` ADD "..ES.DBEscape(k).." "..v.save..";",function() ES.DebugPrint("Added column."); end,function() ES.DebugPrint("Column already exists."); end);
+			ES.DBQuery("ALTER TABLE `es_player_fields` ADD "..ES.DBEscape(k).." "..v.save..";",function() ES.DebugPrint("Added column."); end,function() ES.DebugPrint("Column already exists."); end);
 			ES.DBWait();
 		end
 	end
 end);
 
-hook.Add("PlayerInitialSpawn","ES.NetworkVars.LoadPlayerData",function(ply)
+hook.Add("ESPlayerReady","ES.NetworkVars.LoadPlayerData",function(ply)
 	local select={};
 	for k,v in pairs(ES.NetworkedVariables)do
 		if v.save then
@@ -23,11 +23,11 @@ hook.Add("PlayerInitialSpawn","ES.NetworkVars.LoadPlayerData",function(ply)
 	if select[1] then
 		select=table.concat(select,", ");
 
-		ES.DBQuery(string.format("SELECT %s FROM `es_player` WHERE `id`=%s LIMIT 1;",select,tostring(ply:ESID())),function(data)
+		ES.DBQuery(string.format("SELECT %s FROM `es_player_fields` WHERE `id`=%s LIMIT 1;",select,tostring(ply:ESID())),function(data)
 			ES.DebugPrint("Loaded networked variables saved from "..ply:Nick());
 
 			if not data[1] then 
-				ES.DBQuery("INSERT INTO `es_player` (id,steamid) VALUES("..ply:ESID()..",'"..ply:SteamID().."');");
+				ES.DBQuery("INSERT INTO `es_player_fields` (id,steamid) VALUES("..ply:ESID()..",'"..ply:SteamID().."');");
 				ply:ESSetNetworkedVariable("bananas",100);
 
 				ES.DebugPrint("Created an ExclServer profile for "..ply:Nick());
@@ -194,7 +194,7 @@ timer.Create("ES.NetworkPlayers",.2,0,function()
 				if kind=="String" then
 					v.value="'"..v.value.."'";
 				end
-				ES.DBQuery("UPDATE `es_player` SET `"..v.key.."`="..ES.DBEscape(tostring(v.value)).." WHERE `id`="..ply:ESID()..";");
+				ES.DBQuery("UPDATE `es_player_fields` SET `"..v.key.."`="..ES.DBEscape(tostring(v.value)).." WHERE `id`="..ply:ESID()..";");
 
 				ES.DebugPrint("Synchronized networked variable "..v.key.." with clients and database for "..ply:Nick());
 			else
