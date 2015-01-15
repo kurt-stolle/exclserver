@@ -17,11 +17,11 @@ PLUGIN:AddCommand("ban",function(p,a)
 	if userFound and userFound[1] and #userFound == 1 then
 		user = userFound[1];
 		if user:ESIsImmuneTo(p) then
-			ES:SendMessagePlayerTried(p,user:Nick(),"ban")
+			ES.SendMessagePlayerTried(p,user:Nick(),"ban")
 			return;
 		end
 
-		ES:AddBan(user:SteamID(),p:SteamID(),time,true,reason,user:Nick(),p:Nick())
+		ES.AddBan(user:SteamID(),p:SteamID(),time,true,reason,user:Nick(),p:Nick())
 
 		net.Start("exclBP");
 		net.WriteEntity(p);
@@ -32,7 +32,7 @@ PLUGIN:AddCommand("ban",function(p,a)
 
 		exclDropUser(user:UserID(), "You were globally banned! \""..reason.."\", Your ban will expire in "..time.." minutes.")
 	elseif string.upper(string.Left(user,5)) == "STEAM" then
-		ES:AddBan(user,p:SteamID(),time,true,reason)
+		ES.AddBan(user,p:SteamID(),time,true,reason)
 
 		net.Start("exclBP");
 		net.WriteEntity(p);
@@ -51,7 +51,7 @@ PLUGIN:AddCommand("unban",function(p,a)
 
 	local user = a[1];
 	if string.upper(string.Left(user,5)) == "STEAM" then
-		ES:RemoveBan( string.upper(user) );
+		ES.RemoveBan( string.upper(user) );
 
 		net.Start("exclUBP");
 		net.WriteEntity(p);
@@ -74,7 +74,7 @@ elseif CLIENT then
 		local v = net.ReadString();
 		if not IsValid(p) then return end
 		
-		ES:ChatAddText("accessdenied",Color(255,255,255),
+		ES.ChatAddText("accessdenied",Color(255,255,255),
 		exclFixCaps(p:ESGetRank().name).." ",
 		Color(102,255,51),p:Nick(),
 		Color(255,255,255),
@@ -95,9 +95,9 @@ elseif CLIENT then
 		end
 		if not IsValid(p) or not t then return end
 		if t > 0 then	
-			ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has banned ",Color(102,255,51),v,Color(255,255,255,255), " for ",Color(102,255,51),string.ToMinutesSeconds(tostring(t)),Color(255,255,255,255)," hours with reason: "..(r or "No reason specified.")..".");
+			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has banned ",Color(102,255,51),v,Color(255,255,255,255), " for ",Color(102,255,51),string.ToMinutesSeconds(tostring(t)),Color(255,255,255,255)," hours with reason: "..(r or "No reason specified.")..".");
 		else
-			ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has banned ",Color(102,255,51),v,Color(255,255,255,255), " permanently with reason: "..(r or "No reason specified.")..".");
+			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has banned ",Color(102,255,51),v,Color(255,255,255,255), " permanently with reason: "..(r or "No reason specified.")..".");
 		end
 		chat.PlaySound()
 	end)
@@ -105,7 +105,7 @@ elseif CLIENT then
 		local p = net.ReadEntity();
 		local ub = net.ReadString();
 		if not IsValid(p) then return end
-		ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unbanned ",Color(102,255,51),ub,Color(255,255,255,255), ".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unbanned ",Color(102,255,51),ub,Color(255,255,255,255), ".");
 		chat.PlaySound()
 	end)
 end

@@ -50,7 +50,7 @@ net.Receive("exclNoCEXP",function()
 	local v = net.ReadString();
 	if not IsValid(p) then return end
 	
-	ES:ChatAddText("accessdenied",Color(255,255,255),
+	ES.ChatAddText("accessdenied",Color(255,255,255),
 	exclFixCaps(p:ESGetRank().name).." ",
 	Color(102,255,51),p:Nick(),
 	Color(255,255,255),
@@ -67,6 +67,6 @@ net.Receive("exclCEXP",function()
 	local r = net.ReadString();
 	if not IsValid(p) then return end
 	
-	ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has ran ",Color(102,255,51),r,Color(255,255,255,255), " on ",Color(102,255,51),v,Color(255,255,255),".");
+	ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has ran ",Color(102,255,51),r,Color(255,255,255,255), " on ",Color(102,255,51),v,Color(255,255,255),".");
 	chat.PlaySound()
 end)

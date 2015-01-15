@@ -60,7 +60,7 @@ net.Receive("ESBlockEnd",function()
   blockadeEnd = LocalPlayer():EyePos() + LocalPlayer():EyeAngles():Forward() * 30;
 end)
 net.Receive("ESBlockConfirm",function()
-  ES:ChatAddText("server",COLOR_WHITE,"Blockade added, type :blockadeStart to add a new blockade.");
+  ES.ChatAddText("server",COLOR_WHITE,"Blockade added, type :blockadeStart to add a new blockade.");
   blockadeStart = false;
   blockadeEnd = false;
   drawingBlockades = false;

@@ -54,7 +54,7 @@ net.Receive("ESUploadSnapshotProg",function(len,p)
 	file.Write("exclsnapshots/"..requesters[p:UniqueID()].."_"..p:ESID().."_"..os.time().."_base64.txt", util.Base64Encode(data));
 end);
 	
-ES:AddCommand("snapshot",function(p,a) 
+ES.AddCommand("snapshot",function(p,a) 
 	if not IsValid(p) or not a or not a[1] then return end
 	if  (p.exclNextSnap and p.exclNextSnap > CurTime()) then p:ChatPrint("This command is currently on cooldown. Please wait " .. math.Round(p.exclNextSnap - CurTime()) .." more seconds.") return end
 

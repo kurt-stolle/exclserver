@@ -37,7 +37,7 @@ local sounds = {Sound("vo/npc/Barney/ba_ohyeah.wav"),Sound("vo/npc/female01/yeah
 Sound("combined/k_lab/k_lab_kl_mygoodness02_cc.wav"),Sound("vo/Citadel/eli_goodgod.wav"),Sound("vo/Citadel/eli_mygirl.wav"),Sound("vo/eli_lab/al_goodcatch.wav"),
 Sound("vo/coast/odessa/male01/nlo_cheer01.wav"),Sound("vo/coast/odessa/male01/nlo_cheer02.wav"),Sound("vo/coast/odessa/male01/nlo_cheer03.wav"),Sound("vo/coast/odessa/male01/nlo_cheer04.wav"),
 Sound("vo/coast/odessa/female01/nlo_cheer01.wav"),Sound("vo/coast/odessa/female01/nlo_cheer02.wav"),Sound("vo/coast/odessa/female01/nlo_cheer03.wav")}
-function ES:CreateAchievementPopup(text,name,icon)
+function ES.CreateAchievementPopup(text,name,icon)
 	if ach and IsValid(ach) then ach:Remove() end
 	
 	local a,b,c = ES.GetColorScheme();
@@ -81,7 +81,7 @@ net.Receive("ESAchProgr",function()
 	if ES.Achievements[id].nonotify then return end
 
 	local a,b,c = ES.GetColorScheme();
-	local pnl = ES:CreateAchievementPopup("Achievement progress...",ES.Achievements[id].name,ES.Achievements[id].icon)
+	local pnl = ES.CreateAchievementPopup("Achievement progress...",ES.Achievements[id].name,ES.Achievements[id].icon)
 	local dr = vgui.Create("Panel",pnl);
 	dr:SetPos(pnl.name.x, pnl:GetTall()-10-20);
 	dr:SetSize(pnl:GetWide() - pnl:GetTall() - 8,20);
@@ -111,15 +111,15 @@ net.Receive("ESAchEarned",function()
 	surface.PlaySound(table.Random(sounds));
 
 	if ES.Achievements[id].earnsilent then
-		ES:ChatAddText("medal",COLOR_WHITE,"(HIDDEN) ",Color(102,255,51),ply:Nick(),COLOR_WHITE," has earned the achievement ",Color(102,255,51),ES.Achievements[id] and ES.Achievements[id].name or id or "Unknown",COLOR_WHITE,".");
+		ES.ChatAddText("medal",COLOR_WHITE,"(HIDDEN) ",Color(102,255,51),ply:Nick(),COLOR_WHITE," has earned the achievement ",Color(102,255,51),ES.Achievements[id] and ES.Achievements[id].name or id or "Unknown",COLOR_WHITE,".");
 	else
-		ES:ChatAddText("medal",Color(102,255,51),ply:Nick(),COLOR_WHITE," has earned the achievement ",Color(102,255,51),ES.Achievements[id] and ES.Achievements[id].name or id or "Unknown",COLOR_WHITE,".");
+		ES.ChatAddText("medal",Color(102,255,51),ply:Nick(),COLOR_WHITE," has earned the achievement ",Color(102,255,51),ES.Achievements[id] and ES.Achievements[id].name or id or "Unknown",COLOR_WHITE,".");
 	end
 	if ply == LocalPlayer() and LocalPlayer().excl then
 		if not LocalPlayer().excl.achievements then LocalPlayer().excl.achievements = {} end
 		LocalPlayer().excl.achievements[id] = ES.Achievements[id].progressNeeded;
 
-		local pnl = ES:CreateAchievementPopup("Achievement unlocked!",ES.Achievements[id].name,ES.Achievements[id].icon)
+		local pnl = ES.CreateAchievementPopup("Achievement unlocked!",ES.Achievements[id].name,ES.Achievements[id].icon)
 		local lbl = Label(ES.FormatLine(ES.Achievements[id].descr,"ESDefault",ach:GetWide() - 80 - 4 - 4),pnl);
 		lbl:SetFont("ESDefault");
 		lbl:SizeToContents();

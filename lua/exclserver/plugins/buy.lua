@@ -1,5 +1,5 @@
 -- A bunch of command aliases to open up the main menu. Nothing special here.
-if SERVER then
+--[[if SERVER then
 	util.AddNetworkString("ESToggleMenu");
 end
 
@@ -13,22 +13,22 @@ PLUGIN:AddCommand("buy",function(p,a)
 	if itemtype == "taunt" then
 		itemtype = ITEM_TAUNT;
 	elseif itemtype == "model" then
-		itemtype = ITEM_MODEL;
+		itemtype = ES.ITEM_MODEL;
 
-		if ES.ModelsBuy[name] and ES.ModelsBuy[name].VIPOnly and p:ESGetVIPTier() < 3 then
+		if ES.Models[name] and ES.Models[name].VIPOnly and p:ESGetVIPTier() < 3 then
 			return false;
 		end
 	elseif itemtype == "trail" then
-		itemtype = ITEM_TRAIL;
+		itemtype = ES.ITEM_TRAIL;
 	elseif itemtype == "melee" then
-		itemtype = ITEM_MELEE;
+		itemtype = ES.ITEM_MELEE;
 	elseif itemtype == "prop" then
-		itemtype = ITEM_PROP;
+		itemtype = ES.ITEM_PROP;
 	else
-		itemtype = ITEM_AURA;
+		itemtype = ES.ITEM_AURA;
 	end
-	if itemtype != ITEM_PROP then
-		local iprice = tonumber(ES:GetItemPrice(name,itemtype));
+	if itemtype != ES.ITEM_PROP then
+		local iprice = tonumber(ES.GetItemPrice(name,itemtype));
 		if iprice > 0 and ((p:ESGetBananas() - iprice) > 0) and p:ESGiveItem(name,itemtype,true) then
 			p:ESTakeBananas(iprice)
 			p:ESActivateItem(name,itemtype,true)
@@ -70,13 +70,13 @@ PLUGIN:AddCommand("activate",function(p,a)
 	if itemtype == "taunt" then
 		itemtype = ITEM_TAUNT;
 	elseif itemtype == "model" then
-		itemtype = ITEM_MODEL;
+		itemtype = ES.ITEM_MODEL;
 	elseif itemtype == "trail" then
-		itemtype = ITEM_TRAIL;
+		itemtype = ES.ITEM_TRAIL;
 	elseif itemtype == "aura" then
-		itemtype = ITEM_AURA;
+		itemtype = ES.ITEM_AURA;
 	else
-		itemtype = ITEM_MELEE;
+		itemtype = ES.ITEM_MELEE;
 	end
 
 	p:ESActivateItem(name,itemtype)
@@ -87,13 +87,13 @@ PLUGIN:AddCommand("deactivate",function(p,a)
 	if itemtype == "taunt" then
 		itemtype = ITEM_TAUNT;
 	elseif itemtype == "model" then
-		itemtype = ITEM_MODEL;
+		itemtype = ES.ITEM_MODEL;
 	elseif itemtype == "trail" then
-		itemtype = ITEM_TRAIL;
+		itemtype = ES.ITEM_TRAIL;
 	elseif itemtype == "aura" then
-		itemtype = ITEM_AURA;
+		itemtype = ES.ITEM_AURA;
 	else
-		itemtype = ITEM_MELEE;
+		itemtype = ES.ITEM_MELEE;
 	end
 	
 	p:ESDeactivateItem(itemtype)
@@ -105,14 +105,14 @@ PLUGIN:AddCommand("buyvip",function(p,a)
 	if not tier or tier > 4 or tier <= curtier then return end
 	
 	local price = (tier - curtier) * 5000;
-	if tier == 1 and ES:IsCasualFriday() then
+	if tier == 1 and ES.IsCasualFriday() then
 		price = math.Round(price * 0.5);
 	end
 
 	if p:ESGetBananas() < price then return end
 
 	p:ESTakeBananas(price);
-	ES:AddPlayerData(p,"viptier",tier);
+	ES.AddPlayerData(p,"viptier",tier);
 
 	p:ESSetGlobalData("VIP",p.excl.viptier);
 
@@ -170,9 +170,9 @@ net.Receive("ESVIPBought",function()
 
 	if not IsValid(p) or not tier then return end
 
-	ES:ChatAddText("star",p,Color(255,255,255)," has upgraded to ",Color(102,255,51),tier,Color(255,255,255)," VIP.");
+	ES.ChatAddText("star",p,Color(255,255,255)," has upgraded to ",Color(102,255,51),tier,Color(255,255,255)," VIP.");
 end)
 net.Receive("ESNoBuy",function()
 	chat.AddText(Color(255,255,255),"You can't buy this item.");
 	chat.PlaySound();
-end);
+end);]]

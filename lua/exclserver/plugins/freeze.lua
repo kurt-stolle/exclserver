@@ -22,7 +22,7 @@ PLUGIN:AddCommand("freeze",function(p,a)
 			net.WriteString(r);
 			net.Broadcast();
 		else
-			ES:SendMessagePlayerTried(p,v:Nick(),"freeze")
+			ES.SendMessagePlayerTried(p,v:Nick(),"freeze")
 		end
 	end
 end,10);
@@ -45,7 +45,7 @@ PLUGIN:AddCommand("unfreeze",function(p,a)
 			net.WriteString(r);
 			net.Broadcast();
 		else
-			ES:SendMessagePlayerTried(p,v:Nick(),"unfreeze")
+			ES.SendMessagePlayerTried(p,v:Nick(),"unfreeze")
 		end
 	end
 end,10);
@@ -66,9 +66,9 @@ net.Receive("exclUFP",function()
 	if not IsValid(p) then return end
 	
 	if r and r != "" and r != " " then
-		ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unfrozen ",Color(102,255,51),v,Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unfrozen ",Color(102,255,51),v,Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
 	else
-		ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unfrozen ",Color(102,255,51),v,Color(255,255,255,255),".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unfrozen ",Color(102,255,51),v,Color(255,255,255,255),".");
 	end
 	chat.PlaySound()
 end)
@@ -79,9 +79,9 @@ net.Receive("exclFP",function()
 	if not IsValid(p) then return end
 	
 	if r and r != "" and r != " " then
-		ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has frozen ",Color(102,255,51),v,Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has frozen ",Color(102,255,51),v,Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
 	else
-		ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has frozen ",Color(102,255,51),v,Color(255,255,255,255),".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has frozen ",Color(102,255,51),v,Color(255,255,255,255),".");
 	end
 	chat.PlaySound()
 end)

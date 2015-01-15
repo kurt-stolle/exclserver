@@ -66,8 +66,8 @@ function ENT:Draw()
 	cam.End3D2D();
 end
 
-ES:AddCommand("advert",function()end,60)
-ES:AddCommand("editadvert",function()end,60)
+ES.AddCommand("advert",function()end,60)
+ES.AddCommand("editadvert",function()end,60)
 
 hook.Add("HUDPaint","debugddDrawAdIDs",function()
 	if ES.Debug then

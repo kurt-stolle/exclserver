@@ -37,7 +37,7 @@ if SERVER then
 		end
 
 		if vic:ESIsImmuneTo(p) then
-			ES:SendMessagePlayerTried(p,vic:Nick(),"vote kick")
+			ES.SendMessagePlayerTried(p,vic:Nick(),"vote kick")
 		end
 
 		p:ESChatPrint("server",Color(102,255,51),p:Nick(),COLOR_WHITE," has started a vote to kick ",Color(102,255,51),vic:Nick(),COLOR_WHITE,".");
@@ -61,7 +61,7 @@ if SERVER then
 				if IsValid(voteKickPlayer) then
 					exclDropUser(voteKickPlayer:UserID(),"Voted off the server.");
 				end
-				ES:AddBan(voteKickPlayerID,"EXCLSERVER",30,false,"Voted off the server",IsValid(voteKickPlayer) and voteKickPlayer:Nick() or voteKickPlayer:SteamID(),"EXCLSERVER")
+				ES.AddBan(voteKickPlayerID,"EXCLSERVER",30,false,"Voted off the server",IsValid(voteKickPlayer) and voteKickPlayer:Nick() or voteKickPlayer:SteamID(),"EXCLSERVER")
 			else
 				p:ESChatPrint("server",COLOR_WHITE,"The vote kick failed, ",Color(102,255,51),p:Nick(),COLOR_WHITE," will not be kicked off.");
 			end

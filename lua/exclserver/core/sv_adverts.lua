@@ -23,7 +23,7 @@ hook.Add("ESDBDefineTables","ESAdsDatatableSetup",function()
 	end,"pos varchar(255), ang varchar(255), text varchar(255), xalign int(1), map varchar(100), scale float(8,8)")
 end)
 
-function ES:AddAdvert(text,pos,normal,scale,align)
+function ES.AddAdvert(text,pos,normal,scale,align)
 	scale = scale or .4;
 	align = align or 1;
 
@@ -42,13 +42,13 @@ end
 
 hook.Add("Initialize","addCom`wddwmandswdouhdawiuawdhiuwadd",function()
 
-ES:AddCommand("advert",function(p,a)
+ES.AddCommand("advert",function(p,a)
 	if not IsValid(p) or not a or not a[1] then return end
 	
-	ES:AddAdvert(table.concat(a," "), p:GetEyeTrace().HitPos, p:GetEyeTrace().HitNormal, .4, 1);
+	ES.AddAdvert(table.concat(a," "), p:GetEyeTrace().HitPos, p:GetEyeTrace().HitNormal, .4, 1);
 end,60)
 
-ES:AddCommand("editadvert",function(p,a)
+ES.AddCommand("editadvert",function(p,a)
 	if not IsValid(p) or not a[1] then return end
 
 	local id = tonumber(a[1])

@@ -33,7 +33,7 @@ net.Receive("ES.Player.UpdateOutfit",function(len,ply)
 			local green=slot.color.g or 255;
 			local blue=slot.color.b or 255;
 
-			ES.DBQuery(string.format("INSERT INTO `es_player_outfit` (id,slot,x,y,z,pitch,yaw,roll,red,green,blue) VALUES ("..ply:ESID()..",%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE slot=VALUES(slot), x=VALUES(x), y=VALUES(y), z=VALUES(z), pitch=VALUES(pitch), yaw=VALUES(yaw), roll=VALUES(roll), red=VALUES(red), green=VALUES(green), blue=VALUES(blue);",tostring(k),x,y,z,pitch,yaw,roll,red,green,blue));
+			ES.DBQuery(string.format("INSERT INTO `es_player_outfit` (steamid,slot,x,y,z,pitch,yaw,roll,red,green,blue) VALUES ("..ply:SteamID()..",%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE slot=VALUES(slot), x=VALUES(x), y=VALUES(y), z=VALUES(z), pitch=VALUES(pitch), yaw=VALUES(yaw), roll=VALUES(roll), red=VALUES(red), green=VALUES(green), blue=VALUES(blue);",tostring(k),x,y,z,pitch,yaw,roll,red,green,blue));
 		end
 	end
 
@@ -43,8 +43,8 @@ net.Receive("ES.Player.UpdateOutfit",function(len,ply)
 	net.Broadcast();
 end);
 
-hook.Add("PlayerInitialSpawn","ES.Outfit.LoadOOnSpawn",function(ply)
-	ES.DBQuery("SELECT * FROM `es_player_outfit` WHERE `id`="..ply:ESID().." LIMIT 6;",function(data)
+hook.Add("ESPlayerReady","ES.Outfit.LoadOOnSpawn",function(ply)
+	ES.DBQuery("SELECT * FROM `es_player_outfit` WHERE `steamid`='"..ply:SteamID().."' LIMIT 6;",function(data)
 		if not data[1] then return end
 		
 		ply._es_outfit={};

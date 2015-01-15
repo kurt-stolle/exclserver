@@ -25,7 +25,7 @@ function PLAYER:ESAddAchievementProgress(id,number)
 	
 	self.excl.achievements[id] = self.excl.achievements[id] and (self.excl.achievements[id] + number) or number;
 
-	ES.DBQuery("INSERT INTO es_achievements SET id = "..self:ESID()..", steamid = '"..self:SteamID().."', "..id.." = "..self.excl.achievements[id].." ON DUPLICATE KEY UPDATE  "..id.." = "..id.." + "..number..";");
+	ES.DBQuery("INSERT INTO es_achievements SET steamid = '"..self:SteamID().."', "..id.." = "..self.excl.achievements[id].." ON DUPLICATE KEY UPDATE  "..id.." = "..id.." + "..number..";");
 
 	if self.excl.achievements[id] >= ES.Achievements[id].progressNeeded then
 		net.Start("ESAchEarned");

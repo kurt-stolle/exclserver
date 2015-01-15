@@ -3,10 +3,10 @@
 util.AddNetworkString("ESNoRunRank");
 
 local esCmd= {}
-function ES:AddCommand(n,c,power)
+function ES.AddCommand(n,c,power)
 	esCmd[n] = {func = c, power = power};
 end
-function ES:RemoveCommand(n)
+function ES.RemoveCommand(n)
 	local c = 0;
 	for k,v in pairs(esCmd)do
 		c=c+1;

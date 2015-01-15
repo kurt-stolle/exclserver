@@ -44,7 +44,7 @@ net.Receive("exclNoRP",function()
 	local v = net.ReadEntity();
 	if not IsValid(p) or not IsValid(v) then return end
 	
-	ES:ChatAddText("accessdenied",Color(255,255,255),
+	ES.ChatAddText("accessdenied",Color(255,255,255),
 	exclFixCaps(p:ESGetRank().name).." ",
 	Color(102,255,51),p:Nick(),
 	Color(255,255,255),
@@ -62,9 +62,9 @@ net.Receive("exclRP",function()
 	if not IsValid(p) or not IsValid(v) then return end
 	
 	if r and r != "" and r != " " then
-		ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has respawned ",Color(102,255,51),v:Nick(),Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has respawned ",Color(102,255,51),v:Nick(),Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
 	else
-		ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has respawned ",Color(102,255,51),v:Nick(),Color(255,255,255,255),".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has respawned ",Color(102,255,51),v:Nick(),Color(255,255,255,255),".");
 	end
 	chat.PlaySound()
 end)

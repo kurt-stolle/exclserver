@@ -2,7 +2,7 @@
 local bansLoaded = false;
 local bans = {};
 
-function ES:AddBan(steamBanned,steamAdmin,time,global,reason,name,nameAdmin)
+function ES.AddBan(steamBanned,steamAdmin,time,global,reason,name,nameAdmin)
 	if not ES.ServerID or not steamBanned or not steamAdmin or not time then return end
 
 	local id = ES.ServerID;
@@ -25,13 +25,13 @@ function ES:AddBan(steamBanned,steamAdmin,time,global,reason,name,nameAdmin)
 
 	
 end
-function ES:RemoveBan(steamid)
+function ES.RemoveBan(steamid)
 	if not steamid then return end
 	
 	bans[steamid] = false;
 	ES.DBQuery("UPDATE es_bans SET unbanned = 1 WHERE steamid = '"..steamid.."';");
 end
-function ES:LoadBans()
+function ES.LoadBans()
 	ES.DBQuery("SELECT steamid,timeStart,time,reason FROM es_bans WHERE unbanned = 0 AND ((("..math.Round(os.time()/60).." - timeStart) < time ) OR time = 0 ) AND (serverid = 0 OR serverid = "..ES.ServerID..");",function(d)
 		ES.DebugPrint("Bans have been loaded.");
 		bansLoaded = true;
@@ -61,13 +61,13 @@ function ES:LoadBans()
 	end)
 end
 hook.Add("Initialize","ES.InitializeBans",function()
-	ES:LoadBans();
+	ES.LoadBans();
 	timer.Create("ES.RefreshBans",600,0,function()
-		ES:LoadBans()
+		ES.LoadBans()
 	end)
 end)
 
-function ES:CheckBans(steamid,userid)
+function ES.CheckBans(steamid,userid)
 	if !bansLoaded then
 		return false;
 	end

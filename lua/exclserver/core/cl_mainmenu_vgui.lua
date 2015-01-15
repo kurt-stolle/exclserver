@@ -490,14 +490,14 @@ function PNL:Init()
 	self.BaseClass.Init(self);
 end
 function PNL:Paint(w,h)
-	if not self.item or not ES.TrailsBuy[self.item] then  return end
+	if not self.item or not ES.Trails[self.item] then  return end
 
 	self.BaseClass.Paint(self,w,h);
 
-	if LocalPlayer():ESHasItem(self.item,ITEM_TRAIL) then
+	if LocalPlayer():ESHasItem(self.item,ES.ITEM_TRAIL) then
 		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
 	else
-		draw.SimpleText(ES.TrailsBuy[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
+		draw.SimpleText(ES.Trails[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
 	end
 	
 end
@@ -511,14 +511,14 @@ function PNL:Init()
 	self.BaseClass.Init(self);
 end
 function PNL:Paint(w,h)
-	if not self.item or not ES.AurasBuy[self.item] then  return end
+	if not self.item or not ES.Auras[self.item] then  return end
 	
 	self.BaseClass.Paint(self,w,h);
 
-	if LocalPlayer():ESHasItem(self.item,ITEM_TRAIL) then
+	if LocalPlayer():ESHasItem(self.item,ES.ITEM_TRAIL) then
 		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
 	else
-		draw.SimpleText(ES.AurasBuy[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
+		draw.SimpleText(ES.Auras[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
 	end
 	
 end
@@ -535,14 +535,14 @@ function PNL:Init()
 	self.BaseClass.Init(self);
 end
 function PNL:Paint(w,h)
-	if not self.item or not ES.ModelsBuy[self.item] then  return end
+	if not self.item or not ES.Models[self.item] then  return end
 	
 	self.BaseClass.Paint(self,w,h);
 
-	if LocalPlayer():ESHasItem(self.item,ITEM_MODEL) then
+	if LocalPlayer():ESHasItem(self.item,ES.ITEM_MODEL) then
 		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
 	else
-		draw.SimpleText(ES.ModelsBuy[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
+		draw.SimpleText(ES.Models[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
 	end
 end
 vgui.Register("esMMModelBuyTile",PNL,"ES.ItemTile");
@@ -554,18 +554,18 @@ function PNL:Init()
 	self.dummy = self:Add("Panel");
 end
 function PNL:Paint(w,h)
-	if not self.item or not ES.MeleeBuy[self.item] then  return end
+	if not self.item or not ES.MeleeWeapons[self.item] then  return end
 
 	self.BaseClass.Paint(self,w,h);
 
-	if LocalPlayer():ESHasItem(self.item,ITEM_MELEE) then
+	if LocalPlayer():ESHasItem(self.item,ES.ITEM_MELEE) then
 		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
 	else
-		draw.SimpleText(ES.MeleeBuy[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
+		draw.SimpleText(ES.MeleeWeapons[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
 	end
 	
 end
-vgui.Register("esMMMeleeBuyTile",PNL,"ES.ItemTile");
+vgui.Register("esMMMeleeWeaponsTile",PNL,"ES.ItemTile");
 
 --#### Inventory
 surface.CreateFont("esMMInventoryTitle",{
@@ -1060,7 +1060,7 @@ vgui.Register("esMMMusicPlayer",{
 		surface.SetDrawColor(ES.GetColorScheme(1));
 		surface.DrawRect(0,0,h,h);
 
-		local info = ES:GetMusicInfo();
+		local info = ES.GetMusicInfo();
 		if info.active then
 			draw.SimpleText("ll","esMMPlayButton",h/2,h/2,color_white,1,1);
 		else

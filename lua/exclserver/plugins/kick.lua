@@ -16,7 +16,7 @@ PLUGIN:AddCommand("kick",function(p,a)
 	for k,v in pairs(vTbl)do
 		if !v:ESIsImmuneTo(p) or v == p then 
 
-			ES:AddBan(v:SteamID(),p:SteamID(),10,true,"Kicked off ("..(r or "No reason given")..")",v:Nick(),p:Nick())
+			ES.AddBan(v:SteamID(),p:SteamID(),10,true,"Kicked off ("..(r or "No reason given")..")",v:Nick(),p:Nick())
 
 			exclDropUser(v:UserID(), "You were kicked off the server.\n"..(r or "No reason given"));
 			net.Start("exclKP");
@@ -25,7 +25,7 @@ PLUGIN:AddCommand("kick",function(p,a)
 			net.WriteString(r);
 			net.Broadcast();
 		else
-			ES:SendMessagePlayerTried(p,v:Nick(),"kick")
+			ES.SendMessagePlayerTried(p,v:Nick(),"kick")
 		end
 	end
 end,10);
@@ -45,9 +45,9 @@ net.Receive("exclKP",function()
 	if not IsValid(p) then return end
 	
 	if r and r != "" and r != " " then
-		ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has kicked ",Color(102,255,51),v,Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has kicked ",Color(102,255,51),v,Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
 	else
-		ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has kicked ",Color(102,255,51),v,Color(255,255,255,255),".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has kicked ",Color(102,255,51),v,Color(255,255,255,255),".");
 	end
 	chat.PlaySound()
 end)

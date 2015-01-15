@@ -50,10 +50,10 @@ hook.Add("InitPostEntity","ES.FixLadders",function()
 end)
 
 hook.Add("InitPostEntity","LoadMyStuff",function()
-	RunConsoleCommand("excl_internal_load");
+	net.Start("ES.PlayerReady") net.SendToServer();
 end)
 
-function ES:TauntCamera()
+function ES.TauntCamera()
 
     local CAM = {}
 
@@ -154,7 +154,7 @@ function ES:TauntCamera()
     return CAM;
 end
 
-local camera = ES:TauntCamera();
+local camera = ES.TauntCamera();
 hook.Add("CreateMove","ES.Taunt.HandleMove",function()
 	if LocalPlayer():IsPlayingTaunt() then return true end
 end)

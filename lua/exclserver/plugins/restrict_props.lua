@@ -4,7 +4,7 @@ PLUGIN:SetInfo("Prop restrict","Handles prop restrictions.","Excl")
 PLUGIN:AddCommand("restrictmodelname",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or not a[2] then return end
 	
-	ES:AddPropRestriction(a[1],tonumber(a[2]),a[3] and 0 or ES.ServerID)
+	ES.AddPropRestriction(a[1],tonumber(a[2]),a[3] and 0 or ES.ServerID)
 
 	net.Start("ESTellPropBlockAdded");
 	net.WriteString(a[1]);
@@ -18,7 +18,7 @@ PLUGIN:AddCommand("restrictmodel",function(p,a)
 	if not IsValid(mdl) or not mdl.GetModel then return end
 	mdl = mdl:GetModel();
 
-	ES:AddPropRestriction(mdl,tonumber(a[1]),a[2] and 0 or ES.ServerID)
+	ES.AddPropRestriction(mdl,tonumber(a[1]),a[2] and 0 or ES.ServerID)
 
 	net.Start("ESTellPropBlockAdded");
 	net.WriteString(mdl);
@@ -34,7 +34,7 @@ if SERVER then
 	util.AddNetworkString("ESTellPropBlockAdded");
 
 	ES.RestrictedProps = {};
-	ES:CreateSetting("props_blacklist_is_whitelist",0,true);
+	ES.CreateSetting("props_blacklist_is_whitelist",0,true);
 	hook.Add("ESDBDefineTables","w0wu9uwddwdwdwdwdww09dy0928y09h2",function()
 		ES.DBDefineTable("restrictions_props",false,"model varchar(255), serverid varchar(255), req int(8)");
 	end)
@@ -67,7 +67,7 @@ if SERVER then
 		model = string.Replace(model, "\\", "/")
 		model = string.gsub(model, "[\\/]+", "/")
 
-		if (ES:GetSetting("props_blacklist_is_whitelist") == 0 and ES.RestrictedProps[model]) or (ES:GetSetting("props_blacklist_is_whitelist") == 1 and !ES.RestrictedProps[model]) then
+		if (ES.GetSetting("props_blacklist_is_whitelist") == 0 and ES.RestrictedProps[model]) or (ES.GetSetting("props_blacklist_is_whitelist") == 1 and !ES.RestrictedProps[model]) then
 			if (ES.RestrictedProps[model] < 5 	and p:ESGetVIPTier() < ES.RestrictedProps[model] )
 			or (ES.RestrictedProps[model] == 5 	and !p:ESHasPower(20) )
 			or (ES.RestrictedProps[model] == 6 	and !p:ESHasPower(40) )
@@ -90,7 +90,7 @@ if SERVER then
 		end
 	end)
 
-	function ES:AddPropRestriction(model,tier,serverid)
+	function ES.AddPropRestriction(model,tier,serverid)
 		model = string.lower(model);
 		serverid = serverid or ES.ServerID;
 
@@ -111,13 +111,13 @@ elseif CLIENT then
 	net.Receive("ESTellPropBlockAdded",function()
 		local mdl = net.ReadString();
 		local tier = net.ReadString();
-		ES:ChatAddText("server",COLOR_EXCLSERVER,mdl,COLOR_WHITE," was added to the model blacklist (or whitelist) for everyone below ",COLOR_EXCLSERVER,tier,COLOR_WHITE,".");
+		ES.ChatAddText("server",COLOR_EXCLSERVER,mdl,COLOR_WHITE," was added to the model blacklist (or whitelist) for everyone below ",COLOR_EXCLSERVER,tier,COLOR_WHITE,".");
 	end)
 	net.Receive("ESTellPropBlocked",function()
 
 		local mdl = net.ReadString();
 		local rank = net.ReadString();
 		
-		ES:ChatAddText("error",COLOR_EXCLSERVER,mdl,COLOR_WHITE," is restricted to ",COLOR_EXCLSERVER,rank,COLOR_WHITE,".");
+		ES.ChatAddText("error",COLOR_EXCLSERVER,mdl,COLOR_WHITE," is restricted to ",COLOR_EXCLSERVER,rank,COLOR_WHITE,".");
 	end)	
 end

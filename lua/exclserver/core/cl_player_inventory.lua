@@ -1,62 +1,85 @@
 net.Receive("ESSynchInvAdd",function()
-	name = net.ReadString();
-	itemtype = net.ReadInt(8);
-	if itemtype == ITEM_TRAIL and LocalPlayer().excl then
-		if not LocalPlayer()._es_inventory_trails then
-			LocalPlayer()._es_inventory_trails = {name}
-			return;
-		end
-		LocalPlayer()._es_inventory_trails[#LocalPlayer()._es_inventory_trails + 1] = name;
-	elseif itemtype == ITEM_MODEL and LocalPlayer().excl then
-		if not LocalPlayer()._es_inventory_models then
-			LocalPlayer()._es_inventory_models = {name}
-			return;
-		end
-		LocalPlayer()._es_inventory_models[#LocalPlayer()._es_inventory_models + 1] = name;
-	elseif itemtype == ITEM_MELEE and LocalPlayer().excl then
-		if not LocalPlayer()._es_inventory_meleeweapons then
-			LocalPlayer()._es_inventory_meleeweapons = {name}
-			return;
-		end
-		LocalPlayer()._es_inventory_meleeweapons[#LocalPlayer()._es_inventory_meleeweapons + 1] = name;
-	end 
+	local name = net.ReadString();
+	local itemtype = net.ReadInt(8);
+	local tab_inventory;
+	local tab_items;
+
+	if itemtype == ES.ITEM_TRAIL then
+		tab_inventory=LocalPlayer()._es_inventory_trails;
+		tab_items=ES.Trails;
+	elseif itemtype == ES.ITEM_MODEL then
+		tab_inventory=LocalPlayer()._es_inventory_models;
+		tab_items=ES.Models;
+	elseif itemtype == ES.ITEM_MELEE then
+		tab_inventory=LocalPlayer()._es_inventory_meleeweapons;
+		tab_items=ES.MeleeWeapons;
+	elseif itemtype == ES.ITEM_AURA then
+		tab_inventory=LocalPlayer()._es_inventory_auras;
+		tab_items=ES.Auras;
+	elseif itemtype == ES.ITEM_PROP then
+		tab_inventory=LocalPlayer()._es_inventory_props;
+		tab_items=ES.Props;
+	end  
+
+	if type(tab) != "table" or not tab_items then return end
+
+
+	table.insert(tab_inventory,1,tab_items[name]);
 end)
 net.Receive("ESSynchInvRemove",function()
-	name = net.ReadString();
-	itemtype = net.ReadInt(8);
-	if itemtype == ITEM_TRAIL and LocalPlayer()._es_inventory_trails then
-		for k,v in pairs(LocalPlayer()._es_inventory_trails)do
-			if v == name then
-				table.remove(LocalPlayer()._es_inventory_trails,k);
-				return;
-			end
-		end
-	elseif itemtype == ITEM_MODEL and LocalPlayer()._es_inventory_models then
-		for k,v in pairs(LocalPlayer()._es_inventory_models)do
-			if v == name then
-				table.remove(LocalPlayer()._es_inventory_models,k);
-				return;
-			end
-		end
-	elseif itemtype == ITEM_MELEE and LocalPlayer()._es_inventory_meleeweapons then
-		for k,v in pairs(LocalPlayer()._es_inventory_meleeweapons)do
-			if v == name then
-				table.remove(LocalPlayer()._es_inventory_meleeweapons,k);
-				return;
-			end
-		end
+	local name = net.ReadString();
+	local itemtype = net.ReadInt(8);
+	local tab;
+
+	if itemtype == ES.ITEM_TRAIL then
+		tab=LocalPlayer()._es_inventory_trails;
+	elseif itemtype == ES.ITEM_MODEL then
+		tab=LocalPlayer()._es_inventory_models;
+	elseif itemtype == ES.ITEM_MELEE then
+		tab=LocalPlayer()._es_inventory_meleeweapons;
+	elseif itemtype == ES.ITEM_AURA then
+		tab=LocalPlayer()._es_inventory_auras;
+	elseif itemtype == ES.ITEM_PROP then
+		tab=LocalPlayer()._es_inventory_props;
 	end  
+
+	if type(tab) != "table" then return end
+
+	for k,v in ipairs(tab)do
+		if v == name then
+			table.remove(tab,k);
+			break;
+		end
+	end
 end)
 net.Receive("ESSynchInventory",function()
 	local t = net.ReadTable();
 
-	if not t.models or not t.trails or not t.meleeweapons or not t.auras then 
-		ES.DebugPrint("Received invalid inventory synchronization. Data was lost.");
-		return 
+	if not t.models or not t.trails or not t.meleeweapons or not t.auras or not t.props then 
+		ES.DebugPrint("Received invalid inventory synchronization. Data may be lost.");
 	end
 
-	LocalPlayer()._es_inventory_models = t.models;
-	LocalPlayer()._es_inventory_trails = t.trails;
-	LocalPlayer()._es_inventory_meleeweapons = t.meleeweapons;
-	LocalPlayer()._es_inventory_auras = t.auras
+	for itemtype,items in pairs(t) do
+		local temp={};
+		for k,v in ipairs(items)do
+			local tab_items;
+			if itemtype=="models" then
+				tab_items=ES.Models;
+			elseif itemtype=="trails" then
+				tab_items=ES.Trails;
+			elseif itemtype=="meleeweapons"then
+				tab_items=ES.MeleeWeapons;
+			elseif itemtype=="auras" then
+				tab_items=ES.Auras;
+			elseif itemtype=="props" then
+				tab_items=ES.Props;
+			end
+
+			if not tab_items then continue end
+			
+			table.insert(temp,tab_items[v]);
+		end
+
+		LocalPlayer()["_es_inventory_"..itemtype] = temp;
+	end
 end);

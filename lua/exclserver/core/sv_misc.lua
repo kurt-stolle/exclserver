@@ -1,7 +1,7 @@
 -- sv_misc.lua
 
 util.AddNetworkString("ESCmdOnlyOne");
-function ES:SendMessagePlayerTried(ply,vic,msg)
+function ES.SendMessagePlayerTried(ply,vic,msg)
 	net.Start("ESTriedRun");
 	net.WriteEntity(ply);
 	net.WriteString(vic);

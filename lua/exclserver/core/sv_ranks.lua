@@ -36,23 +36,27 @@ function PLAYER:ESSetRank(r,global)
 		end
 	end
 end
-function PLAYER:ESLoadRank()
-	if not ES.ServerID or not self.excl then return end
+hook.Add("ESPlayerReady","ES.Ranks.LoadOnReady",function(ply)
+	if not ES.ServerID then 
+		ES.DebugPrint("Failed to load rank for "..ply:Nick());
+		return
+	end
 	
-	ES.DBQuery("SELECT rank,serverid FROM `es_ranks` WHERE steamid = '"..self:SteamID().."' AND (serverid = 0 OR serverid = "..ES.ServerID..") LIMIT 2;",function(s)
-			if s and s[1] and IsValid(self) then
+	ES.DebugPrint("Loading rank for "..ply:Nick());
+	ES.DBQuery("SELECT rank,serverid FROM `es_ranks` WHERE steamid = '"..ply:SteamID().."' AND (serverid = 0 OR serverid = "..ES.ServerID..") LIMIT 2;",function(s)
+			if s and s[1] and IsValid(ply) then
 				for k,v in pairs(s)do
 					if v and v.rank and v.serverid and ES.Ranks[ v.rank ] then
 						if tonumber(v.serverid) == 0 and v.rank != "user" then
-							self._es_globalrank = v.rank;
+							ply._es_globalrank = v.rank;
 						else
-							self._es_localrank = v.rank;
+							ply._es_localrank = v.rank;
 						end
 					end
 				end
-				if self._es_globalrank or self._es_localrank then
-					self:ESSetNetworkedVariable("rank",self._es_globalrank or self._es_localrank);
+				if ply._es_globalrank or ply._es_localrank then
+					ply:ESSetNetworkedVariable("rank",ply._es_globalrank or ply._es_localrank);
 				end
 			end
 	end)
-end
+end);

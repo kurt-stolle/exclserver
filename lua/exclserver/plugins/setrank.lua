@@ -6,7 +6,7 @@ PLUGIN:AddCommand("rank",function(p,a)
 	if not vTbl or #vTbl > 1 then net.Start("exclSetRankOnlyOne"); net.Send(p); return end
 	
 	local r = a[2];
-	if not ES:RankExists(r) then return end
+	if not ES.RankExists(r) then return end
 	
 	local v = vTbl[1];
 

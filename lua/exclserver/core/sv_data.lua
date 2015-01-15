@@ -1,4 +1,5 @@
 -- Edit these variables to configurate MySQL.
+-- Edit these variables to configurate MySQL.
 -- You can download MySQL server from the official MySQL website.
 
 local DATABASE_HOST 	= "167.114.72.167";						-- (String) IPv4 IP of the mysql server.
@@ -14,7 +15,7 @@ require "mysqloo"
 ES.ServerID = 0;
 
 if not mysqloo then 
-	ES:DebugPrint("MySQLOO module not found. Please install the MySQLOO module before using ExclServer.");
+	ES.DebugPrint("MySQLOO module not found. Please install the MySQLOO module before using ExclServer.");
 	return;
 end
 local esDataTables = {};
@@ -66,7 +67,7 @@ function ES.DBDefineTable(name,onLoad,vars)
 	table.insert(esDataTables,{name = name,onLoad = (onLoad or false),vars = (vars or "")});
 end
 
-function ES:AddPlayerData(p,k,v,nosave)
+function ES.AddPlayerData(p,k,v,nosave)
 	v=tostring(v);
 	if not p.excl then 
 		p.excl = {} 
@@ -88,9 +89,9 @@ end)
 
 -- Some important queries.
 ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_settings` (`id` SMALLINT(5) unsigned NOT NULL, value int(10), name varchar(22), serverid tinyint(3) unsigned, PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;")
-ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player` (`id` int(10) unsigned NOT NULL, steamid varchar(100), inventory varchar(255), models varchar(255), trails varchar(255), meleeweapons varchar(255), auras varchar(255), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;")
-ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_fields` (`id` int(10) unsigned NOT NULL, PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;")
-ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_outfit` (`id` int(10) unsigned NOT NULL, slot int(8) unsigned NOT NULL, item varchar(255), x float(8,4), y float(8,4), z float(8,4), pitch float(8,5), yaw float(8,5), roll float(8,5), scale float(8,4), red int(3), green int(3), blue int(3), UNIQUE KEY (`id`, `slot`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;")
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_inventory` (`id` int(10) unsigned NOT NULL, steamid varchar(100), itemtype tinyint unsigned, name varchar(255), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;")
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_fields` (`id` int(10) unsigned NOT NULL, steamid varchar(100), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;")
+ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_outfit` (`id` int(10) unsigned NOT NULL, steamid varchar(100), slot int(8) unsigned NOT NULL, item varchar(255), x float(8,4), y float(8,4), z float(8,4), pitch float(8,5), yaw float(8,5), roll float(8,5), scale float(8,4), red int(3), green int(3), blue int(3), UNIQUE KEY (`id`, `slot`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;")
 ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_ranks` ( `id` int(10) unsigned NOT NULL AUTO_INCREMENT, steamid varchar(50), serverid int(10), rank varchar(100), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;" )
 ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_bans` (`ban_id` int(10) unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), steamidAdmin varchar(100), name varchar(100), nameAdmin varchar(100), serverid int(8), unbanned tinyint(1), time int(32), timeStart int(32), reason varchar(255), PRIMARY KEY (`ban_id`), UNIQUE KEY `ban_id` (`ban_id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 

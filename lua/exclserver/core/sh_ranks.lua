@@ -56,7 +56,7 @@ ES.SetupRank("owner","Server Owner"				,80) --
 
 -- grabbers
 local PLAYER = FindMetaTable("Player");
-function ES:RankExists(name)
+function ES.RankExists(name)
 	return !(not ES.Ranks[name]);
 end
 function PLAYER:ESIsRank(r)

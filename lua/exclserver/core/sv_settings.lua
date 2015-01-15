@@ -4,20 +4,20 @@
 ES.Settings = {};
 local settingIDs = {};
 local settingIDsGlobal = {};
-function ES:CreateSetting(name,default)
+function ES.CreateSetting(name,default)
 	if ES.PostInitialize then Error("setting "..name.." was defined after ES initialization!") return end
 
 	name = string.gsub(name," ","_");
 
 	ES.Settings[name] = default or 0;
 end
-function ES:GetSetting(name)
+function ES.GetSetting(name)
 	return ES.Settings[name] or 0;
 end
 local function booltonum(bool)
 	return tonumber(bool) or bool and 1 or 0;
 end
-function ES:SetSetting(name,value,serverid)
+function ES.SetSetting(name,value,serverid)
 	if not ES.Settings[name] then return end
 
 	serverid = serverid or 0;

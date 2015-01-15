@@ -78,11 +78,11 @@ net.Receive("exclRestrTool",function()
 	local rank = net.ReadString();
 	if not IsValid(p) then return end
 	
-	ES:ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has restricted ",Color(102,255,51),exclFixCaps(tool),Color(255,255,255,255)," to "..rank..".");
+	ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has restricted ",Color(102,255,51),exclFixCaps(tool),Color(255,255,255,255)," to "..rank..".");
 end)
 net.Receive("exclNoTool",function()
 	local tool = net.ReadString();
 	local rank = net.ReadString();
 	
-	ES:ChatAddText("error",COLOR_EXCLSERVER,exclFixCaps(tool),COLOR_WHITE," is restricted to ",COLOR_EXCLSERVER,rank,COLOR_WHITE,".");
+	ES.ChatAddText("error",COLOR_EXCLSERVER,exclFixCaps(tool),COLOR_WHITE," is restricted to ",COLOR_EXCLSERVER,rank,COLOR_WHITE,".");
 end)

@@ -5,7 +5,7 @@ require "geoip";
 if not GeoIP then ES.DebugPrint("Failed to load GeoIP module.") return end
 
 util.AddNetworkString("ESSendPlayerInfo")
-ES:AddCommand("info",function(p,a)
+ES.AddCommand("info",function(p,a)
 	if not p:ESHasPower(20) or not a or not a[1] then p:ChatPrint("You are not authorized to use this command") return end
 
 	local targ = exclPlayerByName(a[1]);

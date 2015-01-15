@@ -29,7 +29,7 @@ net.Receive("exclAdminChat",function()
 	local msg = net.ReadString();
 	if not IsValid(p) or not msg then return end
 
-	ES:ChatAddText("medal",Color(255,255,255),"# ",exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255),": "..msg);
+	ES.ChatAddText("medal",Color(255,255,255),"# ",exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255),": "..msg);
 	chat.PlaySound()
 end)
 PLUGIN();

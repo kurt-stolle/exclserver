@@ -22,7 +22,7 @@ net.Receive("exclAnnouce",function()
 	local m = net.ReadString();
 	if not IsValid(p) then return end
 
-	ES:ChatAddText("announce",Color(255,255,255),"(ANNOUNCEMENT) "..exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255),": "..m);
+	ES.ChatAddText("announce",Color(255,255,255),"(ANNOUNCEMENT) "..exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255),": "..m);
 	chat.PlaySound()
 end)
 PLUGIN();

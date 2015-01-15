@@ -23,11 +23,11 @@ hook.Add("ESPlayerReady","ES.NetworkVars.LoadPlayerData",function(ply)
 	if select[1] then
 		select=table.concat(select,", ");
 
-		ES.DBQuery(string.format("SELECT %s FROM `es_player_fields` WHERE `id`=%s LIMIT 1;",select,tostring(ply:ESID())),function(data)
+		ES.DBQuery(string.format("SELECT %s FROM `es_player_fields` WHERE `steamid`='%s' LIMIT 1;",select,ply:SteamID()),function(data)
 			ES.DebugPrint("Loaded networked variables saved from "..ply:Nick());
 
 			if not data[1] then 
-				ES.DBQuery("INSERT INTO `es_player_fields` (id,steamid) VALUES("..ply:ESID()..",'"..ply:SteamID().."');");
+				ES.DBQuery("INSERT INTO `es_player_fields` (steamid) VALUES('"..ply:SteamID().."');");
 				ply:ESSetNetworkedVariable("bananas",100);
 
 				ES.DebugPrint("Created an ExclServer profile for "..ply:Nick());
@@ -189,20 +189,17 @@ timer.Create("ES.NetworkPlayers",.2,0,function()
 		net.WriteEntity(ply);
 		net.WriteUInt(#tab,8);
 		for _,v in ipairs(tab)do
-
+			kind=ES.NetworkedVariables[v.key].type;
+			
+			ES.DebugPrint("Syncing networked variable '"..v.key.."' ("..tostring(v.value)..") for "..ply:Nick());
 			if ES.NetworkedVariables[v.key].save and not tab.noSave then
 				if kind=="String" then
-					v.value="'"..v.value.."'";
+					v.value="'"..ES.DBEscape(v.value).."'";
 				end
-				ES.DBQuery("UPDATE `es_player_fields` SET `"..v.key.."`="..ES.DBEscape(tostring(v.value)).." WHERE `id`="..ply:ESID()..";");
-
-				ES.DebugPrint("Synchronized networked variable "..v.key.." with clients and database for "..ply:Nick());
-			else
-				ES.DebugPrint("Synchronized networked variable "..v.key.." with clients for "..ply:Nick());
+				ES.DBQuery("UPDATE `es_player_fields` SET `"..v.key.."`="..tostring(v.value).." WHERE `steamid`='"..ply:SteamID().."';");
 			end
 
 			net.WriteString(v.key);
-			kind=ES.NetworkedVariables[v.key].type;
 			if kind == "String" then
 				net.WriteString(v.value);
 				continue;

@@ -16,7 +16,7 @@ end,20);
 PLUGIN:AddCommand("mapvote",function(p,a)
 	if not p or not p:IsValid() then return end
 
-	ES:StartMapVote();
+	ES.StartMapVote();
 end,10);
 PLUGIN:AddCommand("addmap",function(p,a)
 	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
@@ -38,6 +38,6 @@ net.Receive("exclChMap",function()
 	local m = net.ReadString();
 	if not IsValid(p) then return end
 
-	ES:ChatAddText("global",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p,Color(255,255,255)," has changed the map to ",Color(102,255,51),m);
+	ES.ChatAddText("global",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p,Color(255,255,255)," has changed the map to ",Color(102,255,51),m);
 	chat.PlaySound()
 end)

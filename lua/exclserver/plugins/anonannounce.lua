@@ -18,7 +18,7 @@ if SERVER then
 end
 net.Receive("exclAnnouceAnon",function()
 	local m = net.ReadString();
-	ES:ChatAddText("announce",Color(255,255,255),"(ANNOUNCEMENT) "..m);
+	ES.ChatAddText("announce",Color(255,255,255),"(ANNOUNCEMENT) "..m);
 	chat.PlaySound()
 end)
 PLUGIN();

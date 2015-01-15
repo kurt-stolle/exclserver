@@ -1,10 +1,22 @@
 -- sh_melee
 -- melee weapons
 
-ES.MeleeBuy = {}
+ES.MeleeWeapons = {}
 
-function ES:AddMelee(n,d,p,model,viewmodel,holdtype)
-	ES.MeleeBuy[string.lower(n)] = {name = n, descr = d, cost = p, model = model, viewmodel = viewmodel,holdtype = holdtype}; 
+function ES.AddMelee(n,d,p,t,viewmodel,holdtype)
+	local tab=ES.Item( ES.ITEM_MELEE );
+	tab:SetName(n);
+	tab:SetDescription(d);
+	tab:SetCost(p);
+	if file.Exists(t,"GAME") then
+		tab:SetModel(t);
+	else
+		ES.DebugPrint("Prevented unknown model: "..t);
+	end
+	tab.viewmodel = viewmodel;
+	tab.holdtype = holdtype;
+
+	table.insert(ES.MeleeWeapons,tab);
 end
 
 ES.MeleeBaseClass = "excl_crowbar";
@@ -12,7 +24,7 @@ ES.MeleeBaseClass = "excl_crowbar";
 local PLAYER = FindMetaTable("Player");
 function PLAYER:ESGetMeleeWeapon()
 	if not self.excl or not self.excl.activemelee then return false end
-	return ES.MeleeBuy[self.excl.activemelee];
+	return ES.MeleeWeapons[self.excl.activemelee];
 end
 local emeta = FindMetaTable("Weapon");
 function emeta:ESIsMelee()
@@ -40,15 +52,14 @@ function PLAYER:ESReplaceMelee()
 	end
 end
 
-hook.Add("Initialize","exclInitCustomMelee",function()
-	 -- works on most of my gamemodes...
+--[[hook.Add("PostGamemodeLoaded","ES.Melee.InitializeOverride",function()
 	if gmod.GetGamemode().Name == "Trouble in Terrorist Town" then
 		ES.MeleeBaseClass = "weapon_zm_improvised"
 	elseif gmod.GetGamemode().Name == "JailBreak" then
 		ES.MeleeBaseClass = "jb_knife"
 	end
 
-	for k,v in pairs(ES.MeleeBuy)do
+	for k,v in pairs(ES.MeleeWeapons)do
 		weapons.Register({
 			WorldModel = v.model,
 			ViewModel = v.viewmodel,
@@ -57,6 +68,6 @@ hook.Add("Initialize","exclInitCustomMelee",function()
 			GetClass = function() return "es_melee_"..string.gsub(string.lower(v.name)," ","_") end,
 		},"es_melee_"..string.gsub(string.lower(v.name)," ","_"))
 	end
-end)
+end)]]
 
-ES:AddMelee("Sword","A katana from ancient times",3000,"models/weapons/w_katana.mdl","models/weapons/v_katana.mdl","melee2")
+ES.AddMelee("Sword","A katana from ancient times",3000,"models/weapons/w_katana.mdl","models/weapons/v_katana.mdl","melee2")

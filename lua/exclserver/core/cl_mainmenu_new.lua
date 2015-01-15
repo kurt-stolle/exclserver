@@ -79,23 +79,23 @@ function makePurchaseConfirmer(cost,item,typ)
 			if pnlConfirm and IsValid(pnlConfirm) then pnlConfirm:Remove() end
 			
 			local sType = "trail"
-			if typ == ITEM_TRAIL then
+			if typ == ES.ITEM_TRAIL then
 				sType = "trail"
 				--LocalPlayer().excl.activetrail = item;
 				--table.insert(LocalPlayer()._es_inventory_trails,item);
-			elseif typ == ITEM_MELEE then
+			elseif typ == ES.ITEM_MELEE then
 				sType = "melee"
 				--LocalPlayer().excl.activemelee = item;
 				--table.insert(LocalPlayer()._es_inventory_meleeweapons,item);
-			elseif typ == ITEM_MODEL then
+			elseif typ == ES.ITEM_MODEL then
 				sType = "model"
 				--LocalPlayer().excl.activemodel = item;
 				--table.insert(LocalPlayer()._es_inventory_models,item);
-			elseif typ == ITEM_AURA then
+			elseif typ == ES.ITEM_AURA then
 				sType = "aura"
 				--LocalPlayer().excl.activeaura = item;
 				--table.insert(LocalPlayer()._es_inventory_auras,item);
-			elseif typ == ITEM_PROP then
+			elseif typ == ES.ITEM_PROP then
 				sType = "prop"
 				--LocalPlayer():ESGetInventory():AddItem(item,1);
 			end
@@ -134,7 +134,7 @@ local function addCheckbox(help,txt,convar,x,y,oncheck)
 	end
 	togOwn:SetChecked(GetConVar(convar):GetBool());
 end
-function ES:CreateMainMenu()
+function ES.CreateMainMenu()
 	if mm and IsValid(mm) then mm:Remove(); end
 	
 	mm = vgui.Create("ESMainMenu");
@@ -272,11 +272,11 @@ function ES:CreateMainMenu()
 						return;
 					end
 
-					makePurchaseConfirmer(ES.Items[self:GetParent().item].cost,self:GetParent().item,ITEM_PROP);
+					makePurchaseConfirmer(ES.Items[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_PROP);
 				end
 
 
-				local maxPages = math.ceil(table.Count(ES:GetBuyableItems())/rowsTotal);
+				local maxPages = math.ceil(table.Count(ES.GetBuyableItems())/rowsTotal);
 				local lblPage = Label("Page "..page.."/"..maxPages,p)
 				local butPrev = vgui.Create("esIconButton",p)
 				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
@@ -349,7 +349,7 @@ function ES:CreateMainMenu()
 					local count = 0;
 					local curRow = 0;
 					local curNum = 0;
-					for k,v in pairs(ES:GetBuyableItems() or {})do	
+					for k,v in pairs(ES.GetBuyableItems() or {})do	
 						
 						count_all = count_all + 1;
 						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
@@ -441,12 +441,12 @@ function ES:CreateMainMenu()
 				buyBtn:SetSize(100,30);
 				buyBtn.Text = "Buy";
 				buyBtn.DoClick = function(self)
-					if not self:GetParent().item or not ES.TrailsBuy[self:GetParent().item] then return end
+					if not self:GetParent().item or not ES.Trails[self:GetParent().item] then return end
 
-					makePurchaseConfirmer(ES.TrailsBuy[self:GetParent().item].cost,self:GetParent().item,ITEM_TRAIL);
+					makePurchaseConfirmer(ES.Trails[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_TRAIL);
 				end
 
-				local maxPages = math.ceil(table.Count(ES.TrailsBuy)/rowsTotal);
+				local maxPages = math.ceil(table.Count(ES.Trails)/rowsTotal);
 				local lblPage = Label("Page "..page.."/"..maxPages,p)
 				local butPrev = vgui.Create("esIconButton",p)
 				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
@@ -514,7 +514,7 @@ function ES:CreateMainMenu()
 						if IsValid(v) then v:Remove() end
 					end
 
-					for k,v in pairs(ES.TrailsBuy or {})do	
+					for k,v in pairs(ES.Trails or {})do	
 						count_all = count_all + 1;
 						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
 							continue;
@@ -555,7 +555,7 @@ function ES:CreateMainMenu()
 				createIcons()
 				if not first then return end
 
-				local info = ES.TrailsBuy[first]
+				local info = ES.Trails[first]
 
 				pnlInfo.item = first;
 				lblInfo:SetText(info.name);
@@ -605,12 +605,12 @@ function ES:CreateMainMenu()
 				buyBtn:SetSize(100,30);
 				buyBtn.Text = "Buy";
 				buyBtn.DoClick = function(self)
-					if not self:GetParent().item or not ES.MeleeBuy[self:GetParent().item] then return end
+					if not self:GetParent().item or not ES.MeleeWeapons[self:GetParent().item] then return end
 
-					makePurchaseConfirmer(ES.MeleeBuy[self:GetParent().item].cost,self:GetParent().item,ITEM_MELEE);
+					makePurchaseConfirmer(ES.MeleeWeapons[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_MELEE);
 				end
 
-				local maxPages = math.ceil(table.Count(ES.MeleeBuy)/rowsTotal);
+				local maxPages = math.ceil(table.Count(ES.MeleeWeapons)/rowsTotal);
 				local lblPage = Label("Page "..page.."/"..maxPages,p)
 				local butPrev = vgui.Create("esIconButton",p)
 				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
@@ -675,14 +675,14 @@ function ES:CreateMainMenu()
 					local count = 0;
 					local curRow = 0;
 					local curNum = 0;
-					for k,v in pairs(ES.MeleeBuy or {})do	
+					for k,v in pairs(ES.MeleeWeapons or {})do	
 						
 						count_all = count_all + 1;
 						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
 							continue;
 						end
 						if not first then first = k end
-						local icon = vgui.Create("esMMMeleeBuyTile",p);
+						local icon = vgui.Create("esMMMeleeWeaponsTile",p);
 						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.02;
 
 						curNum = curNum + 1;
@@ -717,7 +717,7 @@ function ES:CreateMainMenu()
 				createIcons()
 				if not first then return end
 
-				local info = ES.MeleeBuy[first]
+				local info = ES.MeleeWeapons[first]
 
 				pnlInfo.item = first;
 				lblInfo:SetText(info.name);
@@ -771,18 +771,18 @@ function ES:CreateMainMenu()
 				buyBtn:SetSize(100,30);
 				buyBtn.Text = "Buy";
 				buyBtn.DoClick = function(self)
-					if not self:GetParent().item or not ES.ModelsBuy[self:GetParent().item] then return end
+					if not self:GetParent().item or not ES.Models[self:GetParent().item] then return end
 
-					if ES.ModelsBuy[self:GetParent().item].VIPOnly and LocalPlayer():ESGetVIPTier() <= 2 then
+					if ES.Models[self:GetParent().item].VIPOnly and LocalPlayer():ESGetVIPTier() <= 2 then
 						openNeedVIP("gold")
 						return;
 					end
 
-					makePurchaseConfirmer(ES.ModelsBuy[self:GetParent().item].cost,self:GetParent().item,ITEM_MODEL);
+					makePurchaseConfirmer(ES.Models[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_MODEL);
 				end
 
 
-				local maxPages = math.ceil(table.Count(ES.ModelsBuy)/rowsTotal);
+				local maxPages = math.ceil(table.Count(ES.Models)/rowsTotal);
 				local lblPage = Label("Page "..page.."/"..maxPages,p)
 				local butPrev = vgui.Create("esIconButton",p)
 				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
@@ -855,7 +855,7 @@ function ES:CreateMainMenu()
 					local count = 0;
 					local curRow = 0;
 					local curNum = 0;
-					for k,v in pairs(ES.ModelsBuy or {})do	
+					for k,v in pairs(ES.Models or {})do	
 						
 						count_all = count_all + 1;
 						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
@@ -884,7 +884,7 @@ function ES:CreateMainMenu()
 								lblInfo:SizeToContents();
 								lblInfoTxt:SetText(v.descr);
 								lblInfoTxt:SizeToContents();
-								mdl:SetModel(ES.ModelsBuy[k].model)
+								mdl:SetModel(ES.Models[k].model)
 							end
 						end
 
@@ -895,7 +895,7 @@ function ES:CreateMainMenu()
 				createIcons()
 				if not first then return end
 
-				local info = ES.ModelsBuy[first]
+				local info = ES.Models[first]
 
 				pnlInfo.item = first;
 				lblInfo:SetText(info.name);
@@ -943,18 +943,18 @@ function ES:CreateMainMenu()
 				buyBtn:SetSize(100,30);
 				buyBtn.Text = "Buy";
 				buyBtn.DoClick = function(self)
-					if not self:GetParent().item or not ES.AurasBuy[self:GetParent().item] then return end
+					if not self:GetParent().item or not ES.Auras[self:GetParent().item] then return end
 
-					if ES.AurasBuy[self:GetParent().item].VIPOnly and LocalPlayer():ESGetVIPTier() <= 2 then
+					if ES.Auras[self:GetParent().item].VIPOnly and LocalPlayer():ESGetVIPTier() <= 2 then
 						openNeedVIP("gold")
 						return;
 					end
 
-					makePurchaseConfirmer(ES.AurasBuy[self:GetParent().item].cost,self:GetParent().item,ITEM_AURA);
+					makePurchaseConfirmer(ES.Auras[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_AURA);
 				end
 
 
-				local maxPages = math.ceil(table.Count(ES.AurasBuy)/rowsTotal);
+				local maxPages = math.ceil(table.Count(ES.Auras)/rowsTotal);
 				local lblPage = Label("Page "..page.."/"..maxPages,p)
 				local butPrev = vgui.Create("esIconButton",p)
 				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
@@ -1027,7 +1027,7 @@ function ES:CreateMainMenu()
 					local count = 0;
 					local curRow = 0;
 					local curNum = 0;
-					for k,v in pairs(ES.AurasBuy or {})do	
+					for k,v in pairs(ES.Auras or {})do	
 						
 						count_all = count_all + 1;
 						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
@@ -1056,7 +1056,7 @@ function ES:CreateMainMenu()
 								lblInfo:SizeToContents();
 								lblInfoTxt:SetText(v.descr);
 								lblInfoTxt:SizeToContents();
-								mdl:SetMaterial(ES.AurasBuy[k].text)
+								mdl:SetMaterial(ES.Auras[k].text)
 							end
 						end
 
@@ -1067,7 +1067,7 @@ function ES:CreateMainMenu()
 				createIcons()
 				if not first then return end
 
-				local info = ES.AurasBuy[first]
+				local info = ES.Auras[first]
 
 				pnlInfo.item = first;
 				lblInfo:SetText(info.name);
@@ -1268,7 +1268,7 @@ function ES:CreateMainMenu()
 					if k < 1 then
 						return "models/player/Group01/Male_02.mdl"
 					else
-						return ES.ModelsBuy[ models[k] ].model
+						return ES.Models[ models[k] ].model
 					end
 				end
 				
@@ -1291,8 +1291,8 @@ function ES:CreateMainMenu()
 					surface.SetDrawColor(Color(45,45,45))
 					surface.DrawRect(0,5,w,h-5)
 					draw.SimpleText("Model","esMMInventoryTitle",10,10,COLOR_WHITE);
-					if LocalPlayer().excl.activemodel and ES.ModelsBuy[LocalPlayer().excl.activemodel] then
-						draw.SimpleText(ES.ModelsBuy[LocalPlayer().excl.activemodel].name,"ESDefaultBold",15,h-30,COLOR_WHITE);
+					if LocalPlayer().excl.activemodel and ES.Models[LocalPlayer().excl.activemodel] then
+						draw.SimpleText(ES.Models[LocalPlayer().excl.activemodel].name,"ESDefaultBold",15,h-30,COLOR_WHITE);
 						return
 					end
 					
@@ -1370,16 +1370,16 @@ function ES:CreateMainMenu()
 					local y = 0;
 					local x = 0;
 					for k,v in pairs(LocalPlayer()._es_inventory_auras or {}) do
-						if not ES:ValidItem(v,ITEM_AURA) then continue end
+						if not ES.ValidItem(v,ES.ITEM_AURA) then continue end
 						
 						local ic = invAuras.PanelInventory:Add("esMMAuraInventoryTile");
 						ic:SetPos(x*100,y*100);
 						ic:SetSize(100,100);
 						ic.item = v;
-						ic.icon:SetMaterial(ES.AurasBuy[v].text);
-						ic.text = ES.AurasBuy[v].name
+						ic.icon:SetMaterial(ES.Auras[v].text);
+						ic.text = ES.Auras[v].name
 						ic.OnMouseReleased = function()
-							iconAura:SetMaterial(ES.AurasBuy[v].text);
+							iconAura:SetMaterial(ES.Auras[v].text);
 							iconAura:SetVisible(true);
 							invAuras.rm:SetVisible(true);
 							
@@ -1410,16 +1410,16 @@ function ES:CreateMainMenu()
 					local y = 0;
 					local x = 0;
 					for k,v in pairs(LocalPlayer()._es_inventory_trails or {})do
-						if not ES:ValidItem(v,ITEM_TRAIL) then continue end
+						if not ES.ValidItem(v,ES.ITEM_TRAIL) then continue end
 						
 						local ic = invTrails.PanelInventory:Add("esMMTrailInventoryTile");
 						ic:SetPos(x*100,y*100);
 						ic:SetSize(100,100);
 						ic.item = v;
-						ic.icon:SetImage(ES.TrailsBuy[v].text);
-						ic.text = ES.TrailsBuy[v].name
+						ic.icon:SetImage(ES.Trails[v].text);
+						ic.text = ES.Trails[v].name
 						ic.OnMouseReleased = function()
-							iconTrail:SetImage(ES.TrailsBuy[v].text);
+							iconTrail:SetImage(ES.Trails[v].text);
 							iconTrail:SetVisible(true);
 							invTrails.rm:SetVisible(true);
 
@@ -1438,8 +1438,8 @@ function ES:CreateMainMenu()
 				iconTrail:SetSize(90,90);
 				iconTrail:SetPos(5,5);
 
-				if LocalPlayer().excl.activetrail and ES.TrailsBuy[LocalPlayer().excl.activetrail] then
-					iconTrail:SetImage(ES.TrailsBuy[LocalPlayer().excl.activetrail].text);
+				if LocalPlayer().excl.activetrail and ES.Trails[LocalPlayer().excl.activetrail] then
+					iconTrail:SetImage(ES.Trails[LocalPlayer().excl.activetrail].text);
 					invTrails.rm:SetVisible(true);
 				end
 
@@ -1454,16 +1454,16 @@ function ES:CreateMainMenu()
 					local y = 0;
 					local x = 0;
 					for k,v in pairs(LocalPlayer()._es_inventory_meleeweapons or {})do
-						if not ES:ValidItem(v,ITEM_MELEE) then continue end
+						if not ES.ValidItem(v,ES.ITEM_MELEE) then continue end
 						
 						local ic = invMelee.PanelInventory:Add("esMMMeleeInventoryTile");
 						ic:SetPos(x*100,y*100);
 						ic:SetSize(100,100);
 						ic.item = v;
-						ic.icon:SetModel(ES.MeleeBuy[v].model);
-						ic.text = ES.MeleeBuy[v].name
+						ic.icon:SetModel(ES.MeleeWeapons[v].model);
+						ic.text = ES.MeleeWeapons[v].name
 						ic.OnMouseReleased = function()
-							iconMelee:SetModel(ES.MeleeBuy[v].model);
+							iconMelee:SetModel(ES.MeleeWeapons[v].model);
 							iconMelee:SetVisible(true);
 							invMelee.rm:SetVisible(true);
 							
@@ -1482,8 +1482,8 @@ function ES:CreateMainMenu()
 				iconMelee:SetSize(90,90);
 				iconMelee:SetPos(5,5);
 
-				if LocalPlayer().excl.activemelee and ES.MeleeBuy[LocalPlayer().excl.activemelee] then
-					iconMelee:SetModel(ES.MeleeBuy[LocalPlayer().excl.activemelee].model);
+				if LocalPlayer().excl.activemelee and ES.MeleeWeapons[LocalPlayer().excl.activemelee] then
+					iconMelee:SetModel(ES.MeleeWeapons[LocalPlayer().excl.activemelee].model);
 					invMelee.rm:SetVisible(true);
 				else
 					iconMelee:SetVisible(false);
@@ -1595,7 +1595,7 @@ function ES:CreateMainMenu()
 					DComboBox:SetPos( 105,eqpnl:GetTall()-10-20 )
 					DComboBox:SetSize( eqpnl:GetWide()-105-10, 20 )
 					DComboBox:SetValue( boneSelected )
-					for k,v in pairs(ES.ItemBones)do
+					for k,v in pairs(ES.PropBones)do
 						DComboBox:AddChoice( v )
 					end
 					DComboBox.OnSelect = function( panel, index, value, data )
@@ -1926,7 +1926,7 @@ Go here to donate: www.CasualBananas.com/forums/donate.php, click anywhere on th
 text to copy this URL to your clipboard (in your browser, press CTRL+V in the URL 
 field to paste)
 Every $1 you donate will get you 1000 bananas.]];
-		if ES:IsCasualFriday() then
+		if ES.IsCasualFriday() then
 			txt = txt..[[
 Because today is Casual Friday, bronze VIP is 50% off!]]
 		end
@@ -1950,7 +1950,7 @@ Because today is Casual Friday, bronze VIP is 50% off!]]
 		tbl.headColors[4] = Color(245,184,0);
 		tbl.headColors[5] = Color(201,53,71);
 		tbl.itemPrice[2] = (1 - curtier) * 5000;
-		if ES:IsCasualFriday() then
+		if ES.IsCasualFriday() then
 			tbl.itemPrice[2] = math.Round( tbl.itemPrice[2] * 0.5 );
 		end
 		if tbl.itemPrice[2] < 0 then tbl.itemPrice[2] = 0; end
@@ -2357,13 +2357,13 @@ mm:AddButton("Website",Material("icon16/world.png"),function()
 
 end
 
-net.Receive("ESToggleMenu",function() ES:CreateMainMenu() end);
+net.Receive("ESToggleMenu",function() ES.CreateMainMenu() end);
 
 local was_pressed = false;
 hook.Add("Think","exclMMOpenWithF5",function()
 	if input.IsKeyDown(KEY_F6) and not was_pressed then
 		was_pressed = true;
-		ES:CreateMainMenu()
+		ES.CreateMainMenu()
 	elseif not input.IsKeyDown(KEY_F6) then
 		was_pressed = false;
 	end

@@ -41,13 +41,13 @@ end
 function meta:Load()
 	self.disabled = false;
 	for k,v in pairs(self.commands)do
-		ES:AddCommand(k,v.func,v.rank)
+		ES.AddCommand(k,v.func,v.rank)
 	end
 end
 function meta:UnLoad()
 	self.disabled = true;
 	for k,v in pairs(self.commands)do
-		ES:RemoveCommand(k.func)
+		ES.RemoveCommand(k.func)
 	end
 end
 function meta:SetRank(r)

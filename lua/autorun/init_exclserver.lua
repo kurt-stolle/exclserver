@@ -1,9 +1,4 @@
-if SERVER then
 AddCSLuaFile()
-
-resource.AddFile("materials/prisonbreak/gradient.vmt");
-resource.AddFile("materials/exclserver/bananas.png");
-end
 
 -- Tables and variables
 local cvarDebug = CreateConVar("excl_debug","0",{FCVAR_ARCHIVE})
@@ -28,7 +23,7 @@ COLOR_EXCLSERVER_DEBUG = Color(213,213,213,255);
 function ES.DebugPrint(s)
 	if not cvarDebug:GetBool() or not s then return end
 	
-	MsgC(SERVER and COLOR_EXCLSERVER_DEBUG_SERVER or COLOR_EXCLSERVER_DEBUG_CLIENT," [ExclServer] ");
+	MsgC(SERVER and COLOR_EXCLSERVER_DEBUG_SERVER or COLOR_EXCLSERVER_DEBUG_CLIENT,"[ES] ");
 	MsgC(COLOR_EXCLSERVER_DEBUG,tostring(s).."\n");
 end
 ES.DebugPrint("Initializing ExclServer @ version "..ES.version);
@@ -85,7 +80,6 @@ end
 ES.IncludeFolder ("exclserver/util");
 ES.IncludeFolder ("exclserver/core");
 ES.IncludeFolder ("exclserver/vgui", "cl");
-ES.IncludeFolder ("exclserver/items", "sh");
 ES.IncludeFolder ("exclserver/plugins", "sh");
 
 ES.PostInitialize = true;

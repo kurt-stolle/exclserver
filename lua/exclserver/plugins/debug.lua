@@ -21,6 +21,6 @@ net.Receive("exclDebugListUsers",function()
 	local tbl = net.ReadTable();
 	
 	for k,v in pairs(tbl)do
-		ES:ChatAddText("error",Color(255,255,255),v:Nick());
+		ES.ChatAddText("error",Color(255,255,255),v:Nick());
 	end
 end)
