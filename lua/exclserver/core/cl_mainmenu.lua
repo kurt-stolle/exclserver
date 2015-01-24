@@ -15,7 +15,7 @@ to all other servers.
 
 ExclServer is created and constructed by Excl.]]
 
-surface.CreateFont("Coolvetica28",{
+surface.CreateFont("ES.MainMenu.HeadingText",{
 	font = "Roboto",
 	size = 28,
 })
@@ -32,96 +32,12 @@ function openNeedVIP(tier)
 	needvip:Center();
 	needvip:MakePopup();
 end
-local workingon;
-function openWorkingOnIt()
-	if workingon and IsValid(workingon) then workingon:Remove() end
-	workingon= vgui.Create("esFrame");
-	workingon:SetTitle("Sorry!");
-	local l = Label("This feature is not yet implemented.\nI'm working on getting this all to work.\n\n~ Excl",workingon)
-	l:SetPos(15,45);
-	l:SizeToContents();
-	l:SetColor(COLOR_WHITE);
-	workingon:SetSize(15+l:GetWide()+15,45+l:GetTall()+15);
-	workingon:Center();
-	workingon:MakePopup();
-end
-local pnlConfirm;
-function makePurchaseConfirmer(cost,item,typ)
-	if pnlConfirm and IsValid(pnlConfirm) then pnlConfirm:Remove() end
-	pnlConfirm = vgui.Create("esFrame");
-	if LocalPlayer():ESHasItem(item,typ) then
-		pnlConfirm:SetTitle("Nope");
-		local l = Label("You already own this item.\nSilly you!",pnlConfirm)
-		l:SetPos(15,45);
-		l:SizeToContents();
-		l:SetColor(COLOR_WHITE);
-		pnlConfirm:SetSize(15+l:GetWide()+15,45+l:GetTall()+15);
-	elseif LocalPlayer():ESGetBananas() < cost then
-		pnlConfirm:SetTitle("Nope");
-		local l = Label("It would appear that you do not have enough bananas.\nTry again when you have enough bananas to make this purchase.",pnlConfirm)
-		l:SetPos(15,45);
-		l:SizeToContents();
-		l:SetColor(COLOR_WHITE);
-		pnlConfirm:SetSize(15+l:GetWide()+15,45+l:GetTall()+15);
-	else
-		if pnlConfirm and IsValid(pnlConfirm) then pnlConfirm:Remove() end
-		pnlConfirm = vgui.Create("esFrame");
-		pnlConfirm:SetTitle("Are you sure");
-		local l = Label("You're about to buy an item for "..cost.." bananas.\nThere are no refunds, make sure you selected the right item.\nAre you sure you want to make this purchase?",pnlConfirm)
-		l:SetPos(15,45);
-		l:SizeToContents();
-		l:SetColor(COLOR_WHITE);
-		local b = pnlConfirm:Add("esButton")
-		b:SetSize(((15+l:GetWide()+15)/2)-15,30);
-		b:SetPos(10,l.y+l:GetTall()+10);
-		b.Text = "Confirm"
-		b.DoClick = function()
-			if pnlConfirm and IsValid(pnlConfirm) then pnlConfirm:Remove() end
-			
-			local sType = "trail"
-			if typ == ES.ITEM_TRAIL then
-				sType = "trail"
-				--LocalPlayer().excl.activetrail = item;
-				--table.insert(LocalPlayer()._es_inventory_trails,item);
-			elseif typ == ES.ITEM_MELEE then
-				sType = "melee"
-				--LocalPlayer().excl.activemelee = item;
-				--table.insert(LocalPlayer()._es_inventory_meleeweapons,item);
-			elseif typ == ES.ITEM_MODEL then
-				sType = "model"
-				--LocalPlayer().excl.activemodel = item;
-				--table.insert(LocalPlayer()._es_inventory_models,item);
-			elseif typ == ES.ITEM_AURA then
-				sType = "aura"
-				--LocalPlayer().excl.activeaura = item;
-				--table.insert(LocalPlayer()._es_inventory_auras,item);
-			elseif typ == ES.ITEM_PROP then
-				sType = "prop"
-				--LocalPlayer():ESGetInventory():AddItem(item,1);
-			end
-
-
-			RunConsoleCommand("excl","buy",item,sType);
-		end
-		local b = pnlConfirm:Add("esButton")
-		b:SetSize(((15+l:GetWide()+15)/2)-15,30);
-		b:SetPos(10+10+b:GetWide(),l.y+l:GetTall()+10);
-		b.DoClick = function()
-			if pnlConfirm and IsValid(pnlConfirm) then pnlConfirm:Remove() end
-		end
-		b.Text = "Cancel"
-		b.Evil = true;
-		pnlConfirm:SetSize(15+l:GetWide()+15,b.y+b:GetTall()+15);
-	end
-	pnlConfirm:Center();
-	pnlConfirm:MakePopup();
-end
 
 local function addCheckbox(help,txt,convar,x,y,oncheck)
 
 	local togOwn = vgui.Create("esToggleButton",help);
 	togOwn:SetPos(x,y);
-	togOwn:SetSize(help:GetWide()-30,22);
+	togOwn:SetSize(help:GetWide()-30,30);
 	togOwn.Text = txt
 	togOwn.DoClick = function(self)
 		if self:GetChecked() then
@@ -132,8 +48,10 @@ local function addCheckbox(help,txt,convar,x,y,oncheck)
 			oncheck(togOwn);
 		end
 	end
-	togOwn:SetChecked(GetConVar(convar):GetBool());
+
+	togOwn:SetChecked(GetConVarNumber(convar) == 1);
 end
+
 function ES.CreateMainMenu()
 	if mm and IsValid(mm) then mm:Remove(); end
 	
@@ -145,7 +63,7 @@ function ES.CreateMainMenu()
 	--### main items
 	mm:AddButton("Main",Material("icon16/car.png"),function() 
 		mm:OpenChoisePanel({
-			{icon = Material("exclserver/help.png"), name = "Help",func = function()
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Help",func = function()
 				local p = mm:OpenFrame(640)
 				p:SetTitle("Help");
 				local l = Label(helpText,p);
@@ -153,23 +71,23 @@ function ES.CreateMainMenu()
 				l:SetPos(15,15);
 				l:SizeToContents();
 			end},
-			{icon = Material("exclserver/settings.png"), name = "Settings",func = function()
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Settings",func = function()
 				local p = mm:OpenFrame(300)
 				p:SetTitle("Settings");
 
-				addCheckbox(p,"Hide all trails","excl_trails_disable",15,15,function()
+				addCheckbox(p,"Disable trails","es_trails_disable",15,15,function()
 					timer.Simple(.5,function()
 						RunConsoleCommand( "excl_trails_reload")
 					end);
 				end);
-				--addCheckbox(p,"Hide all hats","excl_hats_disable",15,15+22+5,function() end);
+				addCheckbox(p,"Bind ExclServer to F6","es_bind_to_f6",15,15+22+5+22+5,function() end);
 			end},
-			{icon = Material("icon32/wand.png"), name = "Colors",func = function()
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Colors",func = function()
 				local p = mm:OpenFrame(300)
 				p:SetTitle("Colors");
 
 				local l = Label("Color scheme",p)
-				l:SetFont("Coolvetica28");
+				l:SetFont("ES.MainMenu.HeadingText");
 				l:SetPos(15,15);
 				l:SizeToContents();
 				l:SetColor(COLOR_WHITE);
@@ -225,864 +143,26 @@ function ES.CreateMainMenu()
 	--mm:AddWhitespace();
 	mm:AddButton("Shop",Material("icon16/basket.png"),function() 
 		mm:OpenChoisePanel({
-			{icon = Material("exclserver/bananas.png"), name = "Items",func = function()
-				local p = mm:OpenFrame();
-				p:SetTitle("Items shop");
-
-				local mdl = p:Add("DModelPanel");
-				mdl:SetSize(500,500);
-				mdl:SetPos(p:GetWide()-380,p:GetTall()-501);
-				mdl:SetLookAt(Vector(0,0,50));
-				mdl:SetCamPos(Vector(100,100,50));
-				mdl:SetVisible(false);
-
-				local createIcons; -- prototype
-				local rowsX = math.floor((p:GetWide()-15-15-200)/105);
-				local rowsY = math.floor((p:GetTall()-15-100)/105);
-				local rowsTotal = rowsX * rowsY;
-				local icons = {}
-				local page = 1;
-				local first;
-				local pnlInfo = p:Add("esPanel");
-				pnlInfo:SetSize(rowsX*105 - 5,100);
-				pnlInfo:SetPos(15,p:GetTall()-(100) - 15);
-				pnlInfo.color = Color(250,250,250);
-				pnlInfo.item = 0;
-
-				local lblInfo = Label("No item selected",pnlInfo);
-				lblInfo:SetColor(Color(0,0,0,220));
-				lblInfo:SetPos(12,8);
-				lblInfo:SetFont("Coolvetica28");
-				lblInfo:SizeToContents();
-
-				local lblInfoTxt = Label("",pnlInfo);
-				lblInfoTxt:SetPos(15,lblInfo.y+lblInfo:GetTall());
-				lblInfoTxt:SizeToContents();
-				lblInfoTxt:SetColor(Color(0,0,0,210))
-
-				local buyBtn = vgui.Create("esButton",pnlInfo);
-				buyBtn:SetPos(pnlInfo:GetWide()-110,pnlInfo:GetTall()-10-30);
-				buyBtn:SetSize(100,30);
-				buyBtn.Text = "Buy";
-				buyBtn.DoClick = function(self)
-					if not self:GetParent().item or not ES.Items[self:GetParent().item] then return end
-
-					if ES.Items[self:GetParent().item]:GetVIPOnly() and LocalPlayer():ESGetVIPTier() <= 0 then
-						openNeedVIP("bronze")
-						return;
-					end
-
-					makePurchaseConfirmer(ES.Items[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_PROP);
-				end
-
-
-				local maxPages = math.ceil(table.Count(ES.GetBuyableItems())/rowsTotal);
-				local lblPage = Label("Page "..page.."/"..maxPages,p)
-				local butPrev = vgui.Create("esIconButton",p)
-				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butPrev:SetSize(32,32);
-				butPrev:SetPos(15 + rowsX*105 +10,15);
-				butPrev.DoClick = function(self)
-					page = page - 1;
-					if page < 1 then page = 1 end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butPrev.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page-1 < 1 then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,180);
-
-				end
-				local butNext = vgui.Create("esIconButton",p)
-				butNext:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butNext:SetSize(32,32);
-				butNext:SetPos(butPrev.x + 32 + 15,15);
-				butNext.DoClick = function(self)
-					page = page + 1;
-					if page > maxPages then page = maxPages end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butNext.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page+1 > maxPages then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,0);
-
-				end
-				
-				lblPage:SetColor(COLOR_WHITE);
-				lblPage:SetFont("ESDefaultBold");
-				lblPage:SetPos(butPrev.x, butPrev.y + butPrev:GetTall() + 15);
-				lblPage:SizeToContents();
-
-
-
-				buyBtn:SetVisible(false);
-				local icons = {}
-				createIcons = function()
-					for k,v in pairs(icons)do
-						if v and IsValid(v) then
-							v:Remove();
-						end
-					end
-					icons = {};
-
-					local count_all = 0;
-					local count = 0;
-					local curRow = 0;
-					local curNum = 0;
-					for k,v in pairs(ES.GetBuyableItems() or {})do	
-						
-						count_all = count_all + 1;
-						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
-							continue;
-						end
-						if not first then first = k end
-						local icon = vgui.Create("esMMItemBuyTile",p);
-						icon.delay=CurTime() + (k-1-((page-1)*rowsTotal))*.02;
-
-						curNum = curNum + 1;
-
-						if curNum > rowsX then
-							curRow = curRow + 1;
-							curNum = 1;
-						end
-
-						icon:SetSize(105,105);
-						icon:SetPos(15 + (curNum-1)*105,15 + curRow*105);
-						icon:PerformLayout();
-						icon.icon:SetModel(v.model);
-						icon.text = v.name;
-						icon.item = v.id;
-						icon.OnMouseReleased = function()
-							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
-								pnlInfo.item = v.id;
-								lblInfo:SetText(v.name);
-								lblInfo:SizeToContents();
-								lblInfoTxt:SetText(v.descr);
-								lblInfoTxt:SizeToContents();
-								mdl:SetModel(v:GetModel());
-								mdl:SetVisible(true);
-
-								buyBtn:SetVisible(true);
-							end
-						end
-
-						table.insert(icons,icon);
-						count = count + 1;
-					end
-				end
-				createIcons()
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Items",func = function()
+				ES._MMGenerateShop(mm,"Prop",ES.ITEM_PROP)
 			end},
-			
-			{icon = Material("exclserver/editor.png"), name = "Trails",func = function()
-				local p = mm:OpenFrame()
-				p:SetTitle("Trails shop");
-
-				local previewIcons = {};
-				local function buildPreview(material)
-					for k,v in pairs(previewIcons)do if IsValid(v) then v:Remove() end end
-					local icons = math.ceil(p:GetTall()/80);
-					for i=0,icons-1 do
-						local ic = vgui.Create("DImage",p);
-						ic:SetSize(100,100);
-						ic:SetImage(material);
-						ic:SetPos(p:GetWide()-130,i*100);
-
-						table.insert(previewIcons,ic);
-					end
-				
-				end
-
-				local rowsX = math.floor((p:GetWide()-15-15-200)/105);
-				local rowsY = math.floor((p:GetTall()-15-100)/105);
-				local rowsTotal = rowsX * rowsY;
-				local icons = {}
-				local page = 1;
-				local first;
-				local createIcons;
-				local pnlInfo = p:Add("esPanel");
-				pnlInfo:SetSize(rowsX*105 - 5,100);
-				pnlInfo:SetPos(15,p:GetTall()-(100) - 15);
-				pnlInfo.color = Color(250,250,250);
-				pnlInfo.item = 0;
-
-				local lblInfo = Label("No more items",pnlInfo);
-				lblInfo:SetColor(Color(0,0,0,220));
-				lblInfo:SetPos(12,8);
-				lblInfo:SetFont("Coolvetica28");
-				lblInfo:SizeToContents();
-
-				local lblInfoTxt = Label("You already have all items",pnlInfo);
-				lblInfoTxt:SetPos(15,lblInfo.y+lblInfo:GetTall());
-				lblInfoTxt:SizeToContents();
-				lblInfoTxt:SetColor(Color(0,0,0,210))
-
-				local buyBtn = vgui.Create("esButton",pnlInfo);
-				buyBtn:SetPos(pnlInfo:GetWide()-110,pnlInfo:GetTall()-10-30);
-				buyBtn:SetSize(100,30);
-				buyBtn.Text = "Buy";
-				buyBtn.DoClick = function(self)
-					if not self:GetParent().item or not ES.Trails[self:GetParent().item] then return end
-
-					makePurchaseConfirmer(ES.Trails[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_TRAIL);
-				end
-
-				local maxPages = math.ceil(table.Count(ES.Trails)/rowsTotal);
-				local lblPage = Label("Page "..page.."/"..maxPages,p)
-				local butPrev = vgui.Create("esIconButton",p)
-				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butPrev:SetSize(32,32);
-				butPrev:SetPos(15 + rowsX*105 +10,15);
-				butPrev.DoClick = function(self)
-					page = page - 1;
-					if page < 1 then page = 1 end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butPrev.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page-1 < 1 then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,180);
-
-				end
-				local butNext = vgui.Create("esIconButton",p)
-				butNext:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butNext:SetSize(32,32);
-				butNext:SetPos(butPrev.x + 32 + 15,15);
-				butNext.DoClick = function(self)
-					page = page + 1;
-					if page > maxPages then page = maxPages end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butNext.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page+1 > maxPages then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,0);
-
-				end
-				
-				lblPage:SetColor(COLOR_WHITE);
-				lblPage:SetFont("ESDefaultBold");
-				lblPage:SetPos(butPrev.x, butPrev.y + butPrev:GetTall() + 15);
-				lblPage:SizeToContents();
-
-				buyBtn:SetVisible(false);
-				createIcons = function()
-					local count_all = 0;
-					local count = 0;
-					local curRow = 0;
-					local curNum = 0;
-
-					for k,v in pairs(icons) do
-						if IsValid(v) then v:Remove() end
-					end
-
-					for k,v in pairs(ES.Trails or {})do	
-						count_all = count_all + 1;
-						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
-							continue;
-						end
-						if not first then first = k end
-						local icon = vgui.Create("esMMTrailBuyTile",p);
-						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.02;
-
-						curNum = curNum + 1;
-
-						if curNum > rowsX then
-							curRow = curRow + 1;
-							curNum = 1;
-						end
-
-						icon:SetSize(105,105);
-						icon:SetPos(15 + (curNum-1)*105,10 + curRow*105);
-						icon:PerformLayout();
-						icon.icon:SetImage(v.text);
-						icon.text = v.name;
-						icon.item = k;
-						icon.OnMouseReleased = function()
-							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
-								pnlInfo.item = k;
-								lblInfo:SetText(v.name);
-								lblInfo:SizeToContents();
-								lblInfoTxt:SetText(v.descr);
-								lblInfoTxt:SizeToContents();
-								buildPreview(v.text)
-							end
-						end
-
-						table.insert(icons,icon);
-
-						count = count + 1;
-					end
-				end
-				createIcons()
-				if not first then return end
-
-				local info = ES.Trails[first]
-
-				pnlInfo.item = first;
-				lblInfo:SetText(info.name);
-				lblInfo:SizeToContents();
-				lblInfoTxt:SetText(info.descr);
-				lblInfoTxt:SizeToContents();
-				buyBtn:SetVisible(true);
-				buildPreview(info.text);
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Trails",func = function()
+				ES._MMGenerateShop(mm,"Trail",ES.ITEM_TRAIL)
 			end},
-			{icon = Material("exclserver/melee.png"), name = "Melee",func = function()
-				local p = mm:OpenFrame()
-				p:SetTitle("Melee weapon shop");
-
-				local mdl = p:Add("DModelPanel");
-				mdl:SetSize(500,500);
-				mdl:SetPos(p:GetWide()-380,p:GetTall()-501);
-				mdl:SetLookAt(Vector(0,0,0));
-				mdl:SetCamPos(Vector(38,18,0));
-				mdl:SetVisible(false);
-
-				local createIcons; -- prototype
-				local rowsX = math.floor((p:GetWide()-15-15-200)/105);
-				local rowsY = math.floor((p:GetTall()-15-100)/105);
-				local rowsTotal = rowsX * rowsY;
-				local icons = {}
-				local page = 1;
-				local first;
-				local pnlInfo = p:Add("esPanel");
-				pnlInfo:SetSize(rowsX*105 - 5,100);
-				pnlInfo:SetPos(15,p:GetTall()-(100) - 15);
-				pnlInfo.color = Color(250,250,250);
-				pnlInfo.item = 0;
-
-				local lblInfo = Label("No more items",pnlInfo);
-				lblInfo:SetColor(Color(0,0,0,220));
-				lblInfo:SetPos(12,8);
-				lblInfo:SetFont("Coolvetica28");
-				lblInfo:SizeToContents();
-
-				local lblInfoTxt = Label("You already have all items",pnlInfo);
-				lblInfoTxt:SetPos(15,lblInfo.y+lblInfo:GetTall());
-				lblInfoTxt:SizeToContents();
-				lblInfoTxt:SetColor(Color(0,0,0,210))
-
-				local buyBtn = vgui.Create("esButton",pnlInfo);
-				buyBtn:SetPos(pnlInfo:GetWide()-110,pnlInfo:GetTall()-10-30);
-				buyBtn:SetSize(100,30);
-				buyBtn.Text = "Buy";
-				buyBtn.DoClick = function(self)
-					if not self:GetParent().item or not ES.MeleeWeapons[self:GetParent().item] then return end
-
-					makePurchaseConfirmer(ES.MeleeWeapons[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_MELEE);
-				end
-
-				local maxPages = math.ceil(table.Count(ES.MeleeWeapons)/rowsTotal);
-				local lblPage = Label("Page "..page.."/"..maxPages,p)
-				local butPrev = vgui.Create("esIconButton",p)
-				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butPrev:SetSize(32,32);
-				butPrev:SetPos(15 + rowsX*105 +10,15);
-				butPrev.DoClick = function(self)
-					page = page - 1;
-					if page < 1 then page = 1 end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butPrev.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page-1 < 1 then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,180);
-
-				end
-				local butNext = vgui.Create("esIconButton",p)
-				butNext:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butNext:SetSize(32,32);
-				butNext:SetPos(butPrev.x + 32 + 15,15);
-				butNext.DoClick = function(self)
-					page = page + 1;
-					if page > maxPages then page = maxPages end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butNext.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page+1 > maxPages then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,0);
-
-				end
-				
-				lblPage:SetColor(COLOR_WHITE);
-				lblPage:SetFont("ESDefaultBold");
-				lblPage:SetPos(butPrev.x, butPrev.y + butPrev:GetTall() + 15);
-				lblPage:SizeToContents();
-
-
-
-				buyBtn:SetVisible(false);
-				createIcons = function()
-					local count_all = 0;
-					local count = 0;
-					local curRow = 0;
-					local curNum = 0;
-					for k,v in pairs(ES.MeleeWeapons or {})do	
-						
-						count_all = count_all + 1;
-						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
-							continue;
-						end
-						if not first then first = k end
-						local icon = vgui.Create("esMMMeleeWeaponsTile",p);
-						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.02;
-
-						curNum = curNum + 1;
-
-						if curNum > rowsX then
-							curRow = curRow + 1;
-							curNum = 1;
-						end
-
-						icon:SetSize(105,105);
-						icon:SetPos(15 + (curNum-1)*105,15 + curRow*105);
-						icon:PerformLayout();
-						icon.icon:SetModel(v.model);
-						icon.text = v.name;
-						icon.item = k;
-						icon.OnMouseReleased = function()
-							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
-								pnlInfo.item = k;
-								lblInfo:SetText(v.name);
-								lblInfo:SizeToContents();
-								lblInfoTxt:SetText(v.descr);
-								lblInfoTxt:SizeToContents();
-								mdl:SetModel(v.model);
-								mdl:SetVisible(true);
-							end
-						end
-
-						table.insert(icons,icon);
-						count = count + 1;
-					end
-				end
-				createIcons()
-				if not first then return end
-
-				local info = ES.MeleeWeapons[first]
-
-				pnlInfo.item = first;
-				lblInfo:SetText(info.name);
-				lblInfo:SizeToContents();
-				lblInfoTxt:SetText(info.descr);
-				lblInfoTxt:SizeToContents();
-				buyBtn:SetVisible(true);
-				mdl:SetModel(info.model);
-				mdl:SetVisible(true);
-
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Melee",func = function()
+				ES._MMGenerateShop(mm,"Melee",ES.ITEM_MELEE)
 			end},
-			{icon = Material("exclserver/effects.png"), name = "Models",func = function()
-				local p = mm:OpenFrame()
-				p:SetTitle("Models shop");
-
-				local mdl = p:Add("esMMHatPreview");
-				mdl.useCurrentHat = true;
-				mdl:SetSize(500,500);
-				mdl:SetModel(Model("models/player/Group01/male_07.mdl"));
-				mdl:SetPos(p:GetWide()-380,p:GetTall()-501);
-				mdl:SetLookAt(Vector(0,0,62));
-				mdl:SetCamPos(Vector(38,18,64));
-				function mdl:LayoutEntity() end
-
-				local createIcons; -- prototype
-				local rowsX = math.floor((p:GetWide()-15-15-200)/105);
-				local rowsY = math.floor((p:GetTall()-15-100)/105);
-				local rowsTotal = rowsX * rowsY;
-				local icons = {}
-				local page = 1;
-				local first;
-				local pnlInfo = p:Add("esPanel");
-				pnlInfo:SetSize(rowsX*105 - 5,100);
-				pnlInfo:SetPos(15,p:GetTall()-(100) - 15);
-				pnlInfo.color = Color(250,250,250);
-				pnlInfo.item = 0;
-
-				local lblInfo = Label("No more items",pnlInfo);
-				lblInfo:SetColor(Color(0,0,0,220));
-				lblInfo:SetPos(12,8);
-				lblInfo:SetFont("Coolvetica28");
-				lblInfo:SizeToContents();
-
-				local lblInfoTxt = Label("You already have all items",pnlInfo);
-				lblInfoTxt:SetPos(15,lblInfo.y+lblInfo:GetTall());
-				lblInfoTxt:SizeToContents();
-				lblInfoTxt:SetColor(Color(0,0,0,210))
-
-				local buyBtn = vgui.Create("esButton",pnlInfo);
-				buyBtn:SetPos(pnlInfo:GetWide()-110,pnlInfo:GetTall()-10-30);
-				buyBtn:SetSize(100,30);
-				buyBtn.Text = "Buy";
-				buyBtn.DoClick = function(self)
-					if not self:GetParent().item or not ES.Models[self:GetParent().item] then return end
-
-					if ES.Models[self:GetParent().item].VIPOnly and LocalPlayer():ESGetVIPTier() <= 2 then
-						openNeedVIP("gold")
-						return;
-					end
-
-					makePurchaseConfirmer(ES.Models[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_MODEL);
-				end
-
-
-				local maxPages = math.ceil(table.Count(ES.Models)/rowsTotal);
-				local lblPage = Label("Page "..page.."/"..maxPages,p)
-				local butPrev = vgui.Create("esIconButton",p)
-				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butPrev:SetSize(32,32);
-				butPrev:SetPos(15 + rowsX*105 +10,15);
-				butPrev.DoClick = function(self)
-					page = page - 1;
-					if page < 1 then page = 1 end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butPrev.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page-1 < 1 then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,180);
-
-				end
-				local butNext = vgui.Create("esIconButton",p)
-				butNext:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butNext:SetSize(32,32);
-				butNext:SetPos(butPrev.x + 32 + 15,15);
-				butNext.DoClick = function(self)
-					page = page + 1;
-					if page > maxPages then page = maxPages end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butNext.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page+1 > maxPages then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,0);
-
-				end
-				
-				lblPage:SetColor(COLOR_WHITE);
-				lblPage:SetFont("ESDefaultBold");
-				lblPage:SetPos(butPrev.x, butPrev.y + butPrev:GetTall() + 15);
-				lblPage:SizeToContents();
-
-
-
-				buyBtn:SetVisible(false);
-				local icons = {}
-				createIcons = function()
-					for k,v in pairs(icons)do
-						if v and IsValid(v) then
-							v:Remove();
-						end
-					end
-					icons = {};
-
-					local count_all = 0;
-					local count = 0;
-					local curRow = 0;
-					local curNum = 0;
-					for k,v in pairs(ES.Models or {})do	
-						
-						count_all = count_all + 1;
-						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
-							continue;
-						end
-						if not first then first = k end
-						local icon = vgui.Create("esMMModelBuyTile",p);
-						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.02;
-						curNum = curNum + 1;
-
-						if curNum > rowsX then
-							curRow = curRow + 1;
-							curNum = 1;
-						end
-
-						icon:SetSize(105,105);
-						icon:SetPos(15 + (curNum-1)*105,15 + curRow*105);
-						icon:PerformLayout();
-						icon.icon:SetModel(v.model);
-						icon.text = v.name;
-						icon.item = k;
-						icon.OnMouseReleased = function()
-							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
-								pnlInfo.item = k;
-								lblInfo:SetText(v.name);
-								lblInfo:SizeToContents();
-								lblInfoTxt:SetText(v.descr);
-								lblInfoTxt:SizeToContents();
-								mdl:SetModel(ES.Models[k].model)
-							end
-						end
-
-						table.insert(icons,icon);
-						count = count + 1;
-					end
-				end
-				createIcons()
-				if not first then return end
-
-				local info = ES.Models[first]
-
-				pnlInfo.item = first;
-				lblInfo:SetText(info.name);
-				lblInfo:SizeToContents();
-				lblInfoTxt:SetText(info.descr);
-				lblInfoTxt:SizeToContents();
-				buyBtn:SetVisible(true);
-				mdl:SetModel(info.model);
-
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Models",func = function()
+				ES._MMGenerateShop(mm,"Model",ES.ITEM_MODEL)
 			end},
-			{icon = Material("exclserver/effects.png"), name = "Auras",func = function()
-				local p = mm:OpenFrame()
-				p:SetTitle("Aura shop");
-
-				local mdl = p:Add("DImage");
-				mdl:SetSize(256,256);
-				mdl:SetPos(p:GetWide()-200,p:GetTall()-330);
-
-				local createIcons; -- prototype
-				local rowsX = math.floor((p:GetWide()-15-15-200)/105);
-				local rowsY = math.floor((p:GetTall()-15-100)/105);
-				local rowsTotal = rowsX * rowsY;
-				local icons = {}
-				local page = 1;
-				local first;
-				local pnlInfo = p:Add("esPanel");
-				pnlInfo:SetSize(rowsX*105 - 5,100);
-				pnlInfo:SetPos(15,p:GetTall()-(100) - 15);
-				pnlInfo.color = Color(250,250,250);
-				pnlInfo.item = 0;
-
-				local lblInfo = Label("No more items",pnlInfo);
-				lblInfo:SetColor(Color(0,0,0,220));
-				lblInfo:SetPos(12,8);
-				lblInfo:SetFont("Coolvetica28");
-				lblInfo:SizeToContents();
-
-				local lblInfoTxt = Label("You already have all items",pnlInfo);
-				lblInfoTxt:SetPos(15,lblInfo.y+lblInfo:GetTall());
-				lblInfoTxt:SizeToContents();
-				lblInfoTxt:SetColor(Color(0,0,0,210))
-
-				local buyBtn = vgui.Create("esButton",pnlInfo);
-				buyBtn:SetPos(pnlInfo:GetWide()-110,pnlInfo:GetTall()-10-30);
-				buyBtn:SetSize(100,30);
-				buyBtn.Text = "Buy";
-				buyBtn.DoClick = function(self)
-					if not self:GetParent().item or not ES.Auras[self:GetParent().item] then return end
-
-					if ES.Auras[self:GetParent().item].VIPOnly and LocalPlayer():ESGetVIPTier() <= 2 then
-						openNeedVIP("gold")
-						return;
-					end
-
-					makePurchaseConfirmer(ES.Auras[self:GetParent().item].cost,self:GetParent().item,ES.ITEM_AURA);
-				end
-
-
-				local maxPages = math.ceil(table.Count(ES.Auras)/rowsTotal);
-				local lblPage = Label("Page "..page.."/"..maxPages,p)
-				local butPrev = vgui.Create("esIconButton",p)
-				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butPrev:SetSize(32,32);
-				butPrev:SetPos(15 + rowsX*105 +10,15);
-				butPrev.DoClick = function(self)
-					page = page - 1;
-					if page < 1 then page = 1 end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butPrev.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page-1 < 1 then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,180);
-
-				end
-				local butNext = vgui.Create("esIconButton",p)
-				butNext:SetIcon(Material("exclserver/mmarrowicon.png"));
-				butNext:SetSize(32,32);
-				butNext:SetPos(butPrev.x + 32 + 15,15);
-				butNext.DoClick = function(self)
-					page = page + 1;
-					if page > maxPages then page = maxPages end;
-
-					createIcons();
-					lblPage:SetText("Page "..page.."/"..maxPages)
-					lblPage:SizeToContents();
-				end
-				butNext.Paint = function(self,w,h)
-					if not self.Mat then return end
-					
-					surface.SetMaterial(self.Mat)
-					if page+1 > maxPages then
-						surface.SetDrawColor(Color(150,150,150));
-					else
-						surface.SetDrawColor(COLOR_WHITE);
-					end
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,0);
-
-				end
-				
-				lblPage:SetColor(COLOR_WHITE);
-				lblPage:SetFont("ESDefaultBold");
-				lblPage:SetPos(butPrev.x, butPrev.y + butPrev:GetTall() + 15);
-				lblPage:SizeToContents();
-
-
-
-				buyBtn:SetVisible(false);
-				local icons = {}
-				createIcons = function()
-					for k,v in pairs(icons)do
-						if v and IsValid(v) then
-							v:Remove();
-						end
-					end
-					icons = {};
-
-					local count_all = 0;
-					local count = 0;
-					local curRow = 0;
-					local curNum = 0;
-					for k,v in pairs(ES.Auras or {})do	
-						
-						count_all = count_all + 1;
-						if count >= rowsTotal  or count_all < (page-1) * rowsTotal then
-							continue;
-						end
-						if not first then first = k end
-						local icon = vgui.Create("esMMAuraBuyTile",p);
-						icon.delay=CurTime() + ((count_all-1)-((page-1)*rowsTotal))*.02;
-						curNum = curNum + 1;
-
-						if curNum > rowsX then
-							curRow = curRow + 1;
-							curNum = 1;
-						end
-
-						icon:SetSize(105,105);
-						icon:SetPos(15 + (curNum-1)*105,15 + curRow*105);
-						icon:PerformLayout();
-						icon.icon:SetMaterial(v.text);
-						icon.text = v.name;
-						icon.item = k;
-						icon.OnMouseReleased = function()
-							if IsValid(pnlInfo) and IsValid(lblInfo) and IsValid(lblInfoTxt) then
-								pnlInfo.item = k;
-								lblInfo:SetText(v.name);
-								lblInfo:SizeToContents();
-								lblInfoTxt:SetText(v.descr);
-								lblInfoTxt:SizeToContents();
-								mdl:SetMaterial(ES.Auras[k].text)
-							end
-						end
-
-						table.insert(icons,icon);
-						count = count + 1;
-					end
-				end
-				createIcons()
-				if not first then return end
-
-				local info = ES.Auras[first]
-
-				pnlInfo.item = first;
-				lblInfo:SetText(info.name);
-				lblInfo:SizeToContents();
-				lblInfoTxt:SetText(info.descr);
-				lblInfoTxt:SizeToContents();
-				buyBtn:SetVisible(true);
-				mdl:SetMaterial(info.text);
-
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Auras",func = function()
+				ES._MMGenerateShop(mm,"Aura",ES.ITEM_AURA)
 			end}
-		}) 
+		})
 	end)
 	mm:AddButton("Inventory",Material("icon16/plugin.png"),function() 
 		mm:OpenChoisePanel({
-			{icon = Material("exclserver/bananas.png"), name = "Items",func = function()
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Items",func = function()
 				local p = mm:OpenFrame();
 				p:SetTitle("Items inventory");
 
@@ -1109,7 +189,7 @@ function ES.CreateMainMenu()
 				local lblInfo = Label("No item selected",pnlInfo);
 				lblInfo:SetColor(Color(0,0,0,220));
 				lblInfo:SetPos(12,8);
-				lblInfo:SetFont("Coolvetica28");
+				lblInfo:SetFont("ES.MainMenu.HeadingText");
 				lblInfo:SizeToContents();
 
 				local lblInfoTxt = Label("",pnlInfo);
@@ -1250,7 +330,7 @@ function ES.CreateMainMenu()
 				end
 				createIcons()
 			end},
-			{icon = Material("exclserver/editor.png"), name = "Effects",func = function()
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Effects",func = function()
 				--mm:CloseChoisePanel()
 				local p = mm:OpenFrame(nil,200*3+15*4)
 				p:SetTitle("Effects");
@@ -1491,7 +571,7 @@ function ES.CreateMainMenu()
 
 	
 			end},
-			{icon = Material("exclserver/editor.png"), name = "Outfit",func = function()
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Outfit",func = function()
 				local p = mm:OpenFrame(860); p:SetTitle("Outfit");
 				local inv = table.Copy(LocalPlayer():ESGetInventory():GetItems());
 				local a,b,c = ES.GetColorScheme();
@@ -1568,7 +648,7 @@ function ES.CreateMainMenu()
 					eqpnl:SetColor(c);
 					local itemname = Label("No item selected",eqpnl);
 					itemname:SetPos(105,10);
-					itemname:SetFont("Coolvetica28");
+					itemname:SetFont("ES.MainMenu.HeadingText");
 					itemname:SetColor(COLOR_WHITE);
 					itemname:SizeToContents();
 					local spicon = invpnl:Add("SpawnIcon");
@@ -1647,7 +727,7 @@ function ES.CreateMainMenu()
 						surface.DrawTexturedRectRotated(w/2,w/2,w,w,0);
 					end
 					lblPage = Label("Inventory Page 1/"..maxPages,editor);
-					lblPage:SetFont("Coolvetica28");
+					lblPage:SetFont("ES.MainMenu.HeadingText");
 					lblPage:SetPos(butNext.x + 32 + 16,butNext.y+2);
 					lblPage:SizeToContents();
 					lblPage:SetColor(COLOR_WHITE);
@@ -1910,7 +990,7 @@ function ES.CreateMainMenu()
 		local p = mm:OpenFrame(600);
 		p:SetTitle("VIP");
 		local lblVIPHelp = Label("VIPs are special",p)
-		lblVIPHelp:SetFont("Coolvetica28");
+		lblVIPHelp:SetFont("ES.MainMenu.HeadingText");
 		lblVIPHelp:SetColor(Color(255,255,255,255));
 		lblVIPHelp:SetPos(15,15);
 		lblVIPHelp:SizeToContents();

@@ -1,4 +1,4 @@
--- Tiles for items in the main menu.
+-- base for tiles for items
 
 local popModelMatrix = cam.PopModelMatrix
 local pushModelMatrix = cam.PushModelMatrix
@@ -14,12 +14,21 @@ local matrixTranslation = Vector(0, 0, 0)
 
 local matrix,x,y,width,height,rad
 
+
+surface.CreateFont("ES.TileFont",{
+	font="Roboto",
+	weight=300,
+	size=24
+})
+
 local PANEL={};
 AccessorFunc(PANEL,"vip","VIP",FORCE_BOOL);
 AccessorFunc(PANEL,"text","Text",FORCE_STRING);
+AccessorFunc(PANEL,"cost","Cost",FORCE_NUMBER);
 function PANEL:Init()
 	self:SetVIP(false);
 	self:SetText("Name missing");
+	self:SetCost(0);
 	self:NoClipping(false);
 	self.delay=0;
 	self.scale=0;
@@ -33,8 +42,7 @@ function PANEL:PerformLayout()
 	local h = self:GetTall();
 
 	if self.icon then
-		self.icon:SetSize(w-50,h-50);
-		self.icon:SetPos(45,25);
+		self.icon:SetPos(w-67,h-67);
 	end
 
 	self.dummy:SetSize(w,h)
@@ -43,7 +51,7 @@ end
 function PANEL:Think()
 	if self.delay > CurTime() then return end
 
-	self.scale=Lerp(FrameTime()*4,self.scale,1);
+	self.scale=Lerp(FrameTime()*8,self.scale,self:GetHover() and 1.1 or 1);
 end
 function PANEL:Paint(w,h)
 	pushFilterMag( TEXFILTER.ANISOTROPIC )
@@ -87,19 +95,52 @@ function PANEL:Paint(w,h)
 		surface.DrawRect(w-3,3,2,h-6);
 	end
 
-	local col = colHatBuyTileText;
+	local col = ES.Color["#FFFFFF11"];
 	if self:GetHover() then
 		col = color_white;
 	end
-	draw.DrawText(string.gsub(self:GetText()," ","\n"),"ESDefaultBold",8,5,col);
+	draw.DrawText(string.gsub(self:GetText()," ","\n"),"ES.TileFont",8,5,col);
 	if self:GetVIP() then
 		draw.SimpleText("VIP","ES.MainMenu.MainElementHeader",w-8,h-42,Color(255,255,255,20),2);
 	end		
 end
 function PANEL:PaintOver(w,h)
+	if self:GetCost() >= 0 then
+		for x=0,1 do
+			for i=0,1 do
+					draw.SimpleText(tostring(self:GetCost()).." Bananas","ESDefaultBoldBlur",8,h-14-6 + i,color_black);
+			end
+		end
+		draw.SimpleText(tostring(self:GetCost()).." Bananas","ESDefaultBold",8,h-14-6,color_white);
+	end
+
 	popModelMatrix()
 	popFilterMag( TEXFILTER.ANISOTROPIC )
 	popFilterMin( TEXFILTER.ANISOTROPIC )
 end
 ES.UIAddHoverListener(PANEL);
 vgui.Register("ES.ItemTile",PANEL,"Panel");
+
+local PNL = {};
+function PNL:Init()
+	self.icon = vgui.Create("Spawnicon",self);
+	self.icon:SetToolTip(nil)
+	self.icon:SetSize(64,64);
+	self.BaseClass.Init(self);
+end
+function PNL:Setup(item)
+	self.icon:SetModel(item:GetModel());
+end
+vgui.Register("ES.ItemTile.Model",PNL,"ES.ItemTile");
+
+local PNL = {};
+function PNL:Init()
+	self.icon = vgui.Create("DImage",self);
+	self.icon:SetToolTip(nil)
+	self.icon:SetSize(64,64);
+	self.BaseClass.Init(self);
+end
+function PNL:Setup(item)
+	self.icon:SetMaterial(item:GetModel());
+end
+vgui.Register("ES.ItemTile.Texture",PNL,"ES.ItemTile");

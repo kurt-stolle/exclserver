@@ -24,21 +24,21 @@ local tab = ES.UIAddHoverListener({
 		self.DoClick = fn;
 	end,
 	Paint = function(self,w,h)
-		if self:GetHover() then
-			self.hovercolor=table.Copy(ES.GetColorScheme(2));
+		--[[if self:GetHover() then
+			self.hovercolor=table.Copy(ES.GetColorScheme(3));
 			self.alpha=Lerp(FrameTime()*10,self.alpha,255);
 		else
 			self.alpha=Lerp(FrameTime()*10,self.alpha,0);
 		end
-		self.hovercolor.a=self.alpha;
+		self.hovercolor.a=self.alpha;]]
 
 		draw.RoundedBox(2,0,0,w,h,Color(0,0,0,80));
 		draw.RoundedBox(2,1,1,w-2,h-2,color_white);
-		draw.RoundedBox(2,1,1,w-2,h-2,self.hovercolor);
+		--[[draw.RoundedBox(2,1,1,w-2,h-2,self.hovercolor);]]
 
 		ES.UIDrawRippleEffect(self,w,h);
 
-		draw.SimpleText(self:GetText(),"ES.ButtonFont",w/2,h/2,self:GetHover() and color_white or color_gray,1,1);
+		draw.SimpleText(self:GetText(),"ES.ButtonFont",w/2,h/2,--[[self:GetHover() and color_white or ]]color_gray,1,1);
 	end,
 });
 AccessorFunc(tab,"Text","Text",FORCE_STRING);

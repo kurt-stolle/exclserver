@@ -3,7 +3,7 @@ vgui.Register( "esPanel", {
 	Paint = function(self,w,h)
 		draw.RoundedBox(2,0,0,w,h,self.color) 
 
-		surface.SetDrawColor(Color(0,0,0,150));
+		surface.SetDrawColor(ES.Color["#00000022"]);
 		surface.DrawRect(0,0,w,1);
 		surface.DrawRect(0,h-1,w,1);
 		surface.DrawRect(0,1,1,h-2);

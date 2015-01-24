@@ -33,21 +33,8 @@ end
 
 -- actual stuff
 function ES.ValidItem(name,itemtype)
-	local tab;
-
-	if itemtype == ITEM_PROP then
-		tab=ES.Props;
-	elseif itemtype == ITEM_MODEL then
-		tab=ES.Props;
-	elseif itemtype == ITEM_TRAIL then
-		tab=ES.Props;
-	elseif itemtype == ITEM_AURA then
-		tab=ES.Props;
-	elseif itemtype == ITEM_MELEE then
-		tab=ES.MeleeWeapons;
-	else
-		return false;
-	end
+	local tab=ES.GetItemTable(enum);
+	if not tab then return false end
 
 	for k,v in pairs(tab)do
 		if v:GetName() == name then
@@ -58,3 +45,18 @@ function ES.ValidItem(name,itemtype)
 	return true;
 end
 
+function ES.GetItemTable(enum)
+	if enum == ES.ITEM_PROP then
+		return ES.Props;
+	elseif enum == ES.ITEM_MODEL then
+		return ES.Props;
+	elseif enum == ES.ITEM_TRAIL then
+		return ES.Props;
+	elseif enum == ES.ITEM_AURA then
+		return ES.Props;
+	elseif enum == ES.ITEM_MELEE then
+		return ES.MeleeWeapons;
+	else
+		return nil;
+	end
+end

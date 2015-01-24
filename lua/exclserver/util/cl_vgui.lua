@@ -41,3 +41,6 @@ function ES.UIDrawRippleEffect(tab,w,h)
 		surface.DrawTexturedRectRotated(tab.cursorPos_x,tab.cursorPos_y,128*tab.rippleScale,128*tab.rippleScale,0);
 	end
 end
+
+-- Disable ugly progress thingy
+hook.Remove( "SpawniconGenerated", "SpawniconGenerated");

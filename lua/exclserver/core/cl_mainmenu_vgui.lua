@@ -1,7 +1,3 @@
--- cl_mainmenu_vgui.lua
-local color_black = ES.Color["#000"]
-local color_white = ES.Color["#FFF"]
-
 
 local colMainElementBg = Color(30,30,30);
 local colTransBlack = Color(0,0,0,200);
@@ -27,7 +23,11 @@ surface.CreateFont("ES.MainMenu.ChoiseElement",{
 	font = "Roboto",
 	weight = 400;
 	size = 14,
-	weight = 500,
+})
+surface.CreateFont("ES.MainMenu.ChoiseElementSub",{
+	font = "Roboto",
+	weight = 700;
+	size = 12,
 })
 
 local PNL = {}
@@ -47,7 +47,7 @@ function PNL:Init()
 		if not self.Mat then return end
 		
 		surface.SetMaterial(self.Mat)
-		surface.SetDrawColor(color_white);
+		surface.SetDrawColor(ES.Color.White);
 		surface.DrawTexturedRectRotated(w/2,w/2,w,w,180);
 
 		draw.SimpleText("Close","ESDefault",w/2,h-14,Color(255,255,255),1);
@@ -174,7 +174,7 @@ function PNL:Paint(w,h)
 			v.Matrix:SetTranslation(Vector(32-v.scale*32,32-v.scale*32,0));
 			v.Matrix:Scale( Vector(v.scale,v.scale,0) );
 
-			v.scale=Lerp(FrameTime()*6,v.scale,1);
+			v.scale=Lerp(FrameTime()*10,v.scale,1);
 
 			cam.PushModelMatrix( v.Matrix )
 				if v.Hover then
@@ -188,11 +188,17 @@ function PNL:Paint(w,h)
 				surface.DrawRect(0,ScrH()-1,ScrW(),1);
 				surface.DrawRect(0,1,1,ScrH()-(1*1));
 				surface.DrawRect(ScrW()-1,1,1,ScrH()-(1*1));
-				surface.SetDrawColor(color_white)
+				
 				surface.SetMaterial(v.icon)
+
+				surface.SetDrawColor(ES.Color.Black)
+				surface.DrawTexturedRectRotated(32,25,32,32,0);
+
+				surface.SetDrawColor(ES.Color.White)
 				surface.DrawTexturedRectRotated(32,24,32,32,0);
 
-				draw.SimpleText(v.name,"ESDefault",ScrW()/2	,ScrH()-10,color_white,1,1)
+				draw.SimpleText(v.name,"ES.MainMenu.ChoiseElementSub",ScrW()/2	,ScrH()-14+1,ES.Color.Black,1,1)
+				draw.SimpleText(v.name,"ES.MainMenu.ChoiseElementSub",ScrW()/2	,ScrH()-14,ES.Color.White,1,1)
 
 			cam.PopModelMatrix()
 
@@ -213,19 +219,19 @@ function PNL:Paint(w,h)
 	surface.SetDrawColor(ES.GetColorScheme(1));
 	surface.DrawRect(self.ElementMainX,0,256,80);
 
-	---draw.SimpleText("ExclServer","ES.MainMenu.MainElementHeader",self.ElementMainX+10,24,color_white);
+	---draw.SimpleText("ExclServer","ES.MainMenu.MainElementHeader",self.ElementMainX+10,24,ES.Color.White);
 
 	surface.SetMaterial(self.LogoMat)
-	surface.SetDrawColor(color_white);
+	surface.SetDrawColor(ES.Color.White);
 	surface.DrawTexturedRect(self.ElementMainX,80-64,256,64);
 
 	--display bananas
 	surface.SetDrawColor(colElementMainFoot);
 	surface.DrawRect(self.ElementMainX+10,h-10-60,256-20,60);
 
-	draw.SimpleText("Bananas","ES.MainMenu.MainElementInfoBnnsSmall",self.ElementMainX+20,h-10-60+5,color_black);
+	draw.SimpleText("Bananas","ES.MainMenu.MainElementInfoBnnsSmall",self.ElementMainX+20,h-10-60+5,ES.Color.Black);
 	if not (IsValid(p) and p.excl and p.excl.bananas ) then
-		draw.SimpleText("Loading...","ES.MainMenu.MainElementInfoBnns",self.ElementMainX+20,h-10-60+18,color_black);
+		draw.SimpleText("Loading...","ES.MainMenu.MainElementInfoBnns",self.ElementMainX+20,h-10-60+18,ES.Color.Black);
 	else
 		if not didLoad then
 			bananaDisplay = p:ESGetBananas();
@@ -241,7 +247,7 @@ function PNL:Paint(w,h)
 		else
 			bananaDisplay = bananaDisplayRound;
 		end
-		draw.SimpleText(tostring(bananaDisplayRound),"ES.MainMenu.MainElementInfoBnns",self.ElementMainX+20,h-10-60+18,color_black);
+		draw.SimpleText(tostring(bananaDisplayRound),"ES.MainMenu.MainElementInfoBnns",self.ElementMainX+20,h-10-60+18,ES.Color.Black);
 	end
 end
 vgui.Register("ESMainMenu",PNL,"EditablePanel");
@@ -293,7 +299,7 @@ function PNL:Paint(w,h)
 	surface.SetDrawColor(Color(0,0,0,100));
 	surface.DrawRect(0,0,w,1);
 
-	surface.SetDrawColor(color_white);
+	surface.SetDrawColor(ES.Color.White);
 	surface.SetMaterial(self.icon);
 
 	surface.DrawTexturedRectRotated(10+h/2,h/2,16,16,0);
@@ -302,7 +308,7 @@ function PNL:Paint(w,h)
 
 	local col = ES.Color["#444"]
 	if self.Hover then
-		col = color_white;
+		col = ES.Color.White;
 	end
 	draw.SimpleText(self.title,"ES.MainMenu.MainElementButton",42 + 10,h/2,col,0,1);
 end
@@ -313,12 +319,6 @@ surface.CreateFont("ES.MainMenu.FrameHead",{
 	font = "Roboto",
 	size = 48,
 	weight = 300,
-})
-surface.CreateFont("ES.MainMenu.FrameHeadBlur",{
-	font = "Roboto",
-	size = 48,
-	weight = 300,
-	blursize = 2,
 })
 local PNL = {}
 function PNL:Init()
@@ -340,6 +340,14 @@ function PNL:Think(w,h)
 	if not self.x or self.x <= self.xDesired then return end
 
 	self.x = Lerp(FrameTime() *7,self.x,self.xDesired);
+
+	if self.x <= self.xDesired + .00001 then
+		self.x = self.xDesired;
+		ES.DebugPrint("Main Menu panel is ready.");
+		if type(self.context.OnReady) == "function" then
+			self.context.OnReady(self);
+		end
+	end
 end
 function PNL:Paint(w,h)
 	surface.SetDrawColor(Color(255,255,255,5));
@@ -354,8 +362,8 @@ function PNL:Paint(w,h)
 	surface.SetDrawColor(Color(0,0,0,20));
 	surface.DrawRect(1,1,w,math.floor(69/4)*4 + 4);
 
-	draw.SimpleText(self.title,"ES.MainMenu.FrameHeadBlur",15,(70/2),ES.Color["#00000044"],0,1);
-	draw.SimpleText(self.title,"ES.MainMenu.FrameHead",15,70/2,color_white,0,1);
+	--draw.SimpleText(self.title,"ES.MainMenu.FrameHeadBlur",15,(70/2),ES.Color["#00000044"],0,1);
+	draw.SimpleText(self.title,"ES.MainMenu.FrameHead",15,70/2,ES.Color.White,0,1);
 end
 vgui.Register("ES.MainMenu.Frame",PNL,"Panel")
 
@@ -429,7 +437,7 @@ function PNL:Paint()
 		mtr:Scale(scale);
 		item:EnableMatrix("RenderMultiply", mtr);
 
-		item:SetColor(color or color_white);
+		item:SetColor(color or ES.Color.White);
 				
 		drawpos, drawang = self.Entity:GetBonePosition(bone)
 		
@@ -457,115 +465,6 @@ function PNL:Paint()
 	
 end
 vgui.Register("esMMHatPreview",PNL,"DModelPanel")
-
-
---### ITEM PURCHASE TILE
-
-local colHatBuyTileText = Color(255,255,255,50);
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("Spawnicon",self);
-	self.icon:SetToolTip(nil)
-	self.BaseClass.Init(self);
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.Items[self.item] then  return end
-
-	self.BaseClass.Paint(self,w,h);
-
-	if LocalPlayer():ESGetInventory():ContainsItem(self.item) then
-		draw.SimpleText(LocalPlayer():ESGetInventory():GetAmount(self.item).. " owned","ESDefaultSmall",8,h-14-16,color_white);
-	end
-		
-	draw.SimpleText(ES.Items[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
-end
-vgui.Register("esMMItemBuyTile",PNL,"ES.ItemTile");
-
---#### Trail preview
-
-
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("DImage",self);
-	self.BaseClass.Init(self);
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.Trails[self.item] then  return end
-
-	self.BaseClass.Paint(self,w,h);
-
-	if LocalPlayer():ESHasItem(self.item,ES.ITEM_TRAIL) then
-		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
-	else
-		draw.SimpleText(ES.Trails[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
-	end
-	
-end
-vgui.Register("esMMTrailBuyTile",PNL,"ES.ItemTile");
---#### Trail preview
-
-
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("DImage",self);
-	self.BaseClass.Init(self);
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.Auras[self.item] then  return end
-	
-	self.BaseClass.Paint(self,w,h);
-
-	if LocalPlayer():ESHasItem(self.item,ES.ITEM_TRAIL) then
-		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
-	else
-		draw.SimpleText(ES.Auras[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
-	end
-	
-end
-vgui.Register("esMMAuraBuyTile",PNL,"ES.ItemTile");
-
---### MODEL PURCHASE TILE
-
-local colHatBuyTileText = Color(255,255,255,50);
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("Spawnicon",self);
-	self.icon:SetToolTip(nil)
-	
-	self.BaseClass.Init(self);
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.Models[self.item] then  return end
-	
-	self.BaseClass.Paint(self,w,h);
-
-	if LocalPlayer():ESHasItem(self.item,ES.ITEM_MODEL) then
-		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
-	else
-		draw.SimpleText(ES.Models[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
-	end
-end
-vgui.Register("esMMModelBuyTile",PNL,"ES.ItemTile");
-
---#### melee  preview
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("Spawnicon",self);
-	self.dummy = self:Add("Panel");
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.MeleeWeapons[self.item] then  return end
-
-	self.BaseClass.Paint(self,w,h);
-
-	if LocalPlayer():ESHasItem(self.item,ES.ITEM_MELEE) then
-		draw.SimpleText("You own this item","ESDefaultSmall",8,h-14-3,color_white);
-	else
-		draw.SimpleText(ES.MeleeWeapons[self.item].cost.." bananas","ESDefaultSmall",8,h-14-3,color_white);
-	end
-	
-end
-vgui.Register("esMMMeleeWeaponsTile",PNL,"ES.ItemTile");
 
 --#### Inventory
 surface.CreateFont("esMMInventoryTitle",{
@@ -610,7 +509,7 @@ function PNL:Init()
 		if self:GetParent().scrollTo - self:GetParent().tilesX < 0 then
 			surface.SetDrawColor(Color(150,150,150));
 		else
-			surface.SetDrawColor(color_white);
+			surface.SetDrawColor(ES.Color.White);
 		end
 		surface.DrawTexturedRectRotated(w/2,w/2,w,w,180);
 	end
@@ -631,7 +530,7 @@ function PNL:Init()
 		if not self:GetParent().PanelInventory.items[ self:GetParent().scrollTo*2 + self:GetParent().tilesX*2 - 1 ] then
 			surface.SetDrawColor(Color(150,150,150));
 		else
-			surface.SetDrawColor(color_white);
+			surface.SetDrawColor(ES.Color.White);
 		end
 		surface.DrawTexturedRectRotated(w/2,w/2,w,w,0);
 	end
@@ -685,7 +584,7 @@ end
 function PNL:Paint(w,h)
 	surface.SetDrawColor(ES.GetColorScheme(3));
 	surface.DrawRect(0,0,w,h);
-	draw.SimpleText(self.title,"esMMInventoryTitle",10,5,color_white);
+	draw.SimpleText(self.title,"esMMInventoryTitle",10,5,ES.Color.White);
 end
 vgui.Register("esMMInventory",PNL,"Panel");
 
@@ -736,10 +635,10 @@ function PNL:Paint(w,h)
 	local s = string.gsub(self.title," ","\n");
 	local col = colHatBuyTileText;
 	if self.Hover then
-		col = color_white;
+		col = ES.Color.White;
 	end
 	draw.DrawText(s,"ESDefaultBold",8,5,col);
-	draw.SimpleText("Click to activate","ESDefaultSmall",8,h-14-3,color_white);
+	draw.SimpleText("Click to activate","ESDefaultSmall",8,h-14-3,ES.Color.White);
 end
 vgui.Register("esMMHatInventoryTile",PNL,"Panel");
 
@@ -856,7 +755,7 @@ function PNL:Setup(p,plain)
 			end
 		end
 		self.Mute		= self:Add( "DImageButton" )
-		self.Mute:SetColor(color_white);
+		self.Mute:SetColor(ES.Color.White);
 	end
 
 	self.Avatar:SetPlayer(p,32);
@@ -954,7 +853,7 @@ function PNL:Init()
 
 	self.lblName = self:Add("DLabel");
 	self.lblName:SetFont("esMMServerRowBold");
-	self.lblName:SetColor(color_white);
+	self.lblName:SetColor(ES.Color.White);
 
 	self.lblPlayers = self:Add("DLabel");
 	self.lblPlayers:SetFont("ESDefaultBold");
@@ -1029,7 +928,7 @@ function PNL:PerformLayout()
 		</html>]])
 end
 function PNL:Paint(w,h)
-	surface.SetDrawColor(color_black);
+	surface.SetDrawColor(ES.Color.Black);
 	surface.DrawRect(0,0,w,h)
 	
 	surface.SetDrawColor(Color(40,40,40));
@@ -1062,12 +961,12 @@ vgui.Register("esMMMusicPlayer",{
 
 		local info = ES.GetMusicInfo();
 		if info.active then
-			draw.SimpleText("ll","esMMPlayButton",h/2,h/2,color_white,1,1);
+			draw.SimpleText("ll","esMMPlayButton",h/2,h/2,ES.Color.White,1,1);
 		else
-			draw.SimpleText("►","esMMPlayButton",h/2,h/2 - 2,color_white,1,1);
+			draw.SimpleText("►","esMMPlayButton",h/2,h/2 - 2,ES.Color.White,1,1);
 		end
 
-		draw.SimpleText(info.title,"esMMSongTitle",h+15,10,color_white,0,0);
+		draw.SimpleText(info.title,"esMMSongTitle",h+15,10,ES.Color.White,0,0);
 	end,
 },"Panel");
 

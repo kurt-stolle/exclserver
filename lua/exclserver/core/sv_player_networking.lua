@@ -175,13 +175,9 @@ net.Receive("ES.NwPlayerVar",function(len,requester)
 	net.Send(requester);
 end);
 local cnt;
-timer.Create("ES.NetworkPlayers",.2,0,function()
-
-
+timer.Create("ES.NetworkPlayers",.1,0,function()
 	cnt=table.Count(queue);
 	if not queue or cnt < 1 then return end
-	
-	ES.DebugPrint("Dispatched networked variable's queue.");
 
 	net.Start("ES.NwPlayerVar");
 	net.WriteUInt(cnt,8);
@@ -190,8 +186,6 @@ timer.Create("ES.NetworkPlayers",.2,0,function()
 		net.WriteUInt(#tab,8);
 		for _,v in ipairs(tab)do
 			kind=ES.NetworkedVariables[v.key].type;
-			
-			ES.DebugPrint("Syncing networked variable '"..v.key.."' ("..tostring(v.value)..") for "..ply:Nick());
 			if ES.NetworkedVariables[v.key].save and not tab.noSave then
 				if kind=="String" then
 					v.value="'"..ES.DBEscape(v.value).."'";

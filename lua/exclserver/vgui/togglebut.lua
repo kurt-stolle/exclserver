@@ -1,26 +1,18 @@
 -- Buttons
-surface.CreateFont( "ESToggleButtonArrow", { 
-font = "Helvetica", 
-size = 18 } 
+surface.CreateFont( "ES.ToggleButton", { 
+font = "Roboto", 
+size = 16,
+weight=400 } 
 )
 
 local BUTTON = {}
 function BUTTON:Init()
-	self.Hover = false;
 	self.DoClick = function() end
 	self.Text = "Meow";
 	self.Toggled = true;
 	self.moveX = 0;
 	self.hoverAlpha = 0;
 	self.HideButton = false;
-end
-function BUTTON:OnCursorEntered()
-	if self.HideButton then return end
-	self.Hover = true;
-end
-function BUTTON:OnCursorExited()
-	if self.HideButton then return end
-	self.Hover = false;
 end
 function BUTTON:OnMouseReleased()
 	if self.HideButton then return end
@@ -39,44 +31,35 @@ function BUTTON:SetText( str )
 
 	self.Text = str;
 end
-function BUTTON:SetDoClick(func)
-	if self.HideButton then return end
-
-	self.DoClick = func;
-end
-function BUTTON:Paint()
-	draw.RoundedBox(4,0,0,self:GetWide(), self:GetTall(), Color(0,0,0,200))
-	draw.RoundedBox(4,1,1,self:GetWide()-2, self:GetTall()-2, Color(230,230,230))
+function BUTTON:Paint(w,h)
+	draw.RoundedBox(2,0,0,w, h, ES.Color["#00000011"])
+	draw.RoundedBox(2,1,1,w-2, h-2, ES.GetColorScheme(3));
 	
-	draw.SimpleText(self.Text, "ESDefault", 5, (self:GetTall()/2)-1, Color(0,0,0), 0, TEXT_ALIGN_CENTER)
+	draw.SimpleText(self.Text, "ES.ToggleButton", h/3, (h/2), ES.Color.White, 0, TEXT_ALIGN_CENTER)
 	
 	if self.HideButton then return end
 	
-	draw.RoundedBox(2,self:GetWide()-(self:GetTall()*2-4)-2,2,self:GetTall()*2-4, self:GetTall()-4, Color(0,0,0,200))
-
 	-- draw the button thingy
 	if self.Toggled then
-		self.moveX = Lerp(0.1,self.moveX,0)
+		self.moveX = Lerp(FrameTime()*18,self.moveX,0)
 	else
-		self.moveX = Lerp(0.1,self.moveX,self:GetTall()-3);		
+		self.moveX = Lerp(FrameTime()*18,self.moveX,h-8);		
 	end
 
-	draw.RoundedBox(2,self:GetWide()-(self:GetTall()*2-4)-1,3,self:GetTall()*2-6, self:GetTall()-6, Color(0,138,184))
-	draw.RoundedBox(0,self:GetWide()-(self:GetTall()*2-4)-1+4,3,self.moveX-4, self:GetTall()-6, Color(184,46,0))
-	draw.RoundedBoxEx(0,self:GetWide()-(self:GetTall()*2-4)-1,3,4, self:GetTall()-6, Color(184,46,0),true,false,true,false)
 
-	draw.RoundedBox(2,self:GetWide()-(self:GetTall()*2-4)-1+self.moveX,3,(self:GetTall()*2-6)/2, self:GetTall()-6, Color(213,213,213))
-	draw.RoundedBox(2,self:GetWide()-(self:GetTall()*2-4)+self.moveX,4,(self:GetTall()*2-6)/2-2, (self:GetTall()-6)/2-2, Color(255,255,255,100))
+	local x,y=w-(h- 8)*2 -4, 4;
 
-	if self.Hover then
-		self.hoverAlpha = Lerp(0.05,self.hoverAlpha,255)
-	else
-		self.hoverAlpha = Lerp(0.02,self.hoverAlpha,0);		
-	end	
-	if self.Toggled then
-		draw.SimpleText(">", "ESToggleButtonArrow", self:GetWide()-(self:GetTall()*2-4)-1+self.moveX+(self:GetTall()-6)/2,self:GetTall()/2-1, Color(0,0,0,self.hoverAlpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	else
-		draw.SimpleText("<", "ESToggleButtonArrow", self:GetWide()-(self:GetTall()*2-4)-1+self.moveX+(self:GetTall()-6)/2,self:GetTall()/2-1, Color(0,0,0,self.hoverAlpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	end
+
+
+	draw.RoundedBox(2,x-1,y-1,(h-8)*2+2,h-8 + 2, Color(0,0,0,200))
+	--[[draw.RoundedBox(2,x,y,h*2-8,h-8, Color(0,138,184))
+	draw.RoundedBox(0,x,y,self.moveX-4,h-8, Color(184,46,0))]]
+
+	draw.SimpleText("I","ESDefaultSmall",x+(h-8)/2 + (h-8), y+(h-8)/2,ES.Color.White,1,1);
+	draw.SimpleText("O","ESDefaultSmall",x+(h-8)/2, y+(h-8)/2,ES.Color.White,1,1);
+
+	draw.RoundedBox(2,x+self.moveX,y,h-8,h-8, Color(213,213,213))
+
+
 end
 vgui.Register( "esToggleButton", BUTTON, "Panel" );

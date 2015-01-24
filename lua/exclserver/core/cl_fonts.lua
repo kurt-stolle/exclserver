@@ -33,3 +33,8 @@ weight = 800,
 blursize = 2} 
 )
 
+surface.CreateFont( "ESDefaultBig", {
+	font = "Roboto",
+	size=26,
+	weight=400
+})

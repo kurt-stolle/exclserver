@@ -34,9 +34,6 @@ if SERVER then
 
 	util.AddNetworkString("exclRestrTool");
 	util.AddNetworkString("exclNoTool");
-	hook.Add("ESDBDefineTables","w0wu9uw09dy0928y09h2",function()
-		ES.DBDefineTable("restrictions_tools",false,"toolmode varchar(255), req int(9), serverid int(16)")
-	end)
 
 	PLUGIN:AddHook("Initialize",function()
 		if !GAMEMODE.IsSandboxDerived then ES.DebugPrint("Not loading tool restriction - we are not on a sandbox derived gamemode."); return end -- thanks garry, now we can not load this ESPlugin when we are not in a sandbox derive.

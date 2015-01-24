@@ -180,19 +180,19 @@ hook.Add("ESPlayerReady","ES.Inventory.LoadInitial",function(ply)
 		for _,v in pairs(data)do
 			if v.itemtype == ES.ITEM_PROP and ES.MatchSubKey(ES.Props,"name",v.name) then
 				table.insert(tab.props,v.name);
-				table.insert(ply._es_inventory_props,ES.Props[v.name]);
+				table.insert(ply._es_inventory_props,v.name);
 			elseif v.itemtype == ES.ITEM_AURA and ES.MatchSubKey(ES.Auras,"name",v.name) then
 				table.insert(tab.auras,v.name);
-				table.insert(ply._es_inventory_auras,ES.Auras[v.name]);
+				table.insert(ply._es_inventory_auras,v.name);
 			elseif v.itemtype == ES.ITEM_TRAIL and ES.MatchSubKey(ES.Trails,"name",v.name) then
 				table.insert(tab.trails,v.name);
-				table.insert(ply._es_inventory_trails,ES.Trails[v.name]);
+				table.insert(ply._es_inventory_trails,v.name);
 			elseif v.itemtype == ES.ITEM_MODEL and ES.MatchSubKey(ES.Models,"name",v.name) then
 				table.insert(tab.models,v.name);
-				table.insert(ply._es_inventory_models,ES.Models[v.name]);
+				table.insert(ply._es_inventory_models,v.name);
 			elseif v.itemtype == ES.ITEM_MELEE and ES.MatchSubKey(ES.MeleeWeapons,"name",v.name) then
 				table.insert(tab.meleeweapons,v.name);
-				table.insert(ply._es_inventory_meleeweapons,ES.MeleeWeapons[v.name]);
+				table.insert(ply._es_inventory_meleeweapons,v.name);
 			end
 		end
 
@@ -200,4 +200,39 @@ hook.Add("ESPlayerReady","ES.Inventory.LoadInitial",function(ply)
 		net.WriteTable(tab);
 		net.Send(ply);
 	end)
+end);
+
+util.AddNetworkString("ESBuyItem");
+net.Receive("ESBuyItem",function(len,ply)
+	local itemtype=net.ReadUInt(4);
+	local item=net.ReadUInt(8);
+
+	if not item or not itemtype then 
+		ES.DebugPrint(ply:Nick().. " attempted to buy an invalid item (1)");
+		return
+	end
+
+	local tab=ES.GetItemTable(itemtype);
+
+	if not tab then 
+		ES.DebugPrint(ply:Nick().. " attempted to buy an invalid item (2)");
+		return end
+	
+	item=tab[item];
+
+	if not item 
+		or item:GetVIP() and ply:ESGetVIPTier() < 1 then 
+		ES.DebugPrint(ply:Nick().. " attempted to buy an invalid item (3)"); return end
+
+	local cost=item:GetCost();
+
+	if ply:ESGetBananas() < cost then ES.DebugPrint(ply:Nick().. " attempted to buy an item ("..item:GetName().."), but he does not have enough bananas ("..item:GetCost()..")."); return end
+
+	ply:ESTakeBananas(cost);
+
+	ply:ESGiveItem(item:GetName(),itemtype,false);
+
+	ply:ESSendNotification("generic","You bought the item.");
+		
+	ES.DebugPrint(ply:Nick().." bought an item ("..item:GetName()..")")
 end);
