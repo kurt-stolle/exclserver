@@ -1006,10 +1006,6 @@ Go here to donate: www.CasualBananas.com/forums/donate.php, click anywhere on th
 text to copy this URL to your clipboard (in your browser, press CTRL+V in the URL 
 field to paste)
 Every $1 you donate will get you 1000 bananas.]];
-		if ES.IsCasualFriday() then
-			txt = txt..[[
-Because today is Casual Friday, bronze VIP is 50% off!]]
-		end
 		
 		lblVIPInfo:SetFont("ESDefaultBold");
 		lblVIPInfo:SetText(txt)
@@ -1030,9 +1026,7 @@ Because today is Casual Friday, bronze VIP is 50% off!]]
 		tbl.headColors[4] = Color(245,184,0);
 		tbl.headColors[5] = Color(201,53,71);
 		tbl.itemPrice[2] = (1 - curtier) * 5000;
-		if ES.IsCasualFriday() then
-			tbl.itemPrice[2] = math.Round( tbl.itemPrice[2] * 0.5 );
-		end
+
 		if tbl.itemPrice[2] < 0 then tbl.itemPrice[2] = 0; end
 		tbl.itemPrice[3] = (2 - curtier) * 5000;
 		if tbl.itemPrice[3] < 0 then tbl.itemPrice[3] = 0; end

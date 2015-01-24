@@ -230,7 +230,7 @@ function PNL:Paint(w,h)
 	surface.DrawRect(self.ElementMainX+10,h-10-60,256-20,60);
 
 	draw.SimpleText("Bananas","ES.MainMenu.MainElementInfoBnnsSmall",self.ElementMainX+20,h-10-60+5,ES.Color.Black);
-	if not (IsValid(p) and p.excl and p.excl.bananas ) then
+	if not (IsValid(p) or not p:ESGetNetworkedVariable("bananas",false) ) then
 		draw.SimpleText("Loading...","ES.MainMenu.MainElementInfoBnns",self.ElementMainX+20,h-10-60+18,ES.Color.Black);
 	else
 		if not didLoad then

@@ -21,6 +21,7 @@ ES.DefineNetworkedVariable("typing","Bit");
 
 ES.DefineNetworkedVariable("rank","String");
 
+ES.DefineNetworkedVariable("VIP","Int",4,"tinyint(1) unsigned not null default 0")
 ES.DefineNetworkedVariable("bananas","Int",32,"int(10) unsigned not null default 100");
 
 ES.DefineNetworkedVariable("active_trail","String",nil,"varchar(22)");

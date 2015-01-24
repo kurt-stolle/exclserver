@@ -9,18 +9,11 @@ end
 PLAYER.ESID = PLAYER.UniqueID;
 
 function PLAYER:ESGetBananas()
-	return self:ESGetNetworkedVariable("bananas") or 0;
+	return self:ESGetNetworkedVariable("bananas",-1);
 end
 
 function PLAYER:ESGetVIPTier()
-	return tonumber(self:ESGetGlobalData("VIP",0) or 0);
-end
-
-function PLAYER:ESGetGlobalData(name,default)
-	if self.exclGlobal and self.exclGlobal[name] then
-		return self.exclGlobal[name];
-	end
-	return default or nil;
+	return self:ESGetNetworkedVariable("VIP",0);
 end
 
 function PLAYER:ESIsInitialized()
