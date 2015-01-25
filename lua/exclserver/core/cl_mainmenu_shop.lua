@@ -122,8 +122,6 @@ function ES._MMGenerateShop(base,name,itemtype,tileVGUIName)
 	pnl_tiles:Dock(FILL);
 	pnl_tiles:NoClipping(false);
 		buildTiles=function()
-			ES.DebugPrint("Building tiles");
-
 			local tile;
 			local iX,iY=0,1;
 			local space=sizeTile + marginTile;
@@ -160,7 +158,10 @@ function ES._MMGenerateShop(base,name,itemtype,tileVGUIName)
 				tile:SetText(item:GetName());
 				tile:SetVIP(item:GetVIP());
 				tile:SetCost(item:GetCost());
+				tile:SetType(itemtype);
+
 				tile:Setup(item);
+
 				tile.delay=CurTime() + ( (iY-1) + (iX-1) --[[+ iY]] )*.05;
 
 				local this=i;

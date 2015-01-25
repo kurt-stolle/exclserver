@@ -25,6 +25,7 @@ local PANEL={};
 AccessorFunc(PANEL,"vip","VIP",FORCE_BOOL);
 AccessorFunc(PANEL,"text","Text",FORCE_STRING);
 AccessorFunc(PANEL,"cost","Cost",FORCE_NUMBER);
+AccessorFunc(PANEL,"itemtype","Type",FORCE_NUMBER);
 function PANEL:Init()
 	self:SetVIP(false);
 	self:SetText("Name missing");
@@ -106,12 +107,17 @@ function PANEL:Paint(w,h)
 end
 function PANEL:PaintOver(w,h)
 	if self:GetCost() >= 0 then
-		for x=0,1 do
-			for i=0,1 do
-					draw.SimpleText(tostring(self:GetCost()).." Bananas","ESDefaultBoldBlur",8,h-14-6 + i,color_black);
-			end
+		local text;
+		if LocalPlayer():ESHasItem(self:GetText(),self:GetType()) then 
+			text="Owned";
+		else
+			text=tostring(self:GetCost()).." Bananas";
 		end
-		draw.SimpleText(tostring(self:GetCost()).." Bananas","ESDefaultBold",8,h-14-6,color_white);
+
+		for i=0,1 do
+			draw.SimpleText(text,"ESDefaultBoldBlur",8,h-14-6 + i,color_black);
+		end
+		draw.SimpleText(text,"ESDefaultBold",8,h-14-6,color_white);
 	end
 
 	popModelMatrix()

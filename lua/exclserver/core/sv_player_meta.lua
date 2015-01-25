@@ -21,3 +21,11 @@ function PLAYER:ESTakeBananas( a )
 end
 PLAYER.ESRemoveBananas = PLAYER.ESTakeBananas;
 PLAYER.ESGiveBananas = PLAYER.ESAddBananas;
+
+util.AddNetworkString("ES.Notification.Popup");
+function PLAYER:ESSendNotificationPopup(title,message)
+	net.Start("ES.Notification.Popup");
+	net.WriteString(title);
+	net.WriteString(message);
+	net.Send(self);
+end

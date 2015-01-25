@@ -7,7 +7,9 @@ ES.ITEM_PROP = 5;
 
 -- Item object
 local meta={};
-function ES.Item(type)
+function ES.Item(_type)
+	if type(_type) ~= "number" or (_type <= 0 and _type >= 6) then return Error("Invalid type passed to Item constructor."); end
+
 	local obj={};
 	setmetatable(obj,meta);
 	meta.__index=meta;
@@ -16,7 +18,7 @@ function ES.Item(type)
 	obj:SetDescription("No description given.");
 	obj:SetCost(0);
 
-	obj._type=type;
+	obj._type=_type;
 
 	return obj;
 end
@@ -28,7 +30,7 @@ AccessorFunc(meta,"_cost","Cost",FORCE_NUMBER);
 AccessorFunc(meta,"_model","Model",FORCE_STRING);
 AccessorFunc(meta,"_vipOnly","VIP",FORCE_BOOL);
 function meta:GetType()
-	return obj._type;
+	return self._type;
 end
 
 -- actual stuff

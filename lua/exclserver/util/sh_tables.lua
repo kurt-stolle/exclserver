@@ -12,7 +12,7 @@ function ES.IsIdenticalTable(a,b)
 	return true
 end
 
-function ES.MatchKey(tab,key_sub,value)
+function ES.MatchSubKey(tab,key_sub,value)
 	for k,v in ipairs(tab)do
 		if v[key_sub] and v[key_sub] == value then
 			return v;

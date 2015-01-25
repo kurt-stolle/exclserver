@@ -31,6 +31,33 @@
 -- ##                                                                                ##
 -- ####################################################################################
 
+
+-- Popup notifications
+net.Receive("ES.Notification.Popup",function()
+	local title=net.ReadString();
+	local message=net.ReadString();
+
+	if not title or not message then return end
+
+	local frame=vgui.Create("esFrame");
+
+	local label=frame:Add("DLabel");
+	label:SetFont("ESDefault");
+	label:SetColor(ES.Color.White);
+	label:SetPos(10,40);
+
+	label:SetText(message);
+
+	label:SizeToContents();
+
+	frame:SetTitle(title);
+
+	frame:SetSize(label:GetWide()+20,label:GetTall()+50);
+
+	frame:Center();
+
+	frame:MakePopup();
+end)
 -- Fonts
 surface.CreateFont("ES.Notification",{
 	font = "roboto",

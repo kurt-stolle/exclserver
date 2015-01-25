@@ -15,8 +15,8 @@ local matrix,x,y,width,height,rad
 local PANEL = {}
 surface.CreateFont( "ESFrameText", { 
 font = "Roboto", 
-size = 20,
-weight=500 } 
+size = 18,
+weight=400 } 
 )
 surface.CreateFont( "ESFrameTextShadow", { 
 font = "Roboto", 
@@ -97,13 +97,13 @@ function PANEL:Paint(w,h)
 
 	local a,b,c = ES.GetColorScheme();
 
-	draw.RoundedBoxEx(4,0,0,w,h,ES.Color["#000000AA"],true,true) 
-	draw.RoundedBoxEx(4,1,1,w-2,30,a,true,true) 
+	draw.RoundedBoxEx(2,0,0,w,h,ES.Color["#000000AA"],true,true) 
+	draw.RoundedBoxEx(2,1,1,w-2,30,a,true,true) 
 
-	draw.RoundedBoxEx(4,1,30,w-2,h-31,ES.Color["#1E1E1E"],false,false,true,true);
+	draw.RoundedBoxEx(2,1,30,w-2,h-31,ES.Color["#1E1E1E"],false,false,true,true);
 
 	local title = string.upper(self:GetTitle());
-	draw.SimpleText(title,"ESFrameTextShadow",11,30/2+1,ES.Color["#00000022"],0,1);
+	--draw.SimpleText(title,"ESFrameTextShadow",11,30/2+1,ES.Color["#00000066"],0,1);
 	draw.SimpleText(title,"ESFrameText",10,30/2,COLOR_WHITE,0,1);
 end
 function PANEL:PaintOver(w,h)

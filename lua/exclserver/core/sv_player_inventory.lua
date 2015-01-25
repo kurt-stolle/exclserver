@@ -55,17 +55,38 @@ function PLAYER:ESDeactivateItem(itemtype)
 	return true;
 end
 function PLAYER:ESGiveItem(name,itemtype,nosynch)
-	if self:ESHasItem(name,itemtype) then return false end
+	if self:ESHasItem(name,itemtype) then 
+		ES.DebugPrint("Failed to give item '"..name.."' to "..self:Nick().."; item already owned.");
+		return false 
+	end
 
-	if itemtype == ES.ITEM_TRAIL and self._es_inventory_trails then
+	if itemtype == ES.ITEM_TRAIL then
+		if type(self._es_inventory_trails) ~= "table" then
+			self._es_inventory_trails = {};
+		end
 		table.insert(self._es_inventory_trails,name);
-	elseif itemtype == ES.ITEM_MELEE and self._es_inventory_meleeweapons then
+	elseif itemtype == ES.ITEM_MELEE then
+		if type(self._es_inventory_meleeweapons) ~= "table" then
+			self._es_inventory_trails = {};
+		end
 		table.insert(self._es_inventory_meleeweapons,name);
-	elseif itemtype == ES.ITEM_MODEL and self._es_inventory_models then
+	elseif itemtype == ES.ITEM_MODEL then
+		if type(self.self._es_inventory_models) ~= "table" then
+			self.self._es_inventory_models = {};
+		end
 		table.insert(self._es_inventory_models,name);
-	elseif itemtype == ES.ITEM_AURA and self._es_inventory_auras then
+	elseif itemtype == ES.ITEM_AURA then
+		if type(self._es_inventory_auras) ~= "table" then
+			self._es_inventory_auras = {};
+		end
 		table.insert(self._es_inventory_auras,name);
+	elseif itemtype == ES.ITEM_PROP then
+		if type(self._es_inventory_props) ~= "table" then
+			self._es_inventory_props = {};
+		end
+		table.insert(self._es_inventory_props,name);
 	else
+		ES.DebugPrint("Failed to give item '"..name.."' to "..self:Nick().."; invalid itemtype passed.");
 		return false;
 	end
 
@@ -73,8 +94,10 @@ function PLAYER:ESGiveItem(name,itemtype,nosynch)
 
 	net.Start("ESSynchInvAdd");
 	net.WriteString(name);
-	net.WriteInt(itemtype,8)
+	net.WriteUInt(itemtype,4)
 	net.Send(self);
+
+	ES.DebugPrint(self:Nick().." has received item: '"..name.."'");
 	
 	return true;
 end
@@ -178,23 +201,28 @@ hook.Add("ESPlayerReady","ES.Inventory.LoadInitial",function(ply)
 		ply._es_inventory_meleeweapons 		= {};
 
 		for _,v in pairs(data)do
-			if v.itemtype == ES.ITEM_PROP and ES.MatchSubKey(ES.Props,"name",v.name) then
+			if v.itemtype == ES.ITEM_PROP and ES.MatchSubKey(ES.Props,"_name",v.name) then
 				table.insert(tab.props,v.name);
 				table.insert(ply._es_inventory_props,v.name);
-			elseif v.itemtype == ES.ITEM_AURA and ES.MatchSubKey(ES.Auras,"name",v.name) then
+			elseif v.itemtype == ES.ITEM_AURA and ES.MatchSubKey(ES.Auras,"_name",v.name) then
 				table.insert(tab.auras,v.name);
 				table.insert(ply._es_inventory_auras,v.name);
-			elseif v.itemtype == ES.ITEM_TRAIL and ES.MatchSubKey(ES.Trails,"name",v.name) then
+			elseif v.itemtype == ES.ITEM_TRAIL and ES.MatchSubKey(ES.Trails,"_name",v.name) then
 				table.insert(tab.trails,v.name);
 				table.insert(ply._es_inventory_trails,v.name);
-			elseif v.itemtype == ES.ITEM_MODEL and ES.MatchSubKey(ES.Models,"name",v.name) then
+			elseif v.itemtype == ES.ITEM_MODEL and ES.MatchSubKey(ES.Models,"_name",v.name) then
 				table.insert(tab.models,v.name);
 				table.insert(ply._es_inventory_models,v.name);
-			elseif v.itemtype == ES.ITEM_MELEE and ES.MatchSubKey(ES.MeleeWeapons,"name",v.name) then
+			elseif v.itemtype == ES.ITEM_MELEE and ES.MatchSubKey(ES.MeleeWeapons,"_name",v.name) then
 				table.insert(tab.meleeweapons,v.name);
 				table.insert(ply._es_inventory_meleeweapons,v.name);
 			end
 		end
+
+		print("Items:");
+		PrintTable(tab);
+		print("Data:");
+		PrintTable(data);
 
 		net.Start("ESSynchInventory");
 		net.WriteTable(tab);
@@ -226,13 +254,21 @@ net.Receive("ESBuyItem",function(len,ply)
 
 	local cost=item:GetCost();
 
-	if ply:ESGetBananas() < cost then ES.DebugPrint(ply:Nick().. " attempted to buy an item ("..item:GetName().."), but he does not have enough bananas ("..item:GetCost()..")."); return end
+	if ply:ESGetBananas() < cost then 
+		ES.DebugPrint(ply:Nick().. " attempted to buy an item ("..item:GetName().."), but he does not have enough bananas ("..item:GetCost()..").");
+		ply:ESSendNotificationPopup("Shop","You don't have enough bananas to make this purchase.\n'"..item:GetName().."' costs "..item:GetCost().." bananas."); 
+		return;
+	end
+
+	if not ply:ESGiveItem(item:GetName(),itemtype) then 
+		ply:ESSendNotificationPopup("Shop","You already own this item.");
+		return 
+	end
 
 	ply:ESTakeBananas(cost);
 
-	ply:ESGiveItem(item:GetName(),itemtype,false);
+	ply:ESSendNotificationPopup("Shop","Successfully purchased '"..item:GetName().."'.\nThe item has been added to your inventory.");
 
-	ply:ESSendNotification("generic","You bought the item.");
 		
 	ES.DebugPrint(ply:Nick().." bought an item ("..item:GetName()..")")
 end);
