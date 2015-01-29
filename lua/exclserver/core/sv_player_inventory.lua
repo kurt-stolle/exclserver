@@ -71,8 +71,8 @@ function PLAYER:ESGiveItem(name,itemtype,nosynch)
 		end
 		table.insert(self._es_inventory_meleeweapons,name);
 	elseif itemtype == ES.ITEM_MODEL then
-		if type(self.self._es_inventory_models) ~= "table" then
-			self.self._es_inventory_models = {};
+		if type(self._es_inventory_models) ~= "table" then
+			self._es_inventory_models = {};
 		end
 		table.insert(self._es_inventory_models,name);
 	elseif itemtype == ES.ITEM_AURA then
@@ -199,6 +199,7 @@ hook.Add("ESPlayerReady","ES.Inventory.LoadInitial",function(ply)
 		ply._es_inventory_auras 			= {};
 		ply._es_inventory_models 			= {};
 		ply._es_inventory_meleeweapons 		= {};
+		ply._es_inventory_props				= {};
 
 		for _,v in pairs(data)do
 			if v.itemtype == ES.ITEM_PROP and ES.MatchSubKey(ES.Props,"_name",v.name) then
@@ -218,11 +219,6 @@ hook.Add("ESPlayerReady","ES.Inventory.LoadInitial",function(ply)
 				table.insert(ply._es_inventory_meleeweapons,v.name);
 			end
 		end
-
-		print("Items:");
-		PrintTable(tab);
-		print("Data:");
-		PrintTable(data);
 
 		net.Start("ESSynchInventory");
 		net.WriteTable(tab);

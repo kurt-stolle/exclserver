@@ -1,6 +1,7 @@
 -- sh_trails.lua
 
 ES.Trails = {} 
+ES.ImplementIndexMatcher(ES.Trails,"_name");
 
 function  ES.AddTrail(n,d,p,t,color)
 	local tab=ES.Item( ES.ITEM_TRAIL );

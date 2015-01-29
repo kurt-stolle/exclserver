@@ -14,8 +14,17 @@ end
 
 function ES.MatchSubKey(tab,key_sub,value)
 	for k,v in ipairs(tab)do
-		if v[key_sub] and v[key_sub] == value then
+		if v[key_sub] and tostring(v[key_sub]) == tostring(value) then
 			return v;
 		end
 	end
+	return nil;
+end
+
+function ES.ImplementIndexMatcher(tbl,key_sub)
+	setmetatable(tbl,{
+		__index = function(self,key)
+			return ES.MatchSubKey(self,key_sub,key);
+		end
+	});
 end

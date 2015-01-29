@@ -51,11 +51,11 @@ function ES.GetItemTable(enum)
 	if enum == ES.ITEM_PROP then
 		return ES.Props;
 	elseif enum == ES.ITEM_MODEL then
-		return ES.Props;
+		return ES.Models;
 	elseif enum == ES.ITEM_TRAIL then
-		return ES.Props;
+		return ES.Trails;
 	elseif enum == ES.ITEM_AURA then
-		return ES.Props;
+		return ES.Auras;
 	elseif enum == ES.ITEM_MELEE then
 		return ES.MeleeWeapons;
 	else

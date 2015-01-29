@@ -1,5 +1,6 @@
 -- sh_inventory_new.lua
 ES.Props = {};
+ES.ImplementIndexMatcher(ES.Props,"_name");
 
 function  ES.AddProp(n,d,p,t,vip,scale)
 	local tab=ES.Item( ES.ITEM_PROP );

@@ -2,6 +2,7 @@
 
 
 ES.Auras = {} -- Will be loaded in seperate files.
+ES.ImplementIndexMatcher(ES.Auras,"_name");
 
 function  ES.AddAura(n,d,p,t) -- maybe a bit silly to not just edit the table, but we want to make it so people who edit ExclServer do not have to touch files in core/
 	local tab=ES.Item( ES.ITEM_AURA );

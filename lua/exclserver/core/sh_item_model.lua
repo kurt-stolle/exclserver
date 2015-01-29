@@ -1,6 +1,7 @@
 -- sh_models.lua
 -- gets a player's desired model.
 ES.Models = {}
+ES.ImplementIndexMatcher(ES.Models,"_name");
 
 function ES.AddModel(n,d,p,t,bVip)
 	local tab=ES.Item( ES.ITEM_MODEL );

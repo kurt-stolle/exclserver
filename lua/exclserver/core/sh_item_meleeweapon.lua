@@ -2,6 +2,7 @@
 -- melee weapons
 
 ES.MeleeWeapons = {}
+ES.ImplementIndexMatcher(ES.MeleeWeapons,"_name");
 
 function ES.AddMelee(n,d,p,t,viewmodel,holdtype)
 	local tab=ES.Item( ES.ITEM_MELEE );
