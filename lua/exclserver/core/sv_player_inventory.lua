@@ -268,3 +268,33 @@ net.Receive("ESBuyItem",function(len,ply)
 		
 	ES.DebugPrint(ply:Nick().." bought an item ("..item:GetName()..")")
 end);
+
+util.AddNetworkString("ESActivateItem");
+net.Receive("ESActivateItem",function(len,ply)
+	local itemtype=net.ReadUInt(4);
+	local item=net.ReadUInt(8);
+
+	if not item or not itemtype then return end;
+
+	local tab=ES.GetItemTable(itemtype);
+
+	if not tab then return end
+	
+	item=tab[item];
+
+	if not item or not ply:ESHasItem(item:GetName(),itemtype) then return end
+	
+	ply:ESSetNetworkedVariable("active_"..item:GetTypeString(),item:GetName());
+end);
+util.AddNetworkString("ESDeactivateItem");
+net.Receive("ESDeactivateItem",function(len,ply)
+	local itemtype=net.ReadUInt(4):
+
+	if not itemtype then return end;
+
+	local tab = ES.GetItemType(itemtype)
+
+	if not tab then return end
+	
+	ply:ESSetNetworkedVariable("active_"..(tab[1]:GetTypeString()),"");
+end);

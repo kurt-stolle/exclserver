@@ -32,6 +32,22 @@ AccessorFunc(meta,"_vipOnly","VIP",FORCE_BOOL);
 function meta:GetType()
 	return self._type;
 end
+function meta:GetTypeString()
+	local type=self._type;
+
+	return type==ES.ITEM_TRAIL and "trail" or type==ES.ITEM_MELEE and "meleeweapon" or type==ES.ITEM_MODEL and "model" or type==ES.ITEM_AURA and "aura" or type==ES.ITEM_PROP and "prop" or nil;
+end
+function meta:GetKey()
+	local tab=ES.GetItemTable(self:GetType());
+
+	for k,v in pairs(tab) do
+		if v:GetName() == self:GetName() then
+			return k;
+		end
+	end
+
+	return nil;
+end
 
 -- actual stuff
 function ES.ValidItem(name,itemtype)

@@ -52,9 +52,7 @@ function BUTTON:Paint(w,h)
 
 
 	draw.RoundedBox(2,x-1,y-1,(h-8)*2+2,h-8 + 2, Color(0,0,0,200))
-	--[[draw.RoundedBox(2,x,y,h*2-8,h-8, Color(0,138,184))
-	draw.RoundedBox(0,x,y,self.moveX-4,h-8, Color(184,46,0))]]
-
+	
 	draw.SimpleText("I","ESDefaultSmall",x+(h-8)/2 + (h-8), y+(h-8)/2,ES.Color.White,1,1);
 	draw.SimpleText("O","ESDefaultSmall",x+(h-8)/2, y+(h-8)/2,ES.Color.White,1,1);
 

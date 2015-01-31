@@ -66,15 +66,20 @@ function ES._MMGenerateInventoryEffects(base)
 	butPrev:SetRotation(180);
 	butPrev.DoClick = function(self)
 		if CurTime() < nextPress then return end
-		nextPress = CurTime()+.7;
+		nextPress = CurTime()+.2;
 		modeIndex = modeIndex - 1;
 		if modeIndex < 0 then modeIndex = 0 end;
 
 		mdl:SetModel(modelbykey(modeIndex))
 		if modeIndex <= 0 then
-			RunConsoleCommand("excl","deactivate","model");
+			net.Start("ESDeactivateItem");
+			net.WriteUInt(ES.ITEM_MODEL,4);
+			net.SendToServer();
 		else
-			RunConsoleCommand("excl","activate",models[modeIndex],"model");
+			net.Start("ESActivateItem");
+			net.WriteUInt(ES.ITEM_MODEL,4);
+			net.WriteUInt(modelIndex,8);
+			net.SendToServer();
 		end
 	end
 
@@ -117,8 +122,10 @@ function ES._MMGenerateInventoryEffects(base)
 			iconAura:SetVisible(true);
 			invAuras.rm:SetVisible(true);
 				
-			LocalPlayer().excl.activeaura = v;
-			RunConsoleCommand("excl","activate",v,"aura");
+			net.Start("ESActivateItem");
+			net.WriteUInt(ES.ITEM_AURA,4);
+			net.WriteUInt(ES.Auras[v]:GetKey());
+			net.SendToServer();
 		end
 
 		table.insert(invAuras.PanelInventory.items,ic);
@@ -157,7 +164,10 @@ function ES._MMGenerateInventoryEffects(base)
 				iconTrail:SetVisible(true);
 				invTrails.rm:SetVisible(true);
 
-				RunConsoleCommand("excl","activate",v,"trail");
+				net.Start("ESActivateItem");
+				net.WriteUInt(ES.ITEM_TRAIL,4);
+				net.WriteUInt(ES.Trails[v]:GetKey());
+				net.SendToServer();
 			end
 
 			table.insert(invTrails.PanelInventory.items,ic);
@@ -201,7 +211,10 @@ function ES._MMGenerateInventoryEffects(base)
 				iconMelee:SetVisible(true);
 				invMelee.rm:SetVisible(true);
 				
-				RunConsoleCommand("excl","activate",v,"melee");
+				net.Start("ESActivateItem");
+				net.WriteUInt(ES.ITEM_MELEE,4);
+				net.WriteUInt(ES.MeleeWeapons[v]:GetKey());
+				net.SendToServer();
 			end
 
 			table.insert(invMelee.PanelInventory.items,ic);

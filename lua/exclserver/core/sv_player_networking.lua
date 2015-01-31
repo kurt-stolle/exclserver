@@ -175,7 +175,7 @@ net.Receive("ES.NwPlayerVar",function(len,requester)
 	net.Send(requester);
 end);
 local cnt;
-timer.Create("ES.NetworkPlayers",.1,0,function()
+timer.Create("ES.NetworkPlayers",.2,0,function()
 	cnt=table.Count(queue);
 	if not queue or cnt < 1 then return end
 
