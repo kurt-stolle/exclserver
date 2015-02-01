@@ -15,12 +15,12 @@ local matrix,x,y,width,height,rad
 local PANEL = {}
 surface.CreateFont( "ESFrameText", { 
 font = "Calibri", 
-size = 18,
+size = 21,
 weight=400 } 
 )
 surface.CreateFont( "ESFrameTextShadow", { 
 font = "Calibri", 
-size = 20,
+size = 21,
 weight=500,
 blursize=2 } 
 )
@@ -97,14 +97,21 @@ function PANEL:Paint(w,h)
 
 	local a,b,c = ES.GetColorScheme();
 
-	draw.RoundedBoxEx(2,0,0,w,h,ES.Color["#000000AA"],true,true) 
-	draw.RoundedBoxEx(2,1,1,w-2,30,a,true,true) 
+	surface.SetDrawColor(ES.Color.Black);
+	surface.DrawRect(0,0,w,h);
+	surface.SetDrawColor(ES.Color["#1E1E1E"]);
+	surface.DrawRect(1,1,w-2,h-2);
 
-	draw.RoundedBoxEx(2,1,30,w-2,h-31,ES.Color["#1E1E1E"],false,false,true,true);
+	surface.SetDrawColor(ES.Color["#FFFFFF03"])
+	surface.DrawRect(1,1,w-2,1);
+	surface.DrawRect(1,h-2,w-2,1);
+	surface.DrawRect(1,2,1,h-4);
+	surface.DrawRect(w-2,2,1,h-4);
 
-	local title = string.upper(self:GetTitle());
-	--draw.SimpleText(title,"ESFrameTextShadow",11,30/2+1,ES.Color["#00000066"],0,1);
-	draw.SimpleText(title,"ESFrameText",10,30/2,COLOR_WHITE,0,1);
+	surface.SetDrawColor(ES.GetColorScheme(1));
+	surface.DrawRect(1,1,w-2,29);
+
+	draw.SimpleText(self:GetTitle(),"ESFrameText",10,30/2,COLOR_WHITE,0,1);
 end
 function PANEL:PaintOver(w,h)
 	popModelMatrix()

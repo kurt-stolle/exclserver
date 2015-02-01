@@ -177,17 +177,21 @@ function PNL:Paint(w,h)
 			v.scale=Lerp(FrameTime()*10,v.scale,1);
 
 			cam.PushModelMatrix( v.Matrix )
+				local w,h = ScrW(),ScrH();
+
+				surface.SetDrawColor(ES.Color.Black);
+				surface.DrawRect(0,0,w,h);
 				if v.Hover then
 					surface.SetDrawColor(ES.GetColorScheme(3));
 				else
-					surface.SetDrawColor(color_choice_bg);
+					surface.SetDrawColor(ES.Color["#1E1E1E"]);
 				end
-				surface.DrawRect(0,0,ScrW(),ScrH());
-				surface.SetDrawColor(color_choice_border);
-				surface.DrawRect(0,0,ScrW(),1);
-				surface.DrawRect(0,ScrH()-1,ScrW(),1);
-				surface.DrawRect(0,1,1,ScrH()-(1*1));
-				surface.DrawRect(ScrW()-1,1,1,ScrH()-(1*1));
+				surface.DrawRect(1,1,w-2,h-2);
+				surface.SetDrawColor(ES.Color["#FFFFFF03"])
+				surface.DrawRect(1,1,w-2,1);
+				surface.DrawRect(1,h-2,w-2,1);
+				surface.DrawRect(1,2,1,h-4);
+				surface.DrawRect(w-2,2,1,h-4);
 				
 				surface.SetMaterial(v.icon)
 
@@ -197,8 +201,8 @@ function PNL:Paint(w,h)
 				surface.SetDrawColor(ES.Color.White)
 				surface.DrawTexturedRectRotated(32,24,32,32,0);
 
-				draw.SimpleText(v.name,"ES.MainMenu.ChoiseElementSub",ScrW()/2	,ScrH()-14+1,ES.Color.Black,1,1)
-				draw.SimpleText(v.name,"ES.MainMenu.ChoiseElementSub",ScrW()/2	,ScrH()-14,ES.Color.White,1,1)
+				draw.SimpleText(v.name,"ES.MainMenu.ChoiseElementSub",w/2	,h-14+1,ES.Color.Black,1,1)
+				draw.SimpleText(v.name,"ES.MainMenu.ChoiseElementSub",w/2	,h-14,ES.Color.White,1,1)
 
 			cam.PopModelMatrix()
 
@@ -352,10 +356,15 @@ function PNL:Think(w,h)
 	end
 end
 function PNL:Paint(w,h)
-	surface.SetDrawColor(Color(255,255,255,5));
+	surface.SetDrawColor(ES.Color.Black);
 	surface.DrawRect(0,0,w,h);
 	surface.SetDrawColor(Color(30,30,30));
 	surface.DrawRect(1,1,w-2,h-2);
+	surface.SetDrawColor(ES.Color["#FFFFFF03"])
+	surface.DrawRect(1,1,w-2,1);
+	surface.DrawRect(1,h-2,w-2,1);
+	surface.DrawRect(1,2,1,h-4);
+	surface.DrawRect(w-2,2,1,h-4);
 
 	surface.SetDrawColor(ES.GetColorScheme(2));
 	surface.DrawRect(1,1,w-2,70);

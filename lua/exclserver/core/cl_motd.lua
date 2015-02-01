@@ -26,9 +26,9 @@ local navPaintButton=function(self,w,h)
 		surface.DrawRect(0,0,w,h);
 	end
 
-	if self:GetHover() then
+	if self:GetHover() and not self:GetSelected() then
 		surface.SetDrawColor(ES.GetColorScheme(3));
-		surface.DrawRect(1,1,w-2,h-2);
+		surface.DrawRect(0,0,w,h);
 	end
 
 	surface.SetDrawColor(ES.Color.White);
