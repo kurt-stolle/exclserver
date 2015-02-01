@@ -1,12 +1,12 @@
 
 --#### Inventory
 surface.CreateFont("esMMInventoryTitle",{
-	font = "Roboto",
+	font = "Calibri",
 	size = 36,
 	weight=400
 })
 surface.CreateFont("esMMInventoryAppearthere",{
-	font = "Roboto",
+	font = "Calibri",
 	size = 26,
 	weight=400,
 	italic=true

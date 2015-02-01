@@ -2,7 +2,7 @@ local color_white = ES.Color.White;
 local color_gray = ES.Color["#444"];
 
 surface.CreateFont("ES.ButtonFont",{
-	font = "Roboto",
+	font = "Calibri",
 	weight = 700,
 	size = 16,
 })

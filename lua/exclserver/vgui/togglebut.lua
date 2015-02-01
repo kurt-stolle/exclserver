@@ -1,6 +1,6 @@
 -- Buttons
 surface.CreateFont( "ES.ToggleButton", { 
-font = "Roboto", 
+font = "Calibri", 
 size = 16,
 weight=400 } 
 )

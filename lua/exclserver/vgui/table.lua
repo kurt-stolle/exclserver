@@ -15,7 +15,7 @@ local margin = 10;
 COLOR_BLACK = COLOR_BLACK or Color(0,0,0);
 
 surface.CreateFont("ES.VIPTableFont",{
-	font = "Roboto",
+	font = "Calibri",
 	size = 16,
 	weight = 700
 })

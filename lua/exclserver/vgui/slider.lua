@@ -1,12 +1,12 @@
 surface.CreateFont( "ESSlidebutton", { 
-font = "Roboto", 
+font = "Calibri", 
 weight = 700,
 size = 14,
 --italic = true
  } 
 )
 surface.CreateFont( "ESSlidebuttonBlur", { 
-font = "Roboto", 
+font = "Calibri", 
 weight = 700,
 size = 14,
 blursize = 2,

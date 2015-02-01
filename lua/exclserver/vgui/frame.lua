@@ -14,12 +14,12 @@ local matrix,x,y,width,height,rad
 
 local PANEL = {}
 surface.CreateFont( "ESFrameText", { 
-font = "Roboto", 
+font = "Calibri", 
 size = 18,
 weight=400 } 
 )
 surface.CreateFont( "ESFrameTextShadow", { 
-font = "Roboto", 
+font = "Calibri", 
 size = 20,
 weight=500,
 blursize=2 } 

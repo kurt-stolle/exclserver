@@ -34,12 +34,12 @@ end
 if SERVER then return end
 
 surface.CreateFont("ESAdvertFont",{
-	font = "Roboto",
+	font = "Calibri",
 	size = 98,
 	weight = 300,
 })
 surface.CreateFont("ESAdvertFontBlur",{
-	font = "Roboto",
+	font = "Calibri",
 	size = 98,
 	weight = 300,
 	blursize = 2,

@@ -1,40 +1,40 @@
 -- cl_fonts
 surface.CreateFont( "ESDefaultSmallBlur", { 
-font = "Arial", 
+font = "Calibri", 
 size = 12,
 weight = 500,
 blursize = 2} 
 )
 surface.CreateFont( "ESDefaultSmall", { 
-font = "Arial", 
+font = "Calibri", 
 size = 12,
 weight = 500} 
 )
 surface.CreateFont( "ESDefault", { 
-font = "Arial", 
+font = "Calibri", 
 size = 14,
 weight = 500} 
 )
 surface.CreateFont( "ESDefaultBlur", { 
-font = "Arial", 
+font = "Calibri", 
 size = 14,
 weight = 500,
 blursize = 2} 
 )
 surface.CreateFont( "ESDefaultBold", { 
-font = "Arial", 
+font = "Calibri", 
 size = 14,
 weight = 800} 
 )
 surface.CreateFont( "ESDefaultBoldBlur", { 
-font = "Arial", 
+font = "Calibri", 
 size = 14,
 weight = 800,
 blursize = 2} 
 )
 
 surface.CreateFont( "ESDefaultBig", {
-	font = "Roboto",
+	font = "Calibri",
 	size=26,
 	weight=400
 })

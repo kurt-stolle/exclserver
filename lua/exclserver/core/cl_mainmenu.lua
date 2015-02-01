@@ -72,7 +72,7 @@ to all other servers.
 ExclServer is created and constructed by Excl.]]
 
 surface.CreateFont("ES.MainMenu.HeadingText",{
-	font = "Roboto",
+	font = "Calibri",
 	size = 28,
 })
 local needvip;

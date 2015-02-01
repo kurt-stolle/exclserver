@@ -5,27 +5,27 @@ local colElementMainFoot = Color(213,213,213);
 local colElementChoise = Color(30,30,30);
 
 surface.CreateFont("ES.MainMenu.MainElementHeader",{
-	font = "Roboto",
+	font = "Calibri",
 	weight = 400,
 	size = 48,
 })
 surface.CreateFont("ES.MainMenu.MainElementInfoBnns",{
-	font = "Roboto",
+	font = "Calibri",
 	weight = 400,
 	size = 36
 })
 surface.CreateFont("ES.MainMenu.MainElementInfoBnnsSmall",{
-	font = "Roboto",
+	font = "Calibri",
 	weight = 700;
 	size = 16,
 })
 surface.CreateFont("ES.MainMenu.ChoiseElement",{
-	font = "Roboto",
+	font = "Calibri",
 	weight = 400;
 	size = 14,
 })
 surface.CreateFont("ES.MainMenu.ChoiseElementSub",{
-	font = "Roboto",
+	font = "Calibri",
 	weight = 700;
 	size = 12,
 })
@@ -257,13 +257,13 @@ vgui.Register("ESMainMenu",PNL,"EditablePanel");
 --### MAIN ELEMENT BUTTON
 
 surface.CreateFont("ES.MainMenu.MainElementButtonShad",{
-	font = "Roboto",
+	font = "Calibri",
 	size = 16,
 	weight = 700,
 	blursize=2,
 })
 surface.CreateFont("ES.MainMenu.MainElementButton",{
-	font = "Roboto",
+	font = "Calibri",
 	size = 16,
 	weight = 700,
 })
@@ -318,7 +318,7 @@ vgui.Register("ES.MainMenu.NavigationItem",PNL,"Panel");
 
 
 surface.CreateFont("ES.MainMenu.FrameHead",{
-	font = "Roboto",
+	font = "Calibri",
 	size = 48,
 	weight = 300,
 })
