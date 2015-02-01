@@ -52,7 +52,7 @@ end
 function PANEL:Think()
 	if self.delay > CurTime() then return end
 
-	self.scale=Lerp(FrameTime()*8,self.scale,self:GetHover() and 1.1 or 1);
+	self.scale=Lerp(FrameTime()*8,self.scale,self:GetHover() and 1.05 or 1);
 end
 function PANEL:Paint(w,h)
 	pushFilterMag( TEXFILTER.ANISOTROPIC )

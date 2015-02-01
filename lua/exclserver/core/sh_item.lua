@@ -40,7 +40,7 @@ end
 function meta:GetKey()
 	local tab=ES.GetItemTable(self:GetType());
 
-	for k,v in pairs(tab) do
+	for k,v in ipairs(tab) do
 		if v:GetName() == self:GetName() then
 			return k;
 		end
@@ -51,13 +51,17 @@ end
 
 -- actual stuff
 function ES.ValidItem(name,itemtype)
-	local tab=ES.GetItemTable(enum);
+	local tab=ES.GetItemTable(itemtype);
 	if not tab then return false end
 
-	for k,v in pairs(tab)do
-		if v:GetName() == name then
-			return true
+	if type(name) == "string" then
+		for k,v in pairs(tab)do
+			if v:GetName() == name then
+				return true
+			end
 		end
+	elseif type(name) == "number" then
+		return not (not tab[name]);
 	end
 
 	return true;

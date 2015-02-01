@@ -106,13 +106,14 @@ ES.DBQuery("SELECT * FROM es_ranks_config;",function(data)
 	end
 end):wait();
 
+local serverIP=ES.GetServerIP();
 ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_servers` ( `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT, ip varchar(100), prettyname varchar(100), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
-ES.DBQuery("SELECT id FROM es_servers WHERE ip = '"..exclGetIP().."' LIMIT 1;",function(r)
+ES.DBQuery("SELECT id FROM es_servers WHERE ip = '"..serverIP.."' LIMIT 1;",function(r)
 	if r and r[1] then
 		ES.ServerID = r[1].id;
 	else
-		ES.DBQuery("INSERT INTO es_servers SET ip = '"..exclGetIP().."';",function()
-			ES.DBQuery("SELECT id FROM es_servers WHERE ip = '"..exclGetIP().."' LIMIT 1;",function(r)
+		ES.DBQuery("INSERT INTO es_servers SET ip = '"..serverIP.."';",function()
+			ES.DBQuery("SELECT id FROM es_servers WHERE ip = '"..serverIP.."' LIMIT 1;",function(r)
 				if r and r[1] then
 					ES.ServerID = r[1].id;
 				end

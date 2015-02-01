@@ -144,8 +144,8 @@ function PNL:Paint(w,h)
 	local p = LocalPlayer();
 	local scrW,scrH = ScrW(),ScrH();
 
-	surface.SetDrawColor(colTransBlack);
-	surface.DrawRect(0,0,w,h);
+	--[[surface.SetDrawColor(colTransBlack);
+	surface.DrawRect(0,0,w,h);]]
 	Derma_DrawBackgroundBlur(self,self.TimeCreate)
 
 	-- THE CHOISE ELEMENT
@@ -213,11 +213,13 @@ function PNL:Paint(w,h)
 	surface.SetDrawColor(colMainElementBg);
 	surface.DrawRect(self.ElementMainX,0,256,h);
 
-	surface.SetDrawColor(Color(255,255,255,5));
-	surface.DrawRect(self.ElementMainX+256,0,1,h);
-
 	surface.SetDrawColor(ES.GetColorScheme(1));
 	surface.DrawRect(self.ElementMainX,0,256,80);
+
+	surface.SetDrawColor(ES.Color["#000"]);
+	surface.DrawRect(self.ElementMainX+256,0,1,h);
+	surface.SetDrawColor(ES.Color["#FFFFFF03"]);
+	surface.DrawRect(self.ElementMainX+255,0,1,h);
 
 	---draw.SimpleText("ExclServer","ES.MainMenu.MainElementHeader",self.ElementMainX+10,24,ES.Color.White);
 
@@ -466,91 +468,7 @@ function PNL:Paint()
 end
 vgui.Register("esMMHatPreview",PNL,"DModelPanel")
 
-
---#### hat preview in inventory
-
-local colHatBuyTileText = Color(255,255,255,50);
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("Spawnicon",self);
-	self.icon:SetToolTip(nil)
-	self.title = "Un defined"
-	self.dummy = self:Add("Panel");
-	self.dummy.OnCursorEntered = function() self:OnCursorEntered() end
-	self.dummy.OnCursorExited = function() self:OnCursorExited() end
-	self.dummy.OnMouseReleased = function() self:OnMouseReleased() end
-end
-function PNL:PerformLayout()
-	local w = self:GetWide();
-	local h = self:GetTall();
-
-	self.icon:SetSize(w-50,h-50);
-	self.icon:SetPos(45,25);
-	self.dummy:SetSize(w,h)
-	self.dummy:SetPos(0,-1);
-end
-function PNL:OnCursorEntered()
-	self.Hover = true;
-end
-function PNL:OnCursorExited()
-	self.Hover = false;
-end
-function PNL:Paint(w,h)
-	if not self.item or not ES.Hats[self.item] then  return end
-	if self.Hover then
-		surface.SetDrawColor(Color(0,0,0,100));
-		surface.DrawRect(0,0,w,h);
-	end
-	surface.SetDrawColor(Color(255,255,255,20));
-	surface.DrawRect(2,2,w-4,h-4);
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(1));
-	else
-		surface.SetDrawColor(colMainElementBg)
-	end
-	surface.DrawRect(3,3,w-6,h-6);
-
-	local s = string.gsub(self.title," ","\n");
-	local col = colHatBuyTileText;
-	if self.Hover then
-		col = ES.Color.White;
-	end
-	draw.DrawText(s,"ESDefaultBold",8,5,col);
-	draw.SimpleText("Click to activate","ESDefaultSmall",8,h-14-3,ES.Color.White);
-end
-vgui.Register("esMMHatInventoryTile",PNL,"Panel");
-
-
--- ### INVENTORY TRAILS
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("DImage",self);
-	self.BaseClass.Init(self);
-end
-vgui.Register("esMMTrailInventoryTile",PNL,"ES.ItemTile");
-
-
--- ### INVENTORY TRAILS
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("DImage",self);
-	self.BaseClass.Init(self);
-end
-
-vgui.Register("esMMAuraInventoryTile",PNL,"ES.ItemTile");
-
-
---#### melee preview in inventory
-local PNL = {};
-function PNL:Init()
-	self.icon = vgui.Create("Spawnicon",self);
-	self.icon:SetToolTip(nil);
-	self.BaseClass.Init(self);
-end
-vgui.Register("esMMMeleeInventoryTile",PNL,"ES.ItemTile");
-
-
---### FUCKING PLAYER ROWS
+--## FUCKING PLAYER ROWS
 
 local colPlayerRowBg = Color(23,22,20);
 local colPlayerRowBgSelf = Color(23,22,20);

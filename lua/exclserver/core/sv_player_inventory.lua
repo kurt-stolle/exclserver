@@ -288,13 +288,13 @@ net.Receive("ESActivateItem",function(len,ply)
 end);
 util.AddNetworkString("ESDeactivateItem");
 net.Receive("ESDeactivateItem",function(len,ply)
-	local itemtype=net.ReadUInt(4):
+	local itemtype=net.ReadUInt(4);
 
-	if not itemtype then return end;
+	if not itemtype then return end
 
-	local tab = ES.GetItemType(itemtype)
+	local tab = ES.GetItemType(itemtype);
 
 	if not tab then return end
 	
 	ply:ESSetNetworkedVariable("active_"..(tab[1]:GetTypeString()),"");
-end);
+end); 

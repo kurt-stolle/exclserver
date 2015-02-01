@@ -1,13 +1,13 @@
 -- cl_player_hooks
 hook.Add("PostPlayerDraw", "ESPostPlayerDraw", function(p)
-	local drawpos,drawang,slotdata,pos,ang,item,scale,bone,color;
+	--[[local drawpos,drawang,slotdata,pos,ang,item,scale,bone,color;
 	for i=1, 2+(p:ESGetVIPTier()) do
 		slotdata = p:ESGetGlobalData("slot"..i,false);
 		if slotdata and type( slotdata ) == "string" and slotdata != "" then
 			local exp = string.Explode("|",slotdata);
 			if not exp or not exp[1] or not exp[2] or not exp[3] or not exp[4] or not exp[5] or not exp[6] then continue end
 
-			item = ES.Items[exp[1]];
+			item = ES.Items[ exp[1] ];
 			if not item or not item.cMdl or not IsValid(item.cMdl) then continue end
 			scale = Vector(item:GetScale(),item:GetScale(),item:GetScale()) + Vector(exp[4]);
 			item = item.cMdl;
@@ -42,7 +42,7 @@ hook.Add("PostPlayerDraw", "ESPostPlayerDraw", function(p)
 			item:SetRenderAngles()
 		end
 	end
-
+]]
 end)
 
 hook.Add("InitPostEntity","ES.FixLadders",function()

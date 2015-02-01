@@ -1,6 +1,6 @@
 local PLAYER = FindMetaTable("Player");
 function PLAYER:ESHasItem(name,itemtype)
-	if type(name) ~= "string" or type(itemtype) ~= "number" then return Error("Invalid arguments passed to function PLAYER.ESHasItem."); end
+	if type(name) ~= "string" or type(itemtype) ~= "number" then return end
 
 	if itemtype == ES.ITEM_TRAIL and type(self._es_inventory_trails)=="table" then
 		return table.HasValue(self._es_inventory_trails,name);
@@ -13,8 +13,6 @@ function PLAYER:ESHasItem(name,itemtype)
 	elseif itemtype == ES.ITEM_PROP and type(self._es_inventory_props)=="table" then
 		return table.HasValue(self._es_inventory_props,name);
 	end
-
-	ES.DebugPrint("Couldn't verify item in invetory; '"..name.."'@["..tostring(itemtype).."]");
 
 	return false;
 end

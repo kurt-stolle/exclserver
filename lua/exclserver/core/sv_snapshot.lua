@@ -13,8 +13,6 @@ end);
 net.Receive("ESUploadSnapshotProg",function(len,p)
 	if not build[p:UniqueID()] then return end
 
-	ES.DebugPrint("Received SS fragment")
-	
 	build[p:UniqueID()].ss[net.ReadInt(8)] = net.ReadData(net.ReadInt(32));
 
 	local complete= true;
@@ -26,8 +24,6 @@ net.Receive("ESUploadSnapshotProg",function(len,p)
 	end
 
 	if not complete or not requesters[p:UniqueID()] then return end
-
-	ES.DebugPrint("Upload complete")
 
 	net.Start("ESShowSnapshot");
 	net.WriteEntity(p);

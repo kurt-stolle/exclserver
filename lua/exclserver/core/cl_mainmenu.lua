@@ -1,6 +1,62 @@
 -- the new main
 local mm;
 
+local fx = {
+	["$pp_colour_addr"] = 0, 
+	["$pp_colour_addg"] = 0, 
+	["$pp_colour_addb"] = 0, 
+	["$pp_colour_brightness"] = -.2, 
+	["$pp_colour_contrast"] = 1, 
+	["$pp_colour_colour"] = 1, 
+	["$pp_colour_mulr"] = 0, 
+	["$pp_colour_mulg"] = 0, 
+	["$pp_colour_mulb"] = 0
+}
+hook.Add("RenderScreenspaceEffects","ES.MMBlackWhite",function()
+	if IsValid(mm) then
+		fx["$pp_colour_colour"]=Lerp(FrameTime(),fx["$pp_colour_colour"],.1);
+		DrawColorModify(fx);
+	else
+		fx["$pp_colour_colour"]=1;
+	end
+end);
+
+hook.Add("ShouldDrawLocalPlayer","ES.MMDrawLocal",function()
+	if IsValid(mm) then
+		return true;
+	end
+end);
+local view = {};
+hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
+	if IsValid(mm) then
+		local bone=ply:LookupBone("ValveBiped.Bip01_Head1");
+
+		if bone then
+		
+			pos,angles=ply:GetBonePosition(bone);
+
+			if pos and angles then
+
+				angles:RotateAroundAxis(angles:Up(),110);
+				angles:RotateAroundAxis(angles:Forward(),90);
+
+				view.origin = LerpVector(FrameTime()*7,view.origin,pos-( angles:Forward()*20 ));
+
+				
+
+				view.angles = LerpAngle(FrameTime()*7,view.angles,angles);
+				view.fov = 70;
+				
+				return view
+
+			end
+		end
+	else
+		view.origin=pos;
+		view.angles=angles;
+	end
+end);
+
 local helpText = [[ExclServer is an all-in-one server system that handles items, forums, administration and has a plugin framework.
 The global currency used to buy items is Bananas. You can earn these bananas simply by playing, or you can purchase then
 on the forum.
@@ -53,7 +109,7 @@ local function addCheckbox(help,txt,convar,x,y,oncheck)
 end
 
 function ES.CreateMainMenu()
-	if mm and IsValid(mm) then mm:Remove(); end
+	if IsValid(mm) then mm:Remove(); return end
 	
 	mm = vgui.Create("ESMainMenu");
 	mm:SetPos(0,0);
@@ -1029,10 +1085,16 @@ net.Receive("ESToggleMenu",function() ES.CreateMainMenu() end);
 
 local was_pressed = false;
 hook.Add("Think","exclMMOpenWithF5",function()
-	if input.IsKeyDown(KEY_F6) and not was_pressed then
+	if input.IsKeyDown(KEY_F5) and not was_pressed then
 		was_pressed = true;
 		ES.CreateMainMenu()
-	elseif not input.IsKeyDown(KEY_F6) then
+	elseif not input.IsKeyDown(KEY_F5) then
 		was_pressed = false;
 	end
 end)
+
+hook.Add("PlayerBindPress","exclMMSupressJPeg",function(ply, bind, pressed)
+	if string.find(bind,"jpeg",0,false) and input.IsKeyDown(KEY_F5) then
+		return true;
+	end
+end);

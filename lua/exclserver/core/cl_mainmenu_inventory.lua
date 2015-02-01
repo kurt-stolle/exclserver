@@ -8,6 +8,12 @@ function ES._MMGenerateInventoryEffects(base)
 	local activeMeleeWeapon = ES.MeleeWeapons[ply:ESGetNetworkedVariable("active_meleeweapon")];
 
 	local invTall = (p:GetTall()-10*4)/3
+	local invWide = (p:GetWide()-30-230);
+
+	local iconMargin = 4;
+	local iconSize = 110;--with and height.
+
+	local iconsPerRow = math.floor( invWide / (iconSize + iconMargin*2) ); -- the amount of icons per row, width divided by size+margins*2.
 
 	p:SetTitle("Effects");
 
@@ -99,7 +105,7 @@ function ES._MMGenerateInventoryEffects(base)
 	
 --## Auras
 	local invAuras = vgui.Create("ES.InventoryPanel",p);
-	invAuras:SetSize(p:GetWide()-30-230,invTall);
+	invAuras:SetSize(invWide,invTall);
 	invAuras.title = "Auras";
 	invAuras:SetPos(10,10);
 	invAuras.rm.typ = "aura";
@@ -109,31 +115,35 @@ function ES._MMGenerateInventoryEffects(base)
 	local y = 0;
 	local x = 0;
 	for k,v in pairs(LocalPlayer()._es_inventory_auras or {}) do
-		if not ES.ValidItem(v,ES.ITEM_AURA) then continue end
+		if not ES.ValidItem(v,ES.ITEM_AURA) then
+			continue
+		end
+
+		local item=ES.Auras[v];
 			
-		local ic = invAuras.PanelInventory:Add("esMMAuraInventoryTile");
-		ic:SetPos(x*100,y*100);
-		ic:SetSize(100,100);
-		ic.item = v;
-		ic.icon:SetMaterial(ES.Auras[v].text);
-		ic.text = ES.Auras[v].name
+		local ic = invAuras.PanelInventory:Add("ES.ItemTile.Texture");
+		ic:SetSize(iconSize,iconSize);
+		ic:SetPos(iconMargin+x*(iconSize+iconMargin),iconMargin+y*(iconSize+iconMargin));
+		ic:Setup(item);
+		ic:SetType(ES.ITEM_AURA);
+		ic:SetText(item:GetName());
 		ic.OnMouseReleased = function()
-			iconAura:SetMaterial(ES.Auras[v].text);
+			iconAura:SetMaterial(item:GetModel());
 			iconAura:SetVisible(true);
 			invAuras.rm:SetVisible(true);
 				
 			net.Start("ESActivateItem");
 			net.WriteUInt(ES.ITEM_AURA,4);
-			net.WriteUInt(ES.Auras[v]:GetKey());
+			net.WriteUInt(item:GetKey());
 			net.SendToServer();
 		end
 
-		table.insert(invAuras.PanelInventory.items,ic);
+		invAuras:IncludeIcon(ic);
 
-		y = y + 1;
-		if y >= 2 then
-			y = 0;
-			x = x + 1;
+		x = x + 1;
+		if x > iconsPerRow-1 then
+			x=0;
+			y=y+1;
 		end
 	end
 	iconAura:SetSize(90,90);
@@ -141,7 +151,7 @@ function ES._MMGenerateInventoryEffects(base)
 	
 --## Trails
 	local invTrails = vgui.Create("ES.InventoryPanel",p);
-	invTrails:SetSize(p:GetWide()-30-230,invTall);
+	invTrails:SetSize(invWide,invTall);
 	invTrails.title = "Trails";
 	invTrails:SetPos(10,invAuras.y + invTall + 10);
 	invTrails.rm.typ = "trail";
@@ -153,29 +163,34 @@ function ES._MMGenerateInventoryEffects(base)
 		for k,v in pairs(LocalPlayer()._es_inventory_trails or {})do
 			if not ES.ValidItem(v,ES.ITEM_TRAIL) then continue end
 			
-			local ic = invTrails.PanelInventory:Add("esMMTrailInventoryTile");
-			ic:SetPos(x*100,y*100);
-			ic:SetSize(100,100);
-			ic.item = v;
-			ic.icon:SetImage(ES.Trails[v].text);
-			ic.text = ES.Trails[v].name
+			local item=ES.Trails[v];
+
+			local ic = invTrails.PanelInventory:Add("ES.ItemTile.Texture");
+			ic:SetSize(iconSize,iconSize);
+			ic:SetPos(iconMargin+x*(iconSize+iconMargin),iconMargin+y*(iconSize+iconMargin));
+			ic:Setup(item);
+			ic:SetType(ES.ITEM_TRAIL);
+			ic:SetText(item:GetName());
 			ic.OnMouseReleased = function()
-				iconTrail:SetImage(ES.Trails[v].text);
+				iconTrail:SetImage(item:GetModel());
 				iconTrail:SetVisible(true);
 				invTrails.rm:SetVisible(true);
 
+
+				print("Item selected: "..tostring(item:GetKey()));
+
 				net.Start("ESActivateItem");
 				net.WriteUInt(ES.ITEM_TRAIL,4);
-				net.WriteUInt(ES.Trails[v]:GetKey());
+				net.WriteUInt(item:GetKey());
 				net.SendToServer();
 			end
 
-			table.insert(invTrails.PanelInventory.items,ic);
+			invTrails:IncludeIcon(ic);
 
-			y = y + 1;
-			if y >= 2 then
-				y = 0;
-				x = x + 1;
+			x = x + 1;
+			if x > iconsPerRow-1 then
+				x=0;
+				y=y+1;
 			end
 		end
 	iconTrail:SetSize(90,90);
@@ -188,7 +203,7 @@ function ES._MMGenerateInventoryEffects(base)
 
 --## Melee weapons
 	local invMelee = vgui.Create("ES.InventoryPanel",p);
-	invMelee:SetSize(p:GetWide()-30-230,invTall);
+	invMelee:SetSize(invWide,invTall);
 	invMelee.title = "Melee";
 	invMelee:SetPos(10,invTrails.y + invTall + 10);
 	invMelee.rm.typ = "melee";
@@ -200,29 +215,31 @@ function ES._MMGenerateInventoryEffects(base)
 		for k,v in pairs(LocalPlayer()._es_inventory_meleeweapons or {})do
 			if not ES.ValidItem(v,ES.ITEM_MELEE) then continue end
 			
-			local ic = invMelee.PanelInventory:Add("esMMMeleeInventoryTile");
-			ic:SetPos(x*100,y*100);
-			ic:SetSize(100,100);
-			ic.item = v;
-			ic.icon:SetModel(ES.MeleeWeapons[v].model);
-			ic.text = ES.MeleeWeapons[v].name
+			local item=ES.MeleeWeapons[v];
+
+			local ic = invMelee.PanelInventory:Add("ES.ItemTile.Model");
+			ic:SetSize(iconSize,iconSize);
+			ic:SetPos(iconMargin+x*(iconSize+iconMargin),iconMargin+y*(iconSize+iconMargin));
+			ic:Setup(item);
+			ic:SetType(ES.ITEM_MELEE);
+			ic:SetText(item:GetName());
 			ic.OnMouseReleased = function()
-				iconMelee:SetModel(ES.MeleeWeapons[v].model);
+				iconMelee:SetModel(item:GetModel());
 				iconMelee:SetVisible(true);
 				invMelee.rm:SetVisible(true);
 				
 				net.Start("ESActivateItem");
 				net.WriteUInt(ES.ITEM_MELEE,4);
-				net.WriteUInt(ES.MeleeWeapons[v]:GetKey());
+				net.WriteUInt(item:GetKey());
 				net.SendToServer();
 			end
 
-			table.insert(invMelee.PanelInventory.items,ic);
+			invMelee:IncludeIcon(ic);
 
-			y = y + 1;
-			if y >= 2 then
-				y = 0;
-				x = x + 1;
+			x = x + 1;
+			if x > iconsPerRow-1 then
+				x=0;
+				y=y+1;
 			end
 		end
 	iconMelee:SetSize(90,90);

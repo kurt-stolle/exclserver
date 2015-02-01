@@ -17,9 +17,12 @@ function PNL:Init()
 	self.PanelCurrent = vgui.Create("Panel",self);
 
 	self.PanelInventory = vgui.Create("Panel",self);
+	self.Icons={};
 	function self.PanelInventory:Paint(w,h) 
 		surface.SetDrawColor(Color(0,0,0,100)); 
 		surface.DrawRect(0,0,w,h) 
+
+		if self:GetParent().Icons and #self:GetParent().Icons > 0 then return end
 
 		draw.SimpleText("Your purchases will appear here","esMMInventoryAppearthere",w/2,h/2,ES.Color.White,1,1);
 	end
@@ -98,6 +101,9 @@ function PNL:PerformLayout()
 	self.tilesX = math.floor(self.PanelInventory:GetWide()/100);
 
 	self.rm:SetPos(self.PanelCurrent.x + self.PanelCurrent:GetWide()-17,self.PanelCurrent.y + 1);
+end
+function PNL:IncludeIcon(ic)
+	table.insert(self.Icons,ic);
 end
 function PNL:Paint(w,h)
 	surface.SetDrawColor(ES.GetColorScheme(2));
