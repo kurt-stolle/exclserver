@@ -5,11 +5,12 @@ ES.ImplementIndexMatcher(ES.Trails,"_name");
 
 function  ES.AddTrail(n,d,p,t,color)
 	local tab=ES.Item( ES.ITEM_TRAIL );
+	AccessorFunc(tab,"_color","Color");
 	tab:SetName(n);
 	tab:SetDescription(d);
 	tab:SetCost(p);
 	tab:SetModel(t);
-	tab.color=color;
+	tab:SetColor(color);
 
 	table.insert(ES.Trails,tab);
 end

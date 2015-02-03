@@ -4,7 +4,7 @@ util.AddNetworkString("ESSynchInvRemove");
 
 local PLAYER=FindMetaTable("Player");
 
-function PLAYER:ESActivateItem(name,itemtype,NoSynch)
+function PLAYER:ESActivateItem(name,itemtype)
 	if not self:ESHasItem(name,itemtype) then return false end
 
 	if itemtype == ES.ITEM_TRAIL and self._es_inventory_trails then
@@ -24,13 +24,6 @@ function PLAYER:ESActivateItem(name,itemtype,NoSynch)
 			end
 		end)
 	end 
-
-	if !NoSynch then
-		net.Start("ESSynchInvActivate");
-		net.WriteString(name);
-		net.WriteInt(itemtype,8)
-		net.Send(self);
-	end
 
 	return true;
 end
@@ -138,12 +131,12 @@ function PLAYER:ESRemoveItem(name,itemtype)
 	net.Send(self);
 end
 function PLAYER:ESHandleActiveItems()
-	if self:GetObserverMode() == OBS_MODE_NONE and self.excl then			
-		local trail=self:ESGetNetworkedVariable("active_trail");
+	if self:GetObserverMode() == OBS_MODE_NONE then			
+		local trail=ES.Trails[self:ESGetNetworkedVariable("active_trail",nil)];
 		if trail and ES.ValidItem(trail,ES.ITEM_TRAIL) then
-			if self.trail and IsValid(self.trail) then
-				self.trail:Remove();
-				self.trail = nil;
+			if self._es_entTrail and IsValid(self._es_entTrail) then
+				self._es_entTrail:Remove();
+				self._es_entTrail = nil;
 			end
 			local len = 1.5;
 			local size = 16;
@@ -153,15 +146,15 @@ function PLAYER:ESHandleActiveItems()
 			elseif self:ESGetVIPTier() > 1 then
 				len = 3;
 			end
-			self.trail = util.SpriteTrail(self, 0, (ES.Trails[trail].color or Color(255,255,255)), false, size, 1, len, 1/(size+1)*0.5, string.gsub(ES.Trails[self:ESGetNetworkedVariable("active_trail")].text,"materials/",""));
-		elseif self.trail and IsValid(self.trail) then
-				self.trail:Remove();
-				self.trail = nil;
+			self._es_entTrail = util.SpriteTrail(self, 0, (trail:GetColor() or Color(255,255,255)), false, size, 1, len, 1/(size+1)*0.5, string.gsub(trail:GetModel(),"materials/",""));
+		elseif self._es_entTrail and IsValid(self._es_entTrail) then
+				self._es_entTrail:Remove();
+				self._es_entTrail = nil;
 		end
 	else
-		if self.trail and IsValid(self.trail) then
-			self.trail:Remove();
-			self.trail = nil;
+		if self._es_entTrail and IsValid(self._es_entTrail) then
+			self._es_entTrail:Remove();
+			self._es_entTrail = nil;
 		end
 	end
 end
@@ -284,7 +277,7 @@ net.Receive("ESActivateItem",function(len,ply)
 
 	if not item or not ply:ESHasItem(item:GetName(),itemtype) then return end
 	
-	ply:ESSetNetworkedVariable("active_"..item:GetTypeString(),item:GetName());
+	ply:ESActivateItem(item:GetName(),itemtype)
 end);
 util.AddNetworkString("ESDeactivateItem");
 net.Receive("ESDeactivateItem",function(len,ply)
@@ -296,5 +289,5 @@ net.Receive("ESDeactivateItem",function(len,ply)
 
 	if not tab then return end
 	
-	ply:ESSetNetworkedVariable("active_"..(tab[1]:GetTypeString()),"");
+	ply:ESDeactivateItem(itemtype);
 end); 

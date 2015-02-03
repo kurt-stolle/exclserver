@@ -2,24 +2,20 @@
 -- the motd
 
 local motd
-
 local fx = {
 	["$pp_colour_addr"] = 0, 
 	["$pp_colour_addg"] = 0, 
 	["$pp_colour_addb"] = 0, 
-	["$pp_colour_brightness"] = -.2, 
-	["$pp_colour_contrast"] = 1, 
-	["$pp_colour_colour"] = 1, 
+	["$pp_colour_brightness"] = -.1, 
+	["$pp_colour_contrast"] = 1.1, 
+	["$pp_colour_colour"] = 0, 
 	["$pp_colour_mulr"] = 0, 
 	["$pp_colour_mulg"] = 0, 
 	["$pp_colour_mulb"] = 0
 }
 hook.Add("RenderScreenspaceEffects","ES.MOTDBlackWhite",function()
 	if IsValid(motd) then
-		fx["$pp_colour_colour"]=Lerp(FrameTime(),fx["$pp_colour_colour"],.1);
 		DrawColorModify(fx);
-	else
-		fx["$pp_colour_colour"]=1;
 	end
 end);
 hook.Add("ShouldDrawLocalPlayer","ES.MOTDDrawLocal",function()
@@ -34,7 +30,7 @@ hook.Add("CalcView","ES.MOTDCalcView",function(ply,pos,angles,fov)
 		view.origin=pos;
 		view.angles=angles;
 	elseif IsValid(motd) then
-		local bone=ply:LookupBone("ValveBiped.Bip01_Head1");
+		local bone=ply:LookupBone("ValveBiped.Bip01_Spine");
 
 		if bone then
 		
@@ -42,10 +38,9 @@ hook.Add("CalcView","ES.MOTDCalcView",function(ply,pos,angles,fov)
 
 			if pos and angles then
 
-				rot=(rot + (FrameTime() * 10)) % 360;
+				rot=(rot + (FrameTime() * 6)) % 360;
 
-				angles:RotateAroundAxis(angles:Up(),110);
-				angles:RotateAroundAxis(angles:Forward(),90);
+				angles=ply:GetAngles();
 				angles:RotateAroundAxis(angles:Up(),rot);
 
 				local tr=util.TraceLine( {
@@ -54,8 +49,8 @@ hook.Add("CalcView","ES.MOTDCalcView",function(ply,pos,angles,fov)
 					filter=ply
 				} );
 
-				view.origin = LerpVector(FrameTime()*5,view.origin,tr.HitPos + angles:Forward()*10);
-				view.angles = LerpAngle(FrameTime()*5,view.angles,angles);
+				view.origin = tr.HitPos + angles:Forward()*10;
+				view.angles = angles;
 				view.fov = fov;
 				
 				return view
@@ -64,7 +59,6 @@ hook.Add("CalcView","ES.MOTDCalcView",function(ply,pos,angles,fov)
 		end
 	end
 end);
-
 ES.motdEnabled = true;
 ES.ServerRules = {
 	"Do act friendly towards other players.",

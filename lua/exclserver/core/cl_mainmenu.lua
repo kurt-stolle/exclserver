@@ -1,27 +1,7 @@
 -- the new main
 local mm;
 
-local fx = {
-	["$pp_colour_addr"] = 0, 
-	["$pp_colour_addg"] = 0, 
-	["$pp_colour_addb"] = 0, 
-	["$pp_colour_brightness"] = -.2, 
-	["$pp_colour_contrast"] = 1, 
-	["$pp_colour_colour"] = 1, 
-	["$pp_colour_mulr"] = 0, 
-	["$pp_colour_mulg"] = 0, 
-	["$pp_colour_mulb"] = 0
-}
-hook.Add("RenderScreenspaceEffects","ES.MMBlackWhite",function()
-	if IsValid(mm) then
-		fx["$pp_colour_colour"]=Lerp(FrameTime(),fx["$pp_colour_colour"],.1);
-		DrawColorModify(fx);
-	else
-		fx["$pp_colour_colour"]=1;
-	end
-end);
-
-local view = {};
+--[[local view = {};
 hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
 	if IsValid(mm) then
 		local bone=ply:LookupBone("ValveBiped.Bip01_Head1");
@@ -48,6 +28,66 @@ hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
 	else
 		view.origin=pos;
 		view.angles=angles;
+	end
+end);]]
+local fx = {
+	["$pp_colour_addr"] = 0, 
+	["$pp_colour_addg"] = 0, 
+	["$pp_colour_addb"] = 0, 
+	["$pp_colour_brightness"] = -.1, 
+	["$pp_colour_contrast"] = 1.1, 
+	["$pp_colour_colour"] = 0, 
+	["$pp_colour_mulr"] = 0, 
+	["$pp_colour_mulg"] = 0, 
+	["$pp_colour_mulb"] = 0
+}
+hook.Add("RenderScreenspaceEffects","ES.MMBlackWhite",function()
+	if IsValid(mm) then
+		fx["$pp_colour_colour"]=Lerp(FrameTime()*8,fx["$pp_colour_colour"],.1);
+		DrawColorModify(fx);
+	else
+		fx["$pp_colour_colour"]=1;
+	end
+end);
+hook.Add("ShouldDrawLocalPlayer","ES.MMDrawLocal",function()
+	if IsValid(mm) then
+		return true;
+	end
+end);
+local view = {};
+local rot=0;
+hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
+	if not view.origin or not view.angles or not IsValid(mm) then
+		view.origin=pos;
+		view.angles=angles;
+	elseif IsValid(mm) then
+		local bone=ply:LookupBone("ValveBiped.Bip01_Spine");
+
+		if bone then
+		
+			pos,angles=ply:GetBonePosition(bone);
+
+			if pos and angles then
+
+				rot=(rot + (FrameTime() * 6)) % 360;
+
+				angles=ply:GetAngles();
+				angles:RotateAroundAxis(angles:Up(),rot);
+
+				local tr=util.TraceLine( {
+					start=pos,
+					endpos=pos-(angles:Forward()*70),
+					filter=ply
+				} );
+
+				view.origin = LerpVector(FrameTime(),view.origin,tr.HitPos + angles:Forward()*10);
+				view.angles = LerpAngle(FrameTime(),view.angles,angles);
+				view.fov = fov;
+				
+				return view
+
+			end
+		end
 	end
 end);
 

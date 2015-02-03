@@ -11,6 +11,10 @@ function  ES.AddAura(n,d,p,t) -- maybe a bit silly to not just edit the table, b
 	tab:SetCost(p);
 	tab:SetModel(t);
 
+	if CLIENT then
+		tab._material = Material(t);
+	end
+
 	table.insert(ES.Auras,tab);
 end
 
@@ -18,25 +22,46 @@ if CLIENT then
 	CreateConVar("excl_auras_disable", "0", FCVAR_ARCHIVE);
 
 
-	hook.Add("PostPlayerDraw", "ESPostPlayerDrawAuras", function(p) if not GetConVar("excl_auras_disable"):GetBool() then
-		if not p:GetNWString("aura") or not ES.Auras[p:GetNWString("aura")] or not p:Alive() then return end
+	local aura;
+	hook.Add("PostPlayerDraw", "ESPostPlayerDrawAuras", function(p) 
+		if not GetConVar("excl_auras_disable"):GetBool() then
+			aura=ES.Auras[p:ESGetNetworkedVariable("active_aura",nil)];
+			if not aura or not p:Alive() then print("X",p:ESGetNetworkedVariable("active_aura",nil)) return end
 
-		local aura = ES.Auras[p:GetNWString("aura")]
+			if not p._es_auraAngle then
+				p._es_auraAngle=0
+			end
 
-		p.rotateaura = ((p.rotateaura or 0) + .2) % 360;
-		
-		render.SetToneMappingScaleLinear(Vector(0.6,1,1))
-		surface.SetMaterial( aura.material )
-		surface.SetDrawColor(COLOR_WHITE)
-		
-		cam.Start3D2D(p:GetPos() + Vector(0, 0, .5), Angle(0, p.rotateaura, 0), 0.4)
-			surface.DrawTexturedRect(-64, -64, 128,128)
-		cam.End3D2D()
-		cam.Start3D2D(p:GetPos() + Vector(0, 0, 0), Angle(0, p.rotateaura, 180), 0.4)
-			surface.DrawTexturedRect(-64, -64, 128,128)
-		cam.End3D2D()
-		render.TurnOnToneMapping()
-	end end)
+			p._es_auraAngle = (p._es_auraAngle + FrameTime()*4) % 360;
+			
+			local tr=util.TraceHull{start=p:GetPos()+Vector(0,0,.5),endpos=p:GetPos()-Vector(0,0,10000),filter=p,maxs=Vector(16,16,1),mins=Vector(-16,-16,0)};
+
+			if not tr then return end
+
+			local pos=tr.HitPos;
+			local normal=tr.HitNormal:Angle();
+
+			if not pos or not normal then return end
+
+			
+			normal:RotateAroundAxis(normal:Right(),-90);
+			normal:RotateAroundAxis(normal:Up(),p._es_auraAngle);
+
+			render.SetToneMappingScaleLinear(Vector(0.6,1,1))
+			surface.SetMaterial( aura._material )
+			surface.SetDrawColor(COLOR_WHITE)
+			
+			cam.Start3D2D(pos + Vector(0, 0, .2), normal, 0.3)
+				surface.DrawTexturedRect(-64, -64, 128,128)
+			cam.End3D2D()
+
+			normal:RotateAroundAxis(normal:Right(),180);
+			cam.Start3D2D(pos + Vector(0, 0, .2), normal, 0.3)
+				surface.DrawTexturedRect(-64, -64, 128,128)
+			cam.End3D2D()
+			render.TurnOnToneMapping()
+		end 
+	end)
 end
 
 ES.AddAura("Casual Bananas","For the truly loyal members",								20000,"exclserver/auras/logo.png",true);

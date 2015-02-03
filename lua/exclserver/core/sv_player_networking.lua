@@ -187,10 +187,13 @@ timer.Create("ES.NetworkPlayers",.2,0,function()
 		for _,v in ipairs(tab)do
 			kind=ES.NetworkedVariables[v.key].type;
 			if ES.NetworkedVariables[v.key].save and not tab.noSave then
+				local val;
 				if kind=="String" then
-					v.value="'"..ES.DBEscape(v.value).."'";
+					val="'"..ES.DBEscape(v.value).."'";
+				else
+					val=tostring(v.value);
 				end
-				ES.DBQuery("UPDATE `es_player_fields` SET `"..v.key.."`="..tostring(v.value).." WHERE `steamid`='"..ply:SteamID().."';");
+				ES.DBQuery("UPDATE `es_player_fields` SET `"..v.key.."`="..val.." WHERE `steamid`='"..ply:SteamID().."';");
 			end
 
 			net.WriteString(v.key);
