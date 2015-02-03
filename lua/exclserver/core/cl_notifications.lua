@@ -85,7 +85,7 @@ local bananaDisplay = 0;
 local bananaOld = 0;
 local didLoad = false;
 local fadeToDark = 0;
-local x,y = 16,16;
+local x,y;
 local p;
 local colorBlur;
 local popModelMatrix = cam.PopModelMatrix
@@ -116,14 +116,17 @@ local color_text = Color(255,255,255,0);
 local color_text_dark = Color(0,0,0,255);
 local matrix,width,height,rad
 local text = "";
+local xalign = 0;
 local function drawText(text)
-	simpleText(text,"ES.Notification.Shadow"	,x,y+(32/2),color_black,0,1);
-	simpleText(text,"ES.Notification"		,x,y+(32/2),color_white,0,1);
+	simpleText(text,"ES.Notification.Shadow"	,x,y+(32/2),color_black,xalign,1);
+	simpleText(text,"ES.Notification"		,x,y+(32/2),color_white,xalign,1);
 end
 
-hook.Add("HUDPaint","ESDrawBananasToHUD",function()
+local fpsAvgNum=0;
+hook.Add("HUDPaint","ESDrawScreenText",function()
 	x,y = 16,16;
 	p = LocalPlayer();
+	xalign = 0;
 
 	setDrawColor(color_white);
 	setMaterial(icon_bananas);
@@ -153,8 +156,30 @@ hook.Add("HUDPaint","ESDrawBananasToHUD",function()
 		x=x+32+16
 		drawText(tostring(bananaDisplayRound));
 	end
+
+	if ES.Debug then
+		xalign=2;
+		x = ScrW()-16
+		drawText("FPS: "..tostring(math.Round(fpsAvgNum)));
+	end
 end)
 
+local timeCurrent=0;
+local fpsAvg={};
+hook.Add("Think","ES.CalcAverageFPS",function()
+	if timeCurrent+1 < CurTime() then
+		timeCurrent=math.floor(CurTime());
+
+		fpsAvgNum=0;
+		for k,v in ipairs(fpsAvg)do
+			fpsAvgNum=fpsAvgNum+v;
+		end
+		fpsAvgNum=fpsAvgNum/#fpsAvg;
+
+		fpsAvg={};
+	end
+	table.insert(fpsAvg,1/FrameTime());
+end);
 /*
 
 TEXT NOTIFICATIONS

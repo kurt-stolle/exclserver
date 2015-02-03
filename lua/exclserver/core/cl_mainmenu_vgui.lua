@@ -263,13 +263,13 @@ vgui.Register("ESMainMenu",PNL,"EditablePanel");
 surface.CreateFont("ES.MainMenu.MainElementButtonShad",{
 	font = "Calibri",
 	size = 16,
-	weight = 700,
+	weight = 800,
 	blursize=2,
 })
 surface.CreateFont("ES.MainMenu.MainElementButton",{
 	font = "Calibri",
 	size = 16,
-	weight = 700,
+	weight = 800,
 })
 local PNL = {};
 function PNL:Init()

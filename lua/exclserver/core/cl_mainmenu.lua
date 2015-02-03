@@ -21,11 +21,6 @@ hook.Add("RenderScreenspaceEffects","ES.MMBlackWhite",function()
 	end
 end);
 
-hook.Add("ShouldDrawLocalPlayer","ES.MMDrawLocal",function()
-	if IsValid(mm) then
-		return true;
-	end
-end);
 local view = {};
 hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
 	if IsValid(mm) then
@@ -39,13 +34,12 @@ hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
 
 				angles:RotateAroundAxis(angles:Up(),110);
 				angles:RotateAroundAxis(angles:Forward(),90);
+				angles:RotateAroundAxis(angles:Up(),180);
 
-				view.origin = LerpVector(FrameTime()*7,view.origin,pos-( angles:Forward()*20 ));
+				view.origin=LerpVector(FrameTime()*10,view.origin,pos);
+				view.angles=LerpAngle(FrameTime()*10,view.angles,angles);
 
-				
-
-				view.angles = LerpAngle(FrameTime()*7,view.angles,angles);
-				view.fov = 70;
+				view.fov = fov;
 				
 				return view
 

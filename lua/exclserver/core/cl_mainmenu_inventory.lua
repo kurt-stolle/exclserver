@@ -128,13 +128,15 @@ function ES._MMGenerateInventoryEffects(base)
 		ic:SetType(ES.ITEM_AURA);
 		ic:SetText(item:GetName());
 		ic.OnMouseReleased = function()
+			if not item then return end
+
 			iconAura:SetMaterial(item:GetModel());
 			iconAura:SetVisible(true);
 			invAuras.rm:SetVisible(true);
 				
 			net.Start("ESActivateItem");
 			net.WriteUInt(ES.ITEM_AURA,4);
-			net.WriteUInt(item:GetKey());
+			net.WriteUInt(item:GetKey(),8);
 			net.SendToServer();
 		end
 
@@ -172,6 +174,8 @@ function ES._MMGenerateInventoryEffects(base)
 			ic:SetType(ES.ITEM_TRAIL);
 			ic:SetText(item:GetName());
 			ic.OnMouseReleased = function()
+				if not item then return end
+
 				iconTrail:SetImage(item:GetModel());
 				iconTrail:SetVisible(true);
 				invTrails.rm:SetVisible(true);
@@ -181,7 +185,7 @@ function ES._MMGenerateInventoryEffects(base)
 
 				net.Start("ESActivateItem");
 				net.WriteUInt(ES.ITEM_TRAIL,4);
-				net.WriteUInt(item:GetKey());
+				net.WriteUInt(item:GetKey(),8);
 				net.SendToServer();
 			end
 
@@ -224,13 +228,15 @@ function ES._MMGenerateInventoryEffects(base)
 			ic:SetType(ES.ITEM_MELEE);
 			ic:SetText(item:GetName());
 			ic.OnMouseReleased = function()
+				if not item then return end
+
 				iconMelee:SetModel(item:GetModel());
 				iconMelee:SetVisible(true);
 				invMelee.rm:SetVisible(true);
 				
 				net.Start("ESActivateItem");
 				net.WriteUInt(ES.ITEM_MELEE,4);
-				net.WriteUInt(item:GetKey());
+				net.WriteUInt(item:GetKey(),8);
 				net.SendToServer();
 			end
 

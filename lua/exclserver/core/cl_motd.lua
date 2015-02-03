@@ -1,5 +1,70 @@
 -- cl_motd.lua
 -- the motd
+
+local motd
+
+local fx = {
+	["$pp_colour_addr"] = 0, 
+	["$pp_colour_addg"] = 0, 
+	["$pp_colour_addb"] = 0, 
+	["$pp_colour_brightness"] = -.2, 
+	["$pp_colour_contrast"] = 1, 
+	["$pp_colour_colour"] = 1, 
+	["$pp_colour_mulr"] = 0, 
+	["$pp_colour_mulg"] = 0, 
+	["$pp_colour_mulb"] = 0
+}
+hook.Add("RenderScreenspaceEffects","ES.MOTDBlackWhite",function()
+	if IsValid(motd) then
+		fx["$pp_colour_colour"]=Lerp(FrameTime(),fx["$pp_colour_colour"],.1);
+		DrawColorModify(fx);
+	else
+		fx["$pp_colour_colour"]=1;
+	end
+end);
+hook.Add("ShouldDrawLocalPlayer","ES.MOTDDrawLocal",function()
+	if IsValid(motd) then
+		return true;
+	end
+end);
+local view = {};
+local rot=0;
+hook.Add("CalcView","ES.MOTDCalcView",function(ply,pos,angles,fov)
+	if not view.origin or not view.angles or not IsValid(motd) then
+		view.origin=pos;
+		view.angles=angles;
+	elseif IsValid(motd) then
+		local bone=ply:LookupBone("ValveBiped.Bip01_Head1");
+
+		if bone then
+		
+			pos,angles=ply:GetBonePosition(bone);
+
+			if pos and angles then
+
+				rot=(rot + (FrameTime() * 10)) % 360;
+
+				angles:RotateAroundAxis(angles:Up(),110);
+				angles:RotateAroundAxis(angles:Forward(),90);
+				angles:RotateAroundAxis(angles:Up(),rot);
+
+				local tr=util.TraceLine( {
+					start=pos,
+					endpos=pos-(angles:Forward()*70),
+					filter=ply
+				} );
+
+				view.origin = LerpVector(FrameTime()*5,view.origin,tr.HitPos + angles:Forward()*10);
+				view.angles = LerpAngle(FrameTime()*5,view.angles,angles);
+				view.fov = fov;
+				
+				return view
+
+			end
+		end
+	end
+end);
+
 ES.motdEnabled = true;
 ES.ServerRules = {
 	"Do act friendly towards other players.",
@@ -12,8 +77,6 @@ local color_background_faded=Color(0,0,0,150)
 
 local timeOpen=0;
 local motdPaint=function(self,w,h)
-	surface.SetDrawColor(color_background_faded);
-	surface.DrawRect(0,0,w,h);
 	Derma_DrawBackgroundBlur(self,timeOpen)
 end
 local navPaint=function(self,w,h)
@@ -83,7 +146,6 @@ local navigationOptions={
 
 }
 
-local motd
 
 local w=560;
 local h=600;

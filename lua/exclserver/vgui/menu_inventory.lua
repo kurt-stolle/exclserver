@@ -62,7 +62,7 @@ function PNL:Init()
 
 			self:SetVisible(false);
 			for k,v in pairs(self:GetParent().PanelCurrent:GetChildren())do
-				if IsValid(v) then v:Remove() end
+				if IsValid(v) then v:SetVisible(false) end
 			end
 	end
 	self.rm:SetVisible(false);
