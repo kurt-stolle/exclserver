@@ -148,8 +148,12 @@ function ES._MMGenerateInventoryEffects(base)
 			y=y+1;
 		end
 	end
-	iconAura:SetSize(90,90);
-	iconAura:SetPos(5,5);
+	iconAura:Dock(FILL);
+
+	if iconAura then
+		iconAura:SetImage(activeAura:GetModel());
+		invAuras.rm:SetVisible(true);
+	end
 	
 --## Trails
 	local invTrails = vgui.Create("ES.InventoryPanel",p);
@@ -197,11 +201,10 @@ function ES._MMGenerateInventoryEffects(base)
 				y=y+1;
 			end
 		end
-	iconTrail:SetSize(90,90);
-	iconTrail:SetPos(5,5);
+	iconTrail:Dock(FILL);
 
 	if activeTrail then
-		iconTrail:SetImage(activeTrail.text);
+		iconTrail:SetImage(activeTrail:GetModel());
 		invTrails.rm:SetVisible(true);
 	end
 
@@ -248,13 +251,10 @@ function ES._MMGenerateInventoryEffects(base)
 				y=y+1;
 			end
 		end
-	iconMelee:SetSize(90,90);
-	iconMelee:SetPos(5,5);
+	iconMelee:Dock(FILL);
 
 	if activeMelee then
-		iconMelee:SetModel(activeMelee.model);
+		iconMelee:SetModel(activeMelee:GetModel());
 		invMelee.rm:SetVisible(true);
-	else
-		iconMelee:SetVisible(false);
 	end
 end
