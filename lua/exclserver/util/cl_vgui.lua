@@ -29,7 +29,7 @@ end
 function ES.UIDrawRippleEffect(tab,w,h)
 	if not tab.rippleColor or not tab.rippleScale or not tab.cursorPos_x or not tab.cursorPos_y then return	end
 
-	tab.rippleScale = Lerp(FrameTime()*4,tab.rippleScale,1);
+	tab.rippleScale = Lerp(FrameTime()*3,tab.rippleScale,1);
 
 	if tab.rippleScale > 0 and tab.rippleScale < 1 then
 		tab.cursorPos_x = Lerp(FrameTime()*0.5,tab.cursorPos_x,w/2);
