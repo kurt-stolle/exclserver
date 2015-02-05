@@ -2,6 +2,12 @@
 -- the motd
 
 local motd
+
+
+hook.Add("HUDShouldDraw","ES.MOTD.SupressHUD",function()
+	if IsValid(motd) then return false end
+end);
+
 local fx = {
 	["$pp_colour_addr"] = 0, 
 	["$pp_colour_addg"] = 0, 

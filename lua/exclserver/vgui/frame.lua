@@ -52,7 +52,7 @@ function PANEL:PerformLayout()
 	self.btn_close:SetPos(self:GetWide()-(30/2 + 16/2),(30/2 - 16/2));
 end
 function PANEL:Think()
-	self.scale=Lerp(FrameTime()* (self.kill and 28 or 16),self.scale,self.kill and 0 or 1);
+	self.scale=Lerp(FrameTime()* (self.kill and 12 or 8),self.scale,self.kill and 0 or 1);
 
 	if self.kill and self.scale <= 0.01 then
 		self:SetVisible(false);

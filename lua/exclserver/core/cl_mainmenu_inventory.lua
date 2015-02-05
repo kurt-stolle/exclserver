@@ -253,8 +253,14 @@ function ES._MMGenerateInventoryEffects(base)
 		end
 	iconMelee:Dock(FILL);
 
-	if activeMelee then
-		iconMelee:SetModel(activeMelee:GetModel());
+	if activeMeleeWeapon then
+		iconMelee:SetModel(activeMeleeWeapon:GetModel());
 		invMelee.rm:SetVisible(true);
+	else
+		invMelee:SetVisible(false)
 	end
+end
+
+function ES._MMGenerateInventoryOutfit(base)
+
 end

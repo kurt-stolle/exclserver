@@ -100,7 +100,7 @@ function PNL:PerformLayout()
 
 	self.tilesX = math.floor(self.PanelInventory:GetWide()/100);
 
-	self.rm:SetPos(self.PanelCurrent.x + self.PanelCurrent:GetWide()-17,self.PanelCurrent.y + 1);
+	self.rm:SetPos(self.PanelCurrent.x + self.PanelCurrent:GetWide()-20,self.PanelCurrent.y + 4);
 end
 function PNL:IncludeIcon(ic)
 	table.insert(self.Icons,ic);
