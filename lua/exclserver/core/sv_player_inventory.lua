@@ -163,7 +163,7 @@ function PLAYER:ESSetModelToActive()
 	if not model or not ES.Models[model] then
 		self:SetModel(table.Random(ES.DefaultModels));
 	else
-		self:SetModel(ES.Models[model].model);
+		self:SetModel(ES.Models[model]:GetModel());
 	end
 end
 hook.Add("PlayerSpawn","ESHandleActiveItems",function(p)
@@ -285,7 +285,7 @@ net.Receive("ESDeactivateItem",function(len,ply)
 
 	if not itemtype then return end
 
-	local tab = ES.GetItemType(itemtype);
+	local tab = ES.GetItemTable(itemtype);
 
 	if not tab then return end
 	

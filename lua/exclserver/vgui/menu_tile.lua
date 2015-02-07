@@ -115,7 +115,7 @@ function PANEL:PaintOver(w,h)
 		end
 
 		for i=0,1 do
-			draw.SimpleText(text,"ESDefaultBoldBlur",8,h-14-6 + i,color_black);
+			draw.SimpleText(text,"ESDefaultBold.Shadow",8,h-14-6 + i,color_black);
 		end
 		draw.SimpleText(text,"ESDefaultBold",8,h-14-6,color_white);
 	end

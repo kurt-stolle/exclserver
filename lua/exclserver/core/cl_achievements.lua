@@ -88,7 +88,7 @@ net.Receive("ESAchProgr",function()
 	dr.Paint = function(self,w,h)
 		draw.RoundedBox(2,0,0,w,h,Color(30,30,30));
 		draw.RoundedBox(2,1,1,(w-2)*(p.excl.achievements[id]/ES.Achievements[id].progressNeeded),h-2,a);
-		draw.SimpleText(p.excl.achievements[id].." / "..ES.Achievements[id].progressNeeded,"ESDefaultBoldBlur",w/2,h/2,COLOR_BLACK,1,1);
+		draw.SimpleText(p.excl.achievements[id].." / "..ES.Achievements[id].progressNeeded,"ESDefaultBold.Shadow",w/2,h/2,COLOR_BLACK,1,1);
 		--draw.SimpleText(p.excl.achievements[id].." / "..ES.Achievements[id].progressNeeded,"ESDefaultBold",w/2 +1,h/2 +1,COLOR_BLACK,1,1);
 		draw.SimpleText(p.excl.achievements[id].." / "..ES.Achievements[id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1);
 	end

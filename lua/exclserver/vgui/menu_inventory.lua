@@ -16,16 +16,14 @@ function PNL:Init()
 	self.title = "Undefined"
 	self.PanelCurrent = vgui.Create("Panel",self);
 
-	self.PanelInventory = vgui.Create("Panel",self);
+	self.PanelInventory = vgui.Create("esPanel",self);
 	self.Icons={};
-	function self.PanelInventory:Paint(w,h) 
-		surface.SetDrawColor(Color(0,0,0,100)); 
-		surface.DrawRect(0,0,w,h) 
-
+	function self.PanelInventory:PaintOver(w,h) 
 		if self:GetParent().Icons and #self:GetParent().Icons > 0 then return end
 
 		draw.SimpleText("Your purchases will appear here","esMMInventoryAppearthere",w/2,h/2,ES.Color.White,1,1);
 	end
+	self.PanelInventory:SetColor(ES.Color["#00000033"]);
 
 	self.PanelInventory.items = {};
 	self.scrollTo = 0;

@@ -430,7 +430,7 @@ Every $1 you donate will get you 1000 bananas.]];
 				if (LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0) > 0 then
 					draw.RoundedBox(2,1,1,(w-2)*((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0)/ES.Achievements[v.id].progressNeeded),h-2,a);
 				end
-				draw.SimpleText((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBoldBlur",w/2,h/2,COLOR_BLACK,1,1);
+				draw.SimpleText((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold.Shadow",w/2,h/2,COLOR_BLACK,1,1);
 				--draw.SimpleText(p.excl.achievements[id].." / "..ES.Achievements[id].progressNeeded,"ESDefaultBold",w/2 +1,h/2 +1,COLOR_BLACK,1,1);
 				draw.SimpleText((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1);
 			end

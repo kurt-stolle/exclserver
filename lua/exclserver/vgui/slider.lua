@@ -26,14 +26,14 @@ local function generatePoly(x,y,radius,quality)
 end
 local circle = generatePoly(10,20,10,50);
 local circleC = generatePoly(10,20,9,50);
-local car = Material("icon16/car.png");
+local car = Material("exclserver/vgui/sliderhandle.png");
 
 
 local PANEL = {};
 function PANEL:Init()
 	self.car = vgui.Create("esSliderCar",self);
 	self.car:SetPos(0,3);
-	self.car:SetSize(20,25);
+	self.car:SetSize(16,16);
 	self.text = "x = ";
 	self.max = 100;
 	self.min = -100;

@@ -11,12 +11,21 @@ function PNL:Paint(w,h)
 	draw.RoundedBox(0,0,0,self:GetWide(),self:GetTall(),Color(0,0,0,200));
 
 	if not self.Selected then
-		draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-1,ES.GetColorScheme(3));
-		draw.SimpleText(self.title,"ESDefaultBold",6 + 16 + 6,self:GetTall()/2,ES.Color["#EEE"],0,1);
-	end
-	if self:GetHover() or self.Selected then
-		draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-1,ES.GetColorScheme(1));
-		draw.SimpleText(self.title,"ESDefaultBold",6 + 16 + 6,self:GetTall()/2,Color(255,255,255,255),0,1);
+		draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-2,ES.Color["#1A1A1A"]);
+		
+		if self:GetHover() then
+			draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-2,ES.GetColorScheme(3));
+		end
+
+		draw.SimpleText(self.title,"ESDefaultBold.Shadow",6 + 16 + 6,self:GetTall()/2-1,ES.Color.Black,0,1);
+		draw.SimpleText(self.title,"ESDefaultBold",6 + 16 + 6,self:GetTall()/2-1,ES.Color["#DDD"],0,1);
+
+		
+
+	elseif self.Selected then
+		draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-1,ES.GetColorScheme(2));
+		draw.SimpleText(self.title,"ESDefaultBold.Shadow",6 + 16 + 6,self:GetTall()/2-1,ES.Color.Black,0,1);
+		draw.SimpleText(self.title,"ESDefaultBold",6 + 16 + 6,self:GetTall()/2-1,ES.Color.White,0,1);
 	end
 
 	surface.SetMaterial(self.Icon);
@@ -33,6 +42,8 @@ function PNL:Init()
 	self._x_tab = 1;
 end
 function PNL:AddTab(title,icon)
+	title=string.upper(title);
+
 	local p = vgui.Create("Panel",self)
 	p:SetSize(self:GetWide(),self:GetTall()-30);
 	p:SetPos(0,24);
@@ -70,9 +81,7 @@ end
 function PNL:Paint(w,h)
 	surface.SetDrawColor(ES.Color.Black);
 	surface.DrawRect(0,23,w,h-23);
-	surface.SetDrawColor(ES.GetColorScheme(1));
+	surface.SetDrawColor(ES.GetColorScheme(2));
 	surface.DrawRect(1,24,w-2,h-25);
-	surface.SetDrawColor(ES.Color["#1E1E1EFA"]);
-	surface.DrawRect(2,25,w-4,h-27);
 end
 vgui.Register( "esTabPanel", PNL,"Panel");

@@ -1,5 +1,5 @@
 -- cl_fonts
-surface.CreateFont( "ESDefaultSmallBlur", { 
+surface.CreateFont( "ESDefaultSmall.Shadow", { 
 font = "Calibri", 
 size = 13,
 weight = 500,
@@ -15,7 +15,7 @@ font = "Calibri",
 size = 15,
 weight = 500} 
 )
-surface.CreateFont( "ESDefaultBlur", { 
+surface.CreateFont( "ESDefault.Shadow", { 
 font = "Calibri", 
 size = 15,
 weight = 500,
@@ -26,7 +26,7 @@ font = "Calibri",
 size = 15,
 weight = 800} 
 )
-surface.CreateFont( "ESDefaultBoldBlur", { 
+surface.CreateFont( "ESDefaultBold.Shadow", { 
 font = "Calibri", 
 size = 15,
 weight = 800,
