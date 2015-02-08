@@ -1,18 +1,8 @@
 AddCSLuaFile()
 
--- Tables and variables
-local cvarDebug = CreateConVar("excl_debug","0",{FCVAR_ARCHIVE})
-
 ES = {}
-setmetatable(ES,{
-	__index = function(tbl,key)
-		if key == "Debug" then
-			return cvarDebug:GetBool();
-		end
-		return nil;
-	end
-})
-ES.version = "4.7.0"
+ES.debug = true;
+ES.version = "4.7.0";
 ES.PostInitialize = false;
 COLOR_EXCLSERVER = Color(102,255,51,255);
 COLOR_EXCLSERVER_DEBUG_CLIENT = Color(255,204,51);
@@ -21,7 +11,7 @@ COLOR_WHITE = Color(255,255,255,255);
 COLOR_EXCLSERVER_DEBUG = Color(213,213,213,255);
 -- Debug methods
 function ES.DebugPrint(s)
-	if not cvarDebug:GetBool() or not s then return end
+	if not ES.debug or not s then return end
 	
 	MsgC(SERVER and COLOR_EXCLSERVER_DEBUG_SERVER or COLOR_EXCLSERVER_DEBUG_CLIENT,"[ES] ");
 	MsgC(COLOR_EXCLSERVER_DEBUG,tostring(s).."\n");

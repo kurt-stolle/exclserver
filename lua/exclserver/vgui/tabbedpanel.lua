@@ -45,8 +45,8 @@ function PNL:AddTab(title,icon)
 	title=string.upper(title);
 
 	local p = vgui.Create("Panel",self)
-	p:SetSize(self:GetWide(),self:GetTall()-30);
-	p:SetPos(0,24);
+	p:SetTall(self:GetTall()-24);
+	p:Dock(BOTTOM);
 
 	self._tabs[#self._tabs+1]=p;
 	p:SetVisible(#self._tabs==1);

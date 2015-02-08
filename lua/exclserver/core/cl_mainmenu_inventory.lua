@@ -574,9 +574,10 @@ function ES._MMGenerateInventoryOutfit(base)
 			tabpnl:Dock(BOTTOM);
 			tabpnl:DockMargin(10,0,0,10);	
 				local pnl = tabpnl:AddTab("Position","exclserver/tabs/generic.png");	
+				pnl:DockPadding(10,10,10,10);
 					local slideX = pnl:Add("esSlider");	
-					slideX:SetPos(10,10);	
-					slideX:SetSize(pnl:GetWide() - 20,30);	
+					slideX:Dock(TOP);	
+					slideX:SetTall(30)
 					slideX.text = "X";	
 					slideX.min = -8;	
 					slideX.max = 8;	
@@ -585,8 +586,8 @@ function ES._MMGenerateInventoryOutfit(base)
 						slots[slot].pos.x = self:GetValue();	
 					end end	
 					local slideY = pnl:Add("esSlider");	
-					slideY:SetPos(10,50);	
-					slideY:SetSize(pnl:GetWide() - 20,30);	
+					slideY:Dock(TOP);	
+					slideY:SetTall(30)
 					slideY.text = "Y";	
 					slideY.min = -8;	
 					slideY.max = 8;	
@@ -595,8 +596,8 @@ function ES._MMGenerateInventoryOutfit(base)
 						slots[slot].pos.y = self:GetValue();	
 					end end	
 					local slideZ = pnl:Add("esSlider");	
-					slideZ:SetPos(10,90);	
-					slideZ:SetSize(pnl:GetWide() - 20,30);	
+					slideZ:Dock(TOP);
+					slideZ:SetTall(30)
 					slideZ.text = "Z";	
 					slideZ.min = -8;	
 					slideZ.max = 8;	
@@ -606,9 +607,10 @@ function ES._MMGenerateInventoryOutfit(base)
 					end end
 			
 				local pnl = tabpnl:AddTab("Angles","exclserver/tabs/generic.png");	
+				pnl:DockPadding(10,10,10,10);
 					local slideP = pnl:Add("esSlider");	
-					slideP:SetPos(10,10);	
-					slideP:SetSize(pnl:GetWide() - 20,30);	
+					slideP:Dock(TOP);	
+					slideP:SetTall(30)
 					slideP.text = "Pitch";	
 					slideP.min = -180;	
 					slideP.max = 180;	
@@ -617,8 +619,8 @@ function ES._MMGenerateInventoryOutfit(base)
 						slots[slot].ang.p = self:GetValue();	
 					end end	
 					local slideYa = pnl:Add("esSlider");	
-					slideYa:SetPos(10,50);	
-					slideYa:SetSize(pnl:GetWide() - 20,30);	
+					slideYa:Dock(TOP);	
+					slideYa:SetTall(30)
 					slideYa.text = "Yaw";	
 					slideYa.min = -180;	
 					slideYa.max = 180;	
@@ -627,8 +629,8 @@ function ES._MMGenerateInventoryOutfit(base)
 						slots[slot].ang.y = self:GetValue();	
 					end end	
 					local slideR = pnl:Add("esSlider");	
-					slideR:SetPos(10,90);	
-					slideR:SetSize(pnl:GetWide() - 20,30);	
+					slideR:Dock(TOP);	
+					slideR:SetTall(30)
 					slideR.text = "Roll";	
 					slideR.min = -180;	
 					slideR.max = 180;	
@@ -638,9 +640,10 @@ function ES._MMGenerateInventoryOutfit(base)
 					end end
 			
 				local pnl = tabpnl:AddTab("Scale","exclserver/tabs/generic.png");	
+				pnl:DockPadding(10,10,10,10);
 					local slideSX = pnl:Add("esSlider");	
-					slideSX:SetPos(10,10);	
-					slideSX:SetSize(pnl:GetWide() - 20,30);	
+					slideSX:SetTall(30);
+					slideSX:Dock(TOP);
 					slideSX.text = "X";	
 					slideSX.min = -.3;	
 					slideSX.max = .3;	
@@ -649,8 +652,8 @@ function ES._MMGenerateInventoryOutfit(base)
 						slots[slot].scale.x = self:GetValue();	
 					end end	
 					local slideSY = pnl:Add("esSlider");	
-					slideSY:SetPos(10,50);	
-					slideSY:SetSize(pnl:GetWide() - 20,30);	
+					slideSY:Dock(TOP);	
+					slideSY:SetTall(30)
 					slideSY.text = "Y";	
 					slideSY.min = -.3;	
 					slideSY.max = .3;	
@@ -659,8 +662,8 @@ function ES._MMGenerateInventoryOutfit(base)
 						slots[slot].scale.y = self:GetValue();	
 					end end	
 					local slideSZ = pnl:Add("esSlider");	
-					slideSZ:SetPos(10,90);	
-					slideSZ:SetSize(pnl:GetWide() - 20,30);	
+					slideSZ:Dock(TOP);	
+					slideSZ:SetTall(30)
 					slideSZ.text = "Z";	
 					slideSZ.min = -.3;	
 					slideSZ.max = .3;	
@@ -670,6 +673,7 @@ function ES._MMGenerateInventoryOutfit(base)
 					end end
 			
 				local pnl = tabpnl:AddTab("Color","exclserver/tabs/generic.png");	
+				pnl:DockPadding(10,10,10,10);
 					local cube = pnl:Add("DColorMixer");	
 					cube:SetPos(2,2);	
 					cube:SetSize(256,200);	

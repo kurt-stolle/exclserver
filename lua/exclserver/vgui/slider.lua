@@ -1,16 +1,8 @@
 surface.CreateFont( "ESSlidebutton", { 
 font = "Calibri", 
 weight = 700,
-size = 14,
---italic = true
- } 
-)
-surface.CreateFont( "ESSlidebuttonBlur", { 
-font = "Calibri", 
-weight = 700,
-size = 14,
-blursize = 2,
---italic = true
+size = 16,
+italic = true
  } 
 )
 
@@ -31,8 +23,10 @@ local car = Material("exclserver/vgui/sliderhandle.png");
 
 local PANEL = {};
 function PANEL:Init()
+	self:SetTall(30);
+
 	self.car = vgui.Create("esSliderCar",self);
-	self.car:SetPos(0,3);
+	self.car:SetPos(0,self:GetTall()-18);
 	self.car:SetSize(16,16);
 	self.text = "x = ";
 	self.max = 100;
@@ -56,20 +50,15 @@ function PANEL:Paint()
 	surface.SetDrawColor(0,0,0,200);
 	surface.SetTexture(0);
 
-	surface.DrawPoly(circle);
-	surface.DrawPoly(circleB);
-	surface.DrawRect(10,20,self:GetWide()-20,2)
+	surface.DrawRect(2,self:GetTall()-2-9,self:GetWide()-4,2)
+	surface.DrawRect(2,self:GetTall()-2-10,2,4)
+	surface.DrawRect(self:GetWide()-2-2,self:GetTall()-2-10,2,4)
 
-	surface.SetDrawColor(Color(0,138,184));
-	surface.DrawPoly(circleD);
-	surface.SetDrawColor(Color(184,46,0));
-	surface.DrawPoly(circleC);
+	--draw.SimpleText(self:GetValue(),"ESSlidebuttonBlur",self:GetWide()-30,1,COLOR_BLACK,2,0)
+	draw.SimpleText(self:GetValue(),"ESSlidebutton",self:GetWide()-18,0,COLOR_WHITE,2,0)
 
-	draw.SimpleText(string.Left(tostring(self.min + (self.car.x / (self:GetWide()-19))*(self.max - self.min )),5),"ESSlidebuttonBlur",self:GetWide()-30,0,self.car.dragging and COLOR_WHITE or COLOR_BLACK,2,0)
-	draw.SimpleText(string.Left(tostring(self.min + (self.car.x / (self:GetWide()-19))*(self.max - self.min )),5),"ESSlidebutton",self:GetWide()-30,0,COLOR_WHITE,2,0)
-
-	draw.SimpleText(self.text,"ESSlidebuttonBlur",30,0,COLOR_BLACK,0,0)
-	draw.SimpleText(self.text,"ESSlidebutton",30,0,COLOR_WHITE,0,0)
+	--draw.SimpleText(self.text,"ESSlidebuttonBlur",30,0,COLOR_BLACK,0,0)
+	draw.SimpleText(self.text,"ESSlidebutton",18,0,COLOR_WHITE,0,0)
 	
 	if self.PaintHook then
 		self.PaintHook()
@@ -93,15 +82,15 @@ function PANEL:Think()
 	local p = gui.MousePos();
 	p = self.original + (p - self.startPos);
 	if self.dragging and (input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)) then
-		if p < 0 then 
-			self:SetPos(0,3);
+		if p < 2 then 
+			self.x=2;
 			return 
-		elseif p > self:GetParent():GetWide()-19 then
-			self:SetPos(self:GetParent():GetWide()-19,3)
+		elseif p > self:GetParent():GetWide()-18 then
+			self.x=self:GetParent():GetWide()-18;
 			return
 		end
 
-		self:SetPos(p,3)
+		self.x=p;
 	else
 		self.dragging = false;
 	end
@@ -111,4 +100,5 @@ function PANEL:Paint()
 	surface.SetMaterial(car);
 	surface.DrawTexturedRect(0,0,self:GetWide(),self:GetWide());
 end
+ES.UIAddHoverListener(PANEL)
 vgui.Register( "esSliderCar", PANEL, "Panel" );

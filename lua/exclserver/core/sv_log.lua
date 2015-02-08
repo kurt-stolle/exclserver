@@ -1,8 +1,4 @@
 -- sv_log.lua
-hook.Add("ESDBDefineTables","ES.DataDefine.Logs",function()
-	ES.DBDefineTable("logs",false,"steamid varchar(100), ip varchar(100), nick varchar(100), text varchar(255), type varchar(100), time int(32), serverid int(32)");
-end)
-
 ES.LOG_DEBUG = 1;
 ES.LOG_COMMAND = 2;
 ES.LOG_CHAT = 4;

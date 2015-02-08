@@ -84,13 +84,11 @@ local navPaint=function(self,w,h)
 	surface.DrawRect(0,0,w,h);
 end
 local navPaintButton=function(self,w,h)
+	surface.SetDrawColor((self:GetHover() and not self:GetSelected()) and ES.GetColorScheme(3) or Color(255,255,255,1));
+	surface.DrawRect(0,1,w-1,h-2);
+
 	if self:GetSelected() then
 		surface.SetDrawColor(ES.Color["#1E1E1E"])
-		surface.DrawRect(0,0,w,h);
-	end
-
-	if self:GetHover() and not self:GetSelected() then
-		surface.SetDrawColor(ES.GetColorScheme(3));
 		surface.DrawRect(0,0,w,h);
 	end
 

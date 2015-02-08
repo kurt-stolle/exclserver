@@ -3,7 +3,7 @@ setmetatable(ES.Color,{
 	__index = function(tbl,key)
 		if type(key) == "string" then
 			if #key == 4 then
-				return tbl["#"..key[2]..key[2]..key[3]..key[3]..key[4]..key[4].."FF"];
+				return tbl["#"..key[2].."F"..key[3].."F"..key[4].."F".."FF"];
 			elseif #key == 7 then
 				return tbl[key.."FF"];
 			elseif #key == 9 then

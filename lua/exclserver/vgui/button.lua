@@ -1,5 +1,5 @@
 local color_white = ES.Color.White;
-local color_gray = ES.Color["#444"];
+local color_gray = ES.Color["#DDD"];
 
 surface.CreateFont("ES.ButtonFont",{
 	font = "Calibri",
@@ -24,12 +24,18 @@ local tab = ES.UIAddHoverListener({
 		self.DoClick = fn;
 	end,
 	Paint = function(self,w,h)
-		draw.RoundedBox(2,0,0,w,h,Color(0,0,0,80));
-		draw.RoundedBox(2,1,1,w-2,h-2,color_white);
+		draw.RoundedBox(2,0,0,w,h,ES.Color.Black);
+		draw.RoundedBox(2,1,1,w-2,h-2,ES.Color["#151515"]);
+
+		surface.SetDrawColor(ES.Color["#FFFFFF02"]);
+		surface.DrawLine(1,1,w-2,1);
+		surface.DrawLine(1,h-2,w-2,h-2);
+		surface.DrawLine(1,2,1,h-3);
+		surface.DrawLine(w-2,2,w-2,h-3);
 
 		ES.UIDrawRippleEffect(self,w,h);
 
-		draw.SimpleText(self:GetText(),"ES.ButtonFont",w/2,h/2,color_gray,1,1);
+		draw.SimpleText(self:GetText(),"ES.ButtonFont",w/2,h/2,self:GetHover() and color_white or color_gray,1,1);
 	end,
 });
 AccessorFunc(tab,"Text","Text",FORCE_STRING);
