@@ -60,7 +60,7 @@ function ES.LoadBans()
 		end
 	end)
 end
-hook.Add("Initialize","ES.InitializeBans",function()
+hook.Add("ES.PostLoadServerID","ES.InitializeBans",function(id)
 	ES.LoadBans();
 	timer.Create("ES.RefreshBans",600,0,function()
 		ES.LoadBans()

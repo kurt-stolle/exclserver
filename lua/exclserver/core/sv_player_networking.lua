@@ -1,16 +1,5 @@
 util.AddNetworkString("ES.NwPlayerVar");
 
-hook.Add("Initialize","ES.InitializeSavedNetworkedVariables",function()
-	hook.Call("ES.DefineNetworkedVariables");
-	ES.DefineNetworkedVariable = nil;
-
-	for k,v in pairs(ES.NetworkedVariables)do
-		if v.save then
-			ES.DBQuery("ALTER TABLE `es_player_fields` ADD "..ES.DBEscape(k).." "..v.save..";",function() ES.DebugPrint("Added column."); end,function() ES.DebugPrint("Column already exists."); end);
-			ES.DBWait();
-		end
-	end
-end);
 
 hook.Add("ESPlayerReady","ES.NetworkVars.LoadPlayerData",function(ply)
 	local select={};

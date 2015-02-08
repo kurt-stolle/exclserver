@@ -13,17 +13,7 @@ PLUGIN:AddCommand("map",function(p,a)
 		RunConsoleCommand("changelevel",a[1]);
 	end);
 end,20);
-PLUGIN:AddCommand("mapvote",function(p,a)
-	if not p or not p:IsValid() then return end
 
-	ES.StartMapVote();
-end,10);
-PLUGIN:AddCommand("addmap",function(p,a)
-	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
-
-	ES.DBQuery("INSERT INTO es_mapvote SET map = '"..a[1].."', serverid = "..ES.ServerID..", enabled = 1;")
-	p:ChatPrint("Map added to mapvote")
-end,60);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE);
 PLUGIN();
