@@ -5,9 +5,6 @@ net.Receive("ESCmdOnlyOne",function()
 	ES.ChatAddText("error",Color(255,255,255),"This command can only be ran on one player at a time, specify only one player!");
 end);
 
-net.Receive("ESNoRunRank",function()
-	ES.ChatAddText("error",Color(255,255,255),"You are not allowed to run this command!");
-end);
 net.Receive("ESTriedRun",function()
 
 	local runner = net.ReadEntity();

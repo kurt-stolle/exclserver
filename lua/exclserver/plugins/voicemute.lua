@@ -84,7 +84,7 @@ net.Receive("exclNoVMuP",function()
 	" tried to voice mute ",
 	Color(102,255,51),
 	v,
-	Color(255,255,255,255),
+	ES.Color.White,
 	".");
 	chat.PlaySound()
 end)
@@ -97,15 +97,15 @@ net.Receive("exclVMuP",function()
 	
 	if mute then
 		if r and r != "" and r != " " then
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
+			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".");
 		else
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,Color(255,255,255,255),".");
+			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,ES.Color.White,".");
 		end
 	else
 		if r and r != "" and r != " " then
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
+			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".");
 		else
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,Color(255,255,255,255),".");
+			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,ES.Color.White,".");
 		end
 	end
 	chat.PlaySound()

@@ -1,46 +1,49 @@
 -- sh_chatcommands
 -- handles chat commands
-util.AddNetworkString("ESNoRunRank");
 
-local esCmd= {}
+ES.Commands= {}
 function ES.AddCommand(n,c,power)
-	esCmd[n] = {func = c, power = power};
+	ES.Commands[n] = {func = c, power = power};
 end
 function ES.RemoveCommand(n)
 	local c = 0;
-	for k,v in pairs(esCmd)do
+	for k,v in pairs(ES.Commands)do
 		c=c+1;
 		if k==n then
-			table.remove(esCmd,c);
+			table.remove(ES.Commands,c);
 			break;
 		end
 	end
 end
+util.AddNetworkString("ES.SyncCommands");
+hook.Add("ESPlayerReady","ES.SendCommandToPlayers",function(p)
+	local dumbTable={};
+	for k,v in pairs(ES.Commands)do
+		dumbTable[k]={power=v.power or 0};
+	end
+
+	net.Start("ES.SyncCommands");
+		net.WriteTable(dumbTable);
+	net.Send(p)
+end);
+
 concommand.Add("excl",function(p,c,a)
 	if p.esNextCmd and p.esNextCmd > CurTime() then return end
 	p.esNextCmd = CurTime()+.5;
 	
 	c = a[1];
 
-	if not esCmd or not esCmd[c] then 
+	if not ES.Commands or not ES.Commands[c] then 
 		ES.DebugPrint(p:Nick().." attempted to run invalid command "..c);
 		return 
 	end
-	if esCmd[c] then
-		if esCmd[c].power and (esCmd[c].power > 0 and !p:ESHasPower(esCmd[c].power)) then
-			net.Start("ESNoRunRank"); net.Send(p);
+	if ES.Commands[c] then
+		if ES.Commands[c].power and (ES.Commands[c].power > 0 and !p:ESHasPower(ES.Commands[c].power)) then
+			p:ESSendNotificationPopup("Error","You do not have the required authorization level for this command.\nAre you sure '"..c.."' is the command you want to run?\n\nYour current rank is: "..ply:ESGetRank():GetPrettyName());
 			return;
 		end
 		table.remove(a,1);
-		esCmd[c].func(p,a);
-
-		local stringCmd = c.." (";
-		if a and a[1] then for k,v in pairs(a)do
-			stringCmd = stringCmd.." "..v;
-		end end
-		stringCmd = stringCmd.." )";
-		ES.Log(ES.LOG_COMMAND, p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..stringCmd);
-		ES.LogDB(p,stringCmd,"command");
+		ES.Commands[c].func(p,a);
 	end
 end)
 hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
@@ -52,7 +55,7 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 		local t = string.Explode(" ",t or "",false);
 		table.remove(t,1);
 
-		esCmd["anonannounce"].func(p,t);
+		ES.Commands["anonannounce"].func(p,t);
 
 		return false
 	elseif t and string.Left(t,3) == "## " and p:ESHasPower(20) then
@@ -60,14 +63,14 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 		local t = string.Explode(" ",t or "",false);
 		table.remove(t,1);
 
-		esCmd["announce"].func(p,t);
+		ES.Commands["announce"].func(p,t);
 		return false
 	elseif t and string.Left(t,2) == "# " then
 
 		local t = string.Explode(" ",t or "",false);
 		table.remove(t,1);
 
-		esCmd["adminchat"].func(p,t);
+		ES.Commands["adminchat"].func(p,t);
 		return false
 	elseif t and (string.Left(t,1) == ":" --[[or string.Left(t,1) == "!" or string.Left(t,1) == "/" or string.Left(t,1) == "@"]]) then -- strict mode: only allow the : prefix for ExclServer commands.
 		local t = string.Explode(" ",t or "",false);
@@ -75,23 +78,13 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 
 		if t and t[1] then
 			local c = string.lower(t[1]);
-			if esCmd and esCmd[c] then
-				if esCmd[c].power and (esCmd[c].power > 0 and !p:ESHasPower(esCmd[c].power)) then
-					net.Start("ESNoRunRank"); net.Send(p);
+			if ES.Commands and ES.Commands[c] then
+				if ES.Commands[c].power and (ES.Commands[c].power > 0 and !p:ESHasPower(ES.Commands[c].power)) then
+					p:ESSendNotificationPopup("Error","You do not have the required authorization level for this command.\nAre you sure '"..c.."' is the command you want to run?\n\nYour current rank is: "..ply:ESGetRank():GetPrettyName());
 					return false;
 				end
 				table.remove(t,1);
-				esCmd[c].func(p,t);
-
-				local stringCmd = c.." (";
-				if t and t[1] then 
-					for k,v in pairs(t)do
-						stringCmd = stringCmd.." "..v;
-					end 
-				end
-				stringCmd = stringCmd.." )";
-				ES.Log(ES.LOG_COMMAND,p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..stringCmd);
-				ES.LogDB(p,stringCmd,"command");
+				ES.Commands[c].func(p,t);
 
 				return false
 			end

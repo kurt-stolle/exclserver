@@ -18,13 +18,15 @@ function ES._MMGenerateInventoryEffects(base)
 	p:SetTitle("Effects");
 
 --## Models
-	local mdl = p:Add("esMMHatPreview");
+	local mdl = p:Add("ES.PlayerModel");
 	--mdl.useCurrentHat = true;
 	mdl:SetSize(500,500);
 	mdl:SetModel(LocalPlayer():ESGetActiveModel());
 	mdl:SetPos(p:GetWide()-380,p:GetTall()-501);
 	mdl:SetLookAt(Vector(0,0,62));
 	mdl:SetCamPos(Vector(38,18,64));
+	mdl:SetUseOutfit(true);
+	mdl.Slots=LocalPlayer()._es_outfit or {};
 
 	local nextPress = CurTime()+.5;
 	local modelIndex = 0;
@@ -275,8 +277,15 @@ function ES._MMGenerateInventoryEffects(base)
 	end
 end
 
+local boneTranslations={};
+
+
 local color_background_faded=Color(0,0,0,150)
 function ES._MMGenerateInventoryOutfit(base)
+	for k,v in pairs(ES.PropBones)do	
+		boneTranslations[string.gsub(string.gsub(string.gsub(v,"ValveBiped.Bip01_",""),"R_","Right "),"L_","Left ")]=v;
+	end	
+	
 	local p = base:OpenFrame(); 
 	p:SetTitle("Outfit");
 
@@ -284,7 +293,7 @@ function ES._MMGenerateInventoryOutfit(base)
 
 	local inv=LocalPlayer()._es_inventory_props and table.Copy(LocalPlayer()._es_inventory_props) or {};
 
-	local slots={};
+	local slots=LocalPlayer()._es_outfit and table.Copy(LocalPlayer()._es_outfit) or {};
 
 	local tab = vgui.Create("Panel",p);	
 	tab:SetPos(1,p:GetTall()-64-1);	
@@ -337,13 +346,23 @@ function ES._MMGenerateInventoryOutfit(base)
 			btnSave:SetTall(32);	
 			btnSave.DoClick = function()	
 				if slots[slot] and slots[slot].item then	
-					RunConsoleCommand("es_outfit_customize",slot,slots[slot].item,tostring(slots[slot].pos),tostring(slots[slot].ang),tostring(slots[slot].scale),slots[slot].bone,slots[slot].color.r.." "..slots[slot].color.g.." "..slots[slot].color.b);	
+					net.Start("ES.Player.UpdateOutfit");
+						net.WriteUInt(slot,4)
+						net.WriteUInt(ES.Props[slots[slot].item]:GetKey(),8);
+						net.WriteVector(slots[slot].pos);
+						net.WriteAngle(slots[slot].ang);
+						net.WriteVector(slots[slot].scale);
+						net.WriteString(slots[slot].color);
+						net.WriteString(slots[slot].bone);
+					net.SendToServer();
 				else	
-					RunConsoleCommand("es_outfit_customize",slot);	
+					-- Delete the item
 				end	
 			end
 			btnSave:Dock(BOTTOM);
 			btnSave:DockMargin(10,0,10,10);
+
+			local mdl;
 
 			local invpnl = right:Add("esPanel");	
 			invpnl:DockMargin(10,10,10,10);
@@ -367,26 +386,30 @@ function ES._MMGenerateInventoryOutfit(base)
 					rm:SetSize(16,16);	
 					rm:SetPos(100-16-5,5)	
 					rm.DoClick = function()	
-						spicon:SetVisible(false);	
-						rm:SetVisible(false);	
-						itemname:SetText("No item selected");	
-						itemname:SizeToContents()	
-						inv[itemSelected] = inv[itemSelected] and inv[itemSelected] + 1 or 1;	
-						slots[slot] = {};	
 						openEditor(slot);	
 					end	
 					spicon.OnMouseReleased = rm.DoClick	
 					rm:SetVisible(false);	
-					local boneSelected = slots[slot] and slots[slot].bone or "ValveBiped.Bip01_Head1";	
+
+					local boneSelected = slots[slot] and slots[slot].bone or boneTranslations["Head1"];	
 					local DComboBox = vgui.Create( "DComboBox",eqpnl )	
-					DComboBox:SetPos( 105,eqpnl:GetTall()-10-20 )	
-					DComboBox:SetSize( eqpnl:GetWide()-105-10, 20 )	
-					DComboBox:SetValue( boneSelected )	
-					for k,v in pairs(ES.PropBones)do	
-						DComboBox:AddChoice( v )	
+					DComboBox:DockMargin(105,5,10,10);
+					DComboBox:Dock(BOTTOM);
+					DComboBox:SetWide( eqpnl:GetWide()-105-10 )	
+							
+					for k,v in pairs(boneTranslations)do	
+						if v==boneSelected then
+							DComboBox:SetValue( k )
+						end
+
+						DComboBox:AddChoice( k )	
 					end	
+
 					DComboBox.OnSelect = function( panel, index, value, data )	
-						boneSelected = value;	
+						boneSelected = boneTranslations[value];	
+
+						if not boneSelected then return end
+
 						mdl:SetFocus(boneSelected);
 				
 						if slots[slot] and slots[slot].item then	
@@ -394,14 +417,32 @@ function ES._MMGenerateInventoryOutfit(base)
 						end	
 					end	
 
+					local lbl=eqpnl:Add("DLabel");
+					lbl:SetColor(ES.Color.White);
+					lbl:SetFont("ESDefault");
+					lbl:SetText("Attach to bone:");
+					lbl:SizeToContents();
+					lbl:DockMargin(105,10,10,0);
+					lbl:Dock(BOTTOM);
+
 				local navpnl=invpnl:Add("Panel");
 				navpnl:SetTall(64);
 				navpnl:Dock(BOTTOM);
 
+				local page=0;	
+				local perPage = 0;
+				local maxPages = 0;	
+
+				local done=false;
+				function invpnl.PerformLayout(self)
+					if done then return end
+					
+					done=true;
+
 					local lblPage;	
-					local page=1;	
-					local perPage = math.floor((invpnl:GetTall()-100-64)/105)*3;	
-					local maxPages = math.ceil(table.Count(inv)/perPage);	
+					page=1;	
+					perPage = math.floor((invpnl:GetTall()-100-64)/105)*3;
+					maxPages = math.ceil(table.Count(inv)/perPage);	
 
 					local butPrev = vgui.Create("esIconButton",navpnl)	
 					butPrev:SetIcon(Material("exclserver/mmarrowicon.png"));	
@@ -438,6 +479,9 @@ function ES._MMGenerateInventoryOutfit(base)
 					lblPage:SizeToContents();	
 					lblPage:SetColor(COLOR_WHITE);	
 
+					createIcons();
+				end
+
 				local containerpnl=invpnl:Add("esPanel");
 				containerpnl:Dock(FILL);
 				containerpnl:SetColor(ES.Color["#00000033"])
@@ -450,69 +494,57 @@ function ES._MMGenerateInventoryOutfit(base)
 						end	
 					end	
 					icons = {};
-			
-					local count_all = 0;	
-					local count = 0;	
-					local curRow = 0;	
-					local curNum = 0;	
-					for k,v in pairs(inv or {})do		
-						if true then continue end
-						-- EDIT ME
-						-- EDIT ME 
-			
-						count_all = count_all + 1;	
-						if count >= perPage  or count_all < (page-1) * perPage then	
-							continue;	
-						end	
-						if not first then first = k end	
-						local icon = vgui.Create("esMMItemBuyTile",containerpnl);
-			
-						curNum = curNum + 1;
-			
-						if curNum > 3 then	
-							curRow = curRow + 1;	
-							curNum = 1;	
+
+					local icon
+					for i=(page-1) * perPage + 1, page*perPage do
+						local item=ES.Props[inv[i]];
+						if not item then return end
+
+						local x,y = 0,0
+						if IsValid(icon) then
+							x=icon.x + 105;
+							y=icon.y;
+
+							if x >= 105*3 then
+								x=0;
+								y=y+105;
+							end
+
+
 						end
-			
-						local it = ES.Items[k];	
-						if not it then continue end	
-						icon:SetSize(105,105);	
-						icon:SetPos((curNum-1)*105,100 + curRow*105);	
-						icon:PerformLayout();	
-						icon.icon:SetModel(it.model);	
-						icon.text = it.name;	
-						icon.item = it.id;	
-						icon.OnMouseReleased = function()	
-							itemname:SetText(it.name);	
+
+						icon=vgui.Create("ES.ItemTile.Model",containerpnl);
+						icon:SetSize(105,105);
+						icon:SetPos(x,y);
+						icon:Setup(item); 
+						icon:SetText(item:GetName());
+						icon.delay=CurTime() + ( y/105 + x/105 )*.05;
+
+						icon.OnMouseReleased=function()
+							itemname:SetText(item:GetName());	
 							itemname:SizeToContents();	
+
 							rm:SetVisible(true);	
-							spicon:SetModel(it.model);	
-							spicon:SetVisible(true);	
-							if itemSelected and ES.Items[itemSelected] then	
-								inv[itemSelected] = inv[itemSelected] + 1;	
-							end	
-							itemSelected = k;	
-							inv[k] = inv[k] - 1;	
-							createIcons();
-			
-							if slots[slot] and slots[slot].item then	
-								slots[slot].item = k;	
-								slots[slot].scale = Vector(0,0,0);	
-							else	
-								slots[slot] = {};	
-								slots[slot].item = k;	
-								slots[slot].bone = boneSelected;	
-								slots[slot].pos = Vector(0,0,0);	
-								slots[slot].ang = Angle(0,0,0);	
-								slots[slot].scale = Vector(0,0,0);	
-								slots[slot].color = Color(255,255,255);	
-							end	
-						end	
-						count = count + 1;	
-						table.insert(icons,icon);	
-					end						
+
+							spicon:SetModel(item:GetModel());	
+							spicon:SetVisible(true);
+
+							if not mdl.Slots then return end
+							
+							mdl.Slots[slot] = {
+								item=item:GetName(),
+								pos=Vector(0,0,0),
+								ang=Angle(0,0,0),
+								color="#FFFFFFFF",
+								bone=boneTranslations[DComboBox:GetValue()],
+								scale=Vector(0,0,0)
+							}
+						end
+
+						table.insert(icons,icon);
+					end		
 				end	
-				createIcons();
+				
 			
 		local left=editor:Add("Panel");
 		left:Dock(FILL);
@@ -526,14 +558,14 @@ function ES._MMGenerateInventoryOutfit(base)
 					sizePreview = editor:GetTall()-10-32-10-172; 	
 				end	
 
-				local mdl = pnlpreview:Add("esMMHatPreview");
+				mdl = pnlpreview:Add("ES.PlayerModel"); -- prototype above
 				mdl:Dock(FILL);
 				mdl:DockMargin(0,0,0,0);
 				mdl:SetModel(LocalPlayer():ESGetActiveModel());	
 				mdl:SetLookAt(Vector(0,0,0));	
 				mdl:SetCamPos(Vector(10,10,10));	
 				mdl:SetFocus(boneSelected);	
-				mdl.slots = slots;
+				mdl.Slots = slots;
 			
 				local zoommin = pnlpreview:Add("esIconButton")	
 				zoommin:SetIcon(Material("icon16/zoom_out.png"));	
@@ -557,7 +589,7 @@ function ES._MMGenerateInventoryOutfit(base)
 				rotmin:SetSize(16,16);	
 				rotmin:SetPos(zoommin.x,zoommin.y + 16+8);	
 				rotmin.DoClick = function(self)	
-					mdl.rotate = mdl.rotate + 1;	
+					mdl.rotate = mdl.rotate + 45;	
 					mdl:SetFocus(boneSelected);	
 				end	
 				local rotmore = pnlpreview:Add("esIconButton")	
@@ -565,7 +597,7 @@ function ES._MMGenerateInventoryOutfit(base)
 				rotmore:SetSize(16,16);	
 				rotmore:SetPos(rotmin.x - 8 - 16,rotmin.y);	
 				rotmore.DoClick = function(self)	
-					mdl.rotate = mdl.rotate - 1;	
+					mdl.rotate = mdl.rotate - 45;	
 					mdl:SetFocus(boneSelected);	
 				end
 			
@@ -609,6 +641,7 @@ function ES._MMGenerateInventoryOutfit(base)
 				local pnl = tabpnl:AddTab("Angles","exclserver/tabs/generic.png");	
 				pnl:DockPadding(10,10,10,10);
 					local slideP = pnl:Add("esSlider");	
+					slideP:SetPrecision(0);
 					slideP:Dock(TOP);	
 					slideP:SetTall(30)
 					slideP.text = "Pitch";	
@@ -618,7 +651,8 @@ function ES._MMGenerateInventoryOutfit(base)
 					slideP.Think = function(self) if slots[slot] and slots[slot].ang then	
 						slots[slot].ang.p = self:GetValue();	
 					end end	
-					local slideYa = pnl:Add("esSlider");	
+					local slideYa = pnl:Add("esSlider");
+					slideYa:SetPrecision(0);	
 					slideYa:Dock(TOP);	
 					slideYa:SetTall(30)
 					slideYa.text = "Yaw";	
@@ -628,7 +662,8 @@ function ES._MMGenerateInventoryOutfit(base)
 					slideYa.Think = function(self) if slots[slot] and slots[slot].ang then	
 						slots[slot].ang.y = self:GetValue();	
 					end end	
-					local slideR = pnl:Add("esSlider");	
+					local slideR = pnl:Add("esSlider");
+					slideR:SetPrecision(0);	
 					slideR:Dock(TOP);	
 					slideR:SetTall(30)
 					slideR.text = "Roll";	
@@ -641,7 +676,8 @@ function ES._MMGenerateInventoryOutfit(base)
 			
 				local pnl = tabpnl:AddTab("Scale","exclserver/tabs/generic.png");	
 				pnl:DockPadding(10,10,10,10);
-					local slideSX = pnl:Add("esSlider");	
+					local slideSX = pnl:Add("esSlider");
+					slideSX:SetPrecision(3);		
 					slideSX:SetTall(30);
 					slideSX:Dock(TOP);
 					slideSX.text = "X";	
@@ -652,6 +688,7 @@ function ES._MMGenerateInventoryOutfit(base)
 						slots[slot].scale.x = self:GetValue();	
 					end end	
 					local slideSY = pnl:Add("esSlider");	
+					slideSY:SetPrecision(3);
 					slideSY:Dock(TOP);	
 					slideSY:SetTall(30)
 					slideSY.text = "Y";	
@@ -662,6 +699,7 @@ function ES._MMGenerateInventoryOutfit(base)
 						slots[slot].scale.y = self:GetValue();	
 					end end	
 					local slideSZ = pnl:Add("esSlider");	
+					slideSZ:SetPrecision(3);
 					slideSZ:Dock(TOP);	
 					slideSZ:SetTall(30)
 					slideSZ.text = "Z";	
@@ -680,20 +718,22 @@ function ES._MMGenerateInventoryOutfit(base)
 					cube:SetLabel("")	
 					cube:SetColor(Color(255,255,255));	
 					function cube:ValueChanged()	
-						--ES.PushColorScheme(firstCube:GetColor(),secondCube:GetColor(),thirdCube:GetColor())	
+						slots[slot].color = ES.RGBToHex(cube:GetColor());
 					end
 		
 		
-	
-		if slots[slot] and slots[slot].item and ES.Items[slots[slot].item] then	
-			local it = ES.Items[slots[slot].item];	
-			itemname:SetText(it.name);	
-			itemname:SizeToContents();	
-			itemSelected = it.id;	
-			rm:SetVisible(true);	
-			spicon:SetModel(it.model);	
-			spicon:SetVisible(true);	
-		end	
+		if slots[slot] and slots[slot].item then
+			local it = ES.Props[slots[slot].item];
+			if it then	
+					
+				itemname:SetText(it:GetName());	
+				itemname:SizeToContents();	
+				itemSelected = it:GetName();	
+				rm:SetVisible(true);	
+				spicon:SetModel(it:GetModel());	
+				spicon:SetVisible(true);	
+			end	
+		end
 	end	
 	openEditor(1);
 end

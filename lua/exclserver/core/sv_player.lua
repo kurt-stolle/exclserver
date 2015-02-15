@@ -19,7 +19,7 @@ function PLAYER:ESSynchPlayer()
 end
 
 -- Occasionally hand out bananas
-timer.Create("ESHandOutBananas",900,0,function()
+timer.Create("ESHandOutBananas",600,0,function()
 	for k,v in pairs(player.GetAll())do
 		timer.Simple(math.random(0,120),function()
 			if IsValid(v) and v.excl and v:ESGetGlobalData("bananas",false) then
@@ -65,3 +65,21 @@ function PLAYER:ESChatPrint(...)
 	net.WriteTable({...});
 	net.Send(self);
 end
+
+-- Buy VIP
+util.AddNetworkString("ES.BuyVIP");
+net.Receive("ES.BuyVIP",function(len,ply)
+	local tier=net.ReadUInt(4);
+
+	if not tier or not IsValid(ply) or tier <= ply:ESGetVIPTier() or tier > 4 then return end
+
+	local cost=(tier-ply:ESGetVIPTier())*5000;
+
+	if ply:ESGetBananas() >= cost then
+		ply:ESTakeBananas(cost);
+		ply:ESSetNetworkedVariable("VIP",tier);
+		ply:ESSendNotificationPopup("Success","You have successfully upgraded your VIP status.\nThank you for your purchase!");
+	else
+		ply:ESSendNotificationPopup("Error","You do not have enough bananas to make this purchase.");
+	end
+end);

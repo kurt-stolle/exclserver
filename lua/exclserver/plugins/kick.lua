@@ -45,9 +45,9 @@ net.Receive("exclKP",function()
 	if not IsValid(p) then return end
 	
 	if r and r != "" and r != " " then
-		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has kicked ",Color(102,255,51),v,Color(255,255,255,255), " with reason: "..(r or "No reason specified.")..".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has kicked ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".");
 	else
-		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has kicked ",Color(102,255,51),v,Color(255,255,255,255),".");
+		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has kicked ",Color(102,255,51),v,ES.Color.White,".");
 	end
 	chat.PlaySound()
 end)

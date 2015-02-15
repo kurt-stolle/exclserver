@@ -3,35 +3,7 @@ local mm;
 hook.Add("HUDShouldDraw","ES.MM.SupressHUD",function()
 	if IsValid(mm) then return false end
 end);
---[[local view = {};
-hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
-	if IsValid(mm) then
-		local bone=ply:LookupBone("ValveBiped.Bip01_Head1");
 
-		if bone then
-		
-			pos,angles=ply:GetBonePosition(bone);
-
-			if pos and angles then
-
-				angles:RotateAroundAxis(angles:Up(),110);
-				angles:RotateAroundAxis(angles:Forward(),90);
-				angles:RotateAroundAxis(angles:Up(),180);
-
-				view.origin=LerpVector(FrameTime()*10,view.origin,pos);
-				view.angles=LerpAngle(FrameTime()*10,view.angles,angles);
-
-				view.fov = fov;
-				
-				return view
-
-			end
-		end
-	else
-		view.origin=pos;
-		view.angles=angles;
-	end
-end);]]
 local fx = {
 	["$pp_colour_addr"] = 0, 
 	["$pp_colour_addg"] = 0, 
@@ -93,43 +65,17 @@ hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
 	end
 end);
 
-local helpText = [[ExclServer is an all-in-one server system that handles items, forums, administration and has a plugin framework.
-The global currency used to buy items is Bananas. You can earn these bananas simply by playing, or you can purchase then
-on the forum.
-
-Bananas can be spent in the shop menu (accessable from this screen).
-If you are not familar with ExclServer the best way to get to know it is to simply explore these menus, we would suggest you
-to click the 'My account' tab and make a forum account or link your existing account. Doing so will give you 500 bananas.
-Bananas are shared across all our servers (including the forums). This means that bananas earned on one server are 
-automatically transferred
-to all other servers.
-
-
-ExclServer is created and constructed by Excl.]]
-
 surface.CreateFont("ES.MainMenu.HeadingText",{
 	font = "Calibri",
 	size = 28,
 })
-local needvip;
-function openNeedVIP(tier)
-	if needvip and IsValid(needvip) then needvip:Remove() end
-	needvip= vgui.Create("esFrame");
-	needvip:SetTitle("VIP Exclusive");
-	local l = Label("You need "..tier.." VIP.\nClick on VIP to check out the available VIP tiers.",needvip)
-	l:SetPos(15,45);
-	l:SizeToContents();
-	l:SetColor(COLOR_WHITE);
-	needvip:SetSize(15+l:GetWide()+15,45+l:GetTall()+15);
-	needvip:Center();
-	needvip:MakePopup();
-end
 
-local function addCheckbox(help,txt,convar,x,y,oncheck)
+local function addCheckbox(help,txt,convar,oncheck)
 
 	local togOwn = vgui.Create("esToggleButton",help);
-	togOwn:SetPos(x,y);
-	togOwn:SetSize(help:GetWide()-30,30);
+	togOwn:DockMargin(20,20,20,0);
+	togOwn:Dock(TOP);
+	togOwn:SetTall(20);
 	togOwn.Text = txt
 	togOwn.DoClick = function(self)
 		if self:GetChecked() then
@@ -153,29 +99,34 @@ function ES.CreateMainMenu()
 	mm:MakePopup();
 
 	--### main items
-	mm:AddButton("Main",Material("icon16/car.png"),function() 
+	mm:AddButton("General",Material("icon16/car.png"),function() 
 		mm:OpenChoisePanel({
-			{icon = Material("exclserver/menuicons/generic.png"), name = "Help",func = function()
+			{icon = Material("exclserver/menuicons/generic.png"), name = "About",func = function()
 				local p = mm:OpenFrame(640)
-				p:SetTitle("Help");
-				local l = Label(helpText,p);
+				p:SetTitle("About");
+				local l = Label(ES.FormatLine([[ExclServer is an all-in-one server system that handles items, forums, administration and has a plugin framework. The global currency used to buy items is Bananas. You can earn these bananas simply by playing, or you can purchase then on the forum.
+
+Bananas can be spent in the shop menu (accessable from this screen). If you are not familar with ExclServer the best way to get to know it is to simply explore these menus, we would suggest you to click the 'My account' tab and make a forum account or link your existing account. Doing so will give you 500 bananas. Bananas are shared across all our servers (including the forums). This means that bananas earned on one server are automatically transferred to all other servers.
+
+ExclServer is created and constructed by Excl.]],"ESDefault",640-20*2),p);
 				l:SetColor(Color(255,255,255,200));
-				l:SetPos(15,15);
+				l:SetFont("ESDefault");
+				l:SetPos(20,20);
 				l:SizeToContents();
 			end},
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Settings",func = function()
 				local p = mm:OpenFrame(300)
 				p:SetTitle("Settings");
 
-				addCheckbox(p,"Disable trails","es_trails_disable",15,15,function()
+				addCheckbox(p,"Disable trails","es_trails_disable",function()
 					timer.Simple(.5,function()
 						RunConsoleCommand( "excl_trails_reload")
 					end);
 				end);
-				addCheckbox(p,"Bind ExclServer to F6","es_bind_to_f6",15,15+22+5+22+5,function() end);
+				addCheckbox(p,"Bind ExclServer to F6","es_bind_to_f6",function() end);
 			end},
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Colors",func = function()
-				local p = mm:OpenFrame(300)
+				local p = mm:OpenFrame(15+256+15+256+15)
 				p:SetTitle("Colors");
 
 				local l = Label("Color scheme",p)
@@ -193,6 +144,8 @@ function ES.CreateMainMenu()
 				firstCube:SetPos(15,l.y+l:GetTall()+10);
 				firstCube:SetSize(256,200);
 				firstCube:SetLabel("Primary Color")
+				firstCube.label:SetFont("ESDefaultBold");
+				firstCube.label:SetColor(ES.Color.White);
 				firstCube:SetColor(f);
 				function firstCube:ValueChanged()
 					ES.PushColorScheme(firstCube:GetColor(),secondCube:GetColor(),thirdCube:GetColor())
@@ -202,22 +155,26 @@ function ES.CreateMainMenu()
 				secondCube:SetPos(15,firstCube.y+firstCube:GetTall()+10);
 				secondCube:SetSize(256,200);
 				secondCube:SetLabel("Secondary Color")
+				secondCube.label:SetFont("ESDefaultBold");
+				secondCube.label:SetColor(ES.Color.White);
 				secondCube:SetColor(s);
 				function secondCube:ValueChanged()
 					ES.PushColorScheme(firstCube:GetColor(),secondCube:GetColor(),thirdCube:GetColor())
 				end
 
-				thirdCube:SetPos(15,secondCube.y+firstCube:GetTall()+10);
+				thirdCube:SetPos(15+256+15,l.y+l:GetTall()+10);
 				thirdCube:SetSize(256,200);
 				thirdCube:SetLabel("Third Color")
+				thirdCube.label:SetFont("ESDefaultBold");
+				thirdCube.label:SetColor(ES.Color.White);
 				thirdCube:SetColor(t);
 				function thirdCube:ValueChanged()
 					ES.PushColorScheme(firstCube:GetColor(),secondCube:GetColor(),thirdCube:GetColor())
 				end
 
 				local b = vgui.Create("esButton",p);
-				b:SetSize(100,30);
-				b:SetPos(p:GetWide()-100-20,15)
+				b:SetSize(p:GetWide()-15*2,30);
+				b:SetPos(15,p:GetTall()-15-30)
 				b:SetText("Reset")
 				b.DoClick = function()
 					ES.PushColorScheme();
@@ -227,12 +184,14 @@ function ES.CreateMainMenu()
 					thirdCube:SetColor(t);
 
 					ES.SaveColorScheme();
+
+					ES.NotifyPopup("Success","The ExclServer color scheme has been reset.")
 				end
 
 			end},
 		})
 	end)
-	--mm:AddWhitespace();
+	mm:AddWhitespace();
 	mm:AddButton("Shop",Material("icon16/basket.png"),function() 
 		mm:OpenChoisePanel({
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Items",func = function()
@@ -264,44 +223,45 @@ function ES.CreateMainMenu()
 			end},
 		})
 	end)
-
-	--mm:AddButton("Crafting",Material("icon16/paintbrush.png"),function() mm:CloseChoisePanel(); openWorkingOnIt() end)
-	--mm:AddWhitespace();
 	mm:AddButton("VIP",Material("icon16/star.png"),function() 
 		mm:CloseChoisePanel()
 		local p = mm:OpenFrame(600);
 		p:SetTitle("VIP");
-		local lblVIPHelp = Label("VIPs are special",p)
+		local lblVIPHelp = Label("Information",p)
 		lblVIPHelp:SetFont("ES.MainMenu.HeadingText");
-		lblVIPHelp:SetColor(Color(255,255,255,255));
-		lblVIPHelp:SetPos(15,15);
+		lblVIPHelp:SetColor(ES.Color.White);
+		lblVIPHelp:Dock(TOP);
+		lblVIPHelp:DockMargin(15,15,15,0);
 		lblVIPHelp:SizeToContents();
-		local lblVIPInfo = Label("",p);
-		
-		local txt = [[VIP is a special status given to special members. You can buy yourself VIP status for 5000 bananas 
-per tier.There are 4 VIP tiers: Bronze, Silver, Gold and Carebear.
-Being a VIP gives you special benefits in ExclServer that non-VIPs do not have. 
-The gamemode ran by the server may also have implemented VIP benefits.
-
-Not enough bananas? If you donate we will give you a reward in the form of bananas.
-Go here to donate: www.CasualBananas.com/forums/donate.php, click anywhere on this 
-text to copy this URL to your clipboard (in your browser, press CTRL+V in the URL 
-field to paste)
-Every $1 you donate will get you 1000 bananas.]];
-		
-		lblVIPInfo:SetFont("ESDefaultBold");
-		lblVIPInfo:SetText(txt)
+		local lblVIPInfo = Label([[VIP is divided into three tiers; bronze, silver, gold and carebear. Each tier has its own benefits. 
+			The higher your VIP tier, the more benefits you will receive. The current gamemode may also have 
+			certain VIP features implemented. Becoming VIP is a way to both support the server you are 
+			currently playing on, and get yourself access to	features that are not accessible by non-VIP players.]],p);
+		lblVIPInfo:SetFont("ESDefault");
 		lblVIPInfo:SizeToContents();
-		lblVIPInfo:SetPos(15,lblVIPHelp.y + lblVIPHelp:GetTall() + 25);
+		lblVIPInfo:Dock(TOP);
+		lblVIPInfo:DockMargin(15,15,15,0);
 		lblVIPInfo:SetColor(Color(255,255,255,200))
-		function lblVIPInfo:OnMouseReleased()
-			SetClipboardText("www.CasualBananas.com/forums/donate.php")
-		end
+		local lblVIPHelp = Label("Benefits",p)
+		lblVIPHelp:SetFont("ES.MainMenu.HeadingText");
+		lblVIPHelp:SetColor(ES.Color.White);
+		lblVIPHelp:Dock(TOP);
+		lblVIPHelp:DockMargin(15,15,15,0);
+		lblVIPHelp:SizeToContents();
+		local lblVIPInfo = Label([[The table below outlines most of the benefits that upgrading your VIP rank will give.
+Press the button below the column to purchase the VIP tier.
+If you purchase a tier below Carebear, all tiers above said tier will decrease in price.]],p);
+		lblVIPInfo:SetFont("ESDefault");
+		lblVIPInfo:SizeToContents();
+		lblVIPInfo:Dock(TOP);
+		lblVIPInfo:DockMargin(15,15,15,15);
+		lblVIPInfo:SetColor(Color(255,255,255,200))
 
 		local curtier = LocalPlayer():ESGetVIPTier();	
-		local tbl = vgui.Create("esTable",p);
-		tbl:SetPos(15, lblVIPInfo.y + lblVIPInfo:GetTall() + 50)
-		tbl:SetSize(p:GetWide()-30,280);
+		local tbl = vgui.Create("ES.MMVIPTable",p);
+		tbl:Dock(TOP);
+		tbl:DockMargin(15,15,15,15);
+		tbl:SetTall(260);
 		tbl:SetRows(5,8);
 		tbl.headColors[2] = Color(152,101,0);
 		tbl.headColors[3] = Color(180,180,180);
@@ -352,26 +312,42 @@ Every $1 you donate will get you 1000 bananas.]];
 
 		tbl.buttons[2]:SetDoClick(function()
 			if LocalPlayer():ESGetVIPTier() >= 1 then return end
-			RunConsoleCommand("excl","buyvip","1")
+
+			net.Start("ES.BuyVIP");
+				net.WriteUInt(1,4);
+			net.SendToServer();
+
 			p:GetParent():Remove();
 		end)
 		tbl.buttons[3]:SetDoClick(function()
 			if LocalPlayer():ESGetVIPTier() >= 2 then return end
-			RunConsoleCommand("excl","buyvip","2")
+
+			net.Start("ES.BuyVIP");
+				net.WriteUInt(2,4);
+			net.SendToServer();
+
 			p:GetParent():Remove();
 		end)
 		tbl.buttons[4]:SetDoClick(function()
 			if LocalPlayer():ESGetVIPTier() >= 3 then return end
-			RunConsoleCommand("excl","buyvip","3")
+
+			net.Start("ES.BuyVIP");
+				net.WriteUInt(3,4);
+			net.SendToServer();
+
 			p:GetParent():Remove();
 		end)
 		tbl.buttons[5]:SetDoClick(function()
 			if LocalPlayer():ESGetVIPTier() >= 4 then return end
-			RunConsoleCommand("excl","buyvip","4")
+
+			net.Start("ES.BuyVIP");
+				net.WriteUInt(4,4);
+			net.SendToServer();
+
 			p:GetParent():Remove();
 		end)
 	end)
-	--mm:AddWhitespace();
+	mm:AddWhitespace();
 	mm:AddButton("Achievements",Material("icon16/rosette.png"),function()
 		mm:CloseChoisePanel()
 		local p = mm:OpenFrame(640)
@@ -427,12 +403,12 @@ Every $1 you donate will get you 1000 bananas.]];
 			dr.Paint = function(self,w,h)
 				draw.RoundedBox(2,0,0,w,h,COLOR_BLACK);
 
-				if (LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0) > 0 then
+				--[[if (LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0) > 0 then
 					draw.RoundedBox(2,1,1,(w-2)*((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0)/ES.Achievements[v.id].progressNeeded),h-2,a);
 				end
 				draw.SimpleText((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold.Shadow",w/2,h/2,COLOR_BLACK,1,1);
 				--draw.SimpleText(p.excl.achievements[id].." / "..ES.Achievements[id].progressNeeded,"ESDefaultBold",w/2 +1,h/2 +1,COLOR_BLACK,1,1);
-				draw.SimpleText((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1);
+				draw.SimpleText((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1);]]
 			end
 
 			y = y + ach:GetTall() + 1;
@@ -443,7 +419,6 @@ Every $1 you donate will get you 1000 bananas.]];
 		scr:SetSize(15,context:GetTall());
 		scr:SetUp()
 	end);
-	--mm:AddWhitespace();
 	mm:AddButton("Server list",Material("icon16/server.png"),function()
 		mm:CloseChoisePanel()
 		local p = mm:OpenFrame(640)
@@ -659,35 +634,11 @@ Every $1 you donate will get you 1000 bananas.]];
 			self:SetText(#player.GetAll().." active players")
 			self:SizeToContents();
 		end
-
-		--[[local muteall = p:Add("esButton");
-		muteall:SetText("Mute all");
-		muteall:SetSize(90,20);
-		muteall:SetPos(p:GetWide()-15-90,p:GetTall()-15-20);
-		muteall.DoClick = function()
-			for k,v in pairs(player.GetAll())do
-				if IsValid(v) then
-					v:SetMuted(true);
-				end
-			end
-		end
-		local unmuteall = p:Add("esButton");
-		unmuteall:SetText("Unmute all");
-		unmuteall:SetSize(90,20);
-		unmuteall:SetPos(muteall.x-15-90,p:GetTall()-15-20);
-		unmuteall.DoClick = function()
-			for k,v in pairs(player.GetAll())do
-				if IsValid(v) then
-					v:SetMuted(false);
-				end
-			end
-		end]]
 	end)
---mm:AddWhitespace();
-mm:AddButton("Website",Material("icon16/world.png"),function()
+	mm:AddButton("Website",Material("icon16/world.png"),function()
 		mm:CloseChoisePanel()
 		local p = mm:OpenFrame();
-		p:SetTitle("Community Website");
+		p:SetTitle("Website");
 
 		local lbl = Label("Loading...",p);
 		lbl:SetFont("ESDefaultBold");
@@ -700,17 +651,6 @@ mm:AddButton("Website",Material("icon16/world.png"),function()
 		web:SetPos(1,0);
 		web:OpenURL("http://casualbananas.com/")
 	end)
-	----mm:AddWhitespace();
-	--[[mm:AddButton("Music",Material("icon16/sound.png"),function()
-		mm:CloseChoisePanel()
-		local p = mm:OpenFrame();
-		p:SetTitle("Music Player");
-
-		local ply = p:Add("esMMMusicPlayer");
-		ply:SetPos(15,15);
-		ply:SetSize(p:GetWide()-30,100);
-	end)]]
-
 end
 
 net.Receive("ESToggleMenu",function() ES.CreateMainMenu() end);

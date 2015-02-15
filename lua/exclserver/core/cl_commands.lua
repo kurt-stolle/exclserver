@@ -1,20 +1,18 @@
 -- cl_commands
 
-local esCmd= {}
+ES.Commands= {}
 function ES.AddCommand(n,c,power)
-	table.insert(esCmd,{name = n, power = power});
+	table.insert(ES.Commands,{name = n, power = power});
 end
 function ES.RemoveCommand(n)
-	for k,v in pairs(esCmd)do
+	for k,v in pairs(ES.Commands)do
 		if v == n then
-			table.remove(esCmd,k);
+			table.remove(ES.Commands,k);
 			break;
 		end
 	end
 end
-function ES.GetCommandsList()
-	return esCmd;
-end
 
-ES.AddCommand("snapshot",nil,20);
-ES.AddCommand("info",nil,20);
+net.Receive("ES.SyncCommands",function(len)
+	ES.Commands=net.ReadTable() or {};
+end);

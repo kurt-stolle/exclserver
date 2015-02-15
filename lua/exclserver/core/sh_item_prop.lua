@@ -4,13 +4,20 @@ ES.ImplementIndexMatcher(ES.Props,"_name");
 
 function  ES.AddProp(n,d,p,t,vip,scale)
 	local tab=ES.Item( ES.ITEM_PROP );
+	tab.scale=Vector(scale or 1,scale or 1,scale or 1);
 	tab:SetName(n);
 	tab:SetDescription(d);
 	tab:SetCost(p);
 	if file.Exists(t,"GAME") then
 		tab:SetModel(t);
+
+		if CLIENT then
+			tab.cMdl=ClientsideModel( t , RENDERGROUP_BOTH );
+			tab.cMdl:SetNoDraw(true);
+		end
 	else
 		ES.DebugPrint("Prevented unknown model: "..t);
+		return;
 	end
 	tab:SetVIP(bVip);
 
@@ -61,3 +68,6 @@ ES.AddProp("Plug","For the modern leprichaun..",1800,"models/props_lab/tpplug.md
 ES.AddProp("Skeleton head","2spooky4u.",300,"models/Gibs/HGIBS.mdl")
 ES.AddProp("Traffic light","Groovy",8000,"models/props_phx/misc/t_light_head.mdl",true,.8)
 ES.AddProp("Pothead","The perfect pottery for the perfect hat.",2300,"models/props_c17/pottery_large01a.mdl",false,.6)
+ES.AddProp("Top hat","The gentle classic.",20000,"models/player/items/humans/top_hat.mdl",true,1);
+ES.AddProp("Grad cap","For a new found master.",15000,"models/player/items/humans/graduation_cap.mdl",true,1);
+ES.AddProp("Bomb","A bomb.",13000,"models/dynamite/dynamite.mdl",false,1.1);

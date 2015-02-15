@@ -38,7 +38,7 @@ if SERVER then
 
 	local loadedGlobal = {}
 	local loadedLocal = {};
-	PLUGIN:AddHook("ES.PostLoadServerID",function()
+	PLUGIN:AddHook("ES.MySQLReady",function()
 		if !GAMEMODE.IsSandboxDerived then ES.DebugPrint("Not loading prop restriction - we are not on a sandbox derived gamemode."); return end -- thanks garry, now we can not load this ESPlugin when we are not in a sandbox derive.
 
 		ES.DBQuery("SELECT * FROM es_restrictions_props WHERE serverid = "..ES.ServerID.." OR serverid = 0;",function(res)

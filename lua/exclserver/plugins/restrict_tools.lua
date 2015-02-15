@@ -35,7 +35,7 @@ if SERVER then
 	util.AddNetworkString("exclRestrTool");
 	util.AddNetworkString("exclNoTool");
 
-	PLUGIN:AddHook("ES.PostLoadServerID",function()
+	PLUGIN:AddHook("ES.MySQLReady",function()
 		if !GAMEMODE.IsSandboxDerived then ES.DebugPrint("Not loading tool restriction - we are not on a sandbox derived gamemode."); return end -- thanks garry, now we can not load this ESPlugin when we are not in a sandbox derive.
 
 		ES.DBQuery("SELECT * FROM es_restrictions_tools WHERE serverid = "..ES.ServerID..";",function(res)
@@ -75,7 +75,7 @@ net.Receive("exclRestrTool",function()
 	local rank = net.ReadString();
 	if not IsValid(p) then return end
 	
-	ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has restricted ",Color(102,255,51),exclFixCaps(tool),Color(255,255,255,255)," to "..rank..".");
+	ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has restricted ",Color(102,255,51),exclFixCaps(tool),ES.Color.White," to "..rank..".");
 end)
 net.Receive("exclNoTool",function()
 	local tool = net.ReadString();

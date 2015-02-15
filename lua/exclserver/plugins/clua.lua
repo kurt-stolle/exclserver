@@ -55,7 +55,7 @@ net.Receive("exclNoCEXP",function()
 	" tried to run a console command ",
 	Color(102,255,51),
 	v,
-	Color(255,255,255,255),
+	ES.Color.White,
 	".");
 	chat.PlaySound()
 end)
@@ -65,6 +65,6 @@ net.Receive("exclCLuaP",function()
 	local r = net.ReadString();
 	if not IsValid(p) then return end
 	
-	chat.AddText(Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has ran lua command \"",Color(102,255,51),r,Color(255,255,255,255), "\" on ",Color(102,255,51),v,Color(255,255,255),".");
+	chat.AddText(Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has ran lua command \"",Color(102,255,51),r,ES.Color.White, "\" on ",Color(102,255,51),v,Color(255,255,255),".");
 	chat.PlaySound()
 end)

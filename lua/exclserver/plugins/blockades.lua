@@ -15,7 +15,7 @@ util.AddNetworkString("ESBlockStart");
 util.AddNetworkString("ESBlockEnd");
 util.AddNetworkString("ESBlockConfirm");
 
-hook.Add("Initialize","WDAGHGINITBLOCKADESEXCLWASHEREESS",function()
+hook.Add("ES.MySQLReady","ES.SpawnBlockades",function()
 	ES.DBQuery("SELECT * FROM es_blockades WHERE mapname = '"..game.GetMap().."';",function(r) 
 		ES.DebugPrint("Attempting to spawn blockades");
 

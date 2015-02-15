@@ -20,10 +20,16 @@ if not mysqloo then
 end
 local esDataTables = {};
 
+local initialized=false;
+
 ES.DebugPrint("Connecting to MySQL...");
 local db = mysqloo.connect( DATABASE_HOST, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_SCHEMA, DATABASE_PORT );
 db.onConnected = function(database)
 	ES.DebugPrint("Successfully connected to MySQL database :)");
+
+	-- Make sure we don't call this twice.
+	if initialized then return end
+	initialized=true;
 
 	-- Get the server's IP.
 	local serverIP=ES.GetServerIP();
@@ -70,14 +76,14 @@ db.onConnected = function(database)
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_settings` (`id` smallint unsigned NOT NULL AUTO_INCREMENT, value int(10), name varchar(22), serverid tinyint(3) unsigned, PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_inventory` (`id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), itemtype tinyint unsigned, name varchar(255), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;"):wait();
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_fields` (`id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;"):wait();
-			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_outfit` (`id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), slot int(8) unsigned NOT NULL, item varchar(255), x float(8,4), y float(8,4), z float(8,4), pitch float(8,5), yaw float(8,5), roll float(8,5), scale float(8,4), red int(3), green int(3), blue int(3), UNIQUE KEY (`id`, `slot`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
+			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_player_outfit` (`id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), slot int(8) unsigned NOT NULL, item varchar(255), bone varchar(255), pos varchar(255), ang varchar(255), scale varchar(255), color varchar(255), UNIQUE KEY (`id`, `slot`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_ranks` ( `id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(50), serverid int(10), rank varchar(100), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;" ):wait();
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_bans` (`ban_id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), steamidAdmin varchar(100), name varchar(100), nameAdmin varchar(100), serverid int(8), unbanned tinyint(1), time int(32), timeStart int(32), reason varchar(255), PRIMARY KEY (`ban_id`), UNIQUE KEY `ban_id` (`ban_id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;"):wait();
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_ranks_config` ( `id` int(10) unsigned NOT NULL AUTO_INCREMENT, name varchar(100), prettyname varchar(200), power int(16), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_logs` (`id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), ip varchar(100), nick varchar(100), text varchar(255), type varchar(100), time int(32), serverid int(32), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;"):wait();
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_servers` ( `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT, ip varchar(100), prettyname varchar(100), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1;"):wait();
 
-			ES.DebugPrint("Reloading server to finalise data setup...");
+			ES.DebugPrint("Reloading server to finalise data setup (1/2)...");
 			game.ConsoleCommand("map "..game.GetMap().."\n");
 		else
 
@@ -87,11 +93,11 @@ db.onConnected = function(database)
 				if r and r[1] then
 					ES.DebugPrint("Server ID found: "..r[1].id)
 					ES.ServerID = r[1].id;
-					hook.Call("ES.PostLoadServerID",GM or GAMEMODE,ES.ServerID);
+					hook.Call("ES.MySQLReady",GM or GAMEMODE,ES.ServerID);
 				else
 					ES.DebugPrint("No server ID found! Registering server...");
 					ES.DBQuery("INSERT INTO es_servers SET ip = '"..serverIP.."';",function()
-						ES.DebugPrint("Reloading server to finalise data setup...");
+						ES.DebugPrint("Reloading server to finalise data setup (2/2)...");
 						game.ConsoleCommand("map "..game.GetMap().."\n");
 					end):wait();
 				end
@@ -124,7 +130,14 @@ end;
 db.onConnectionFailed = function(Q,e) 
 	ES.DebugPrint("Could not connect to mysql, "..e);
 end
-db:connect();
+
+local void=true;
+hook.Add("InitPostEntity","ES.InitDatabase",function()
+	void=nil;
+
+	db:connect();
+	db:wait();
+end);
 
 local function MySQLError(q,e,sql)
 	ES.DebugPrint("MySQL error:")
@@ -134,6 +147,21 @@ end
 
 function ES.DBQuery(request,fn,fnError)		
 	local query = db:query(request);
+
+	if not query then 
+		if void then
+			Error("Voided MySQL call - called too early!");
+			return;
+		end
+
+		if db:status() ~= DATABASE_CONNECTED then
+			db:connect()
+			db:wait()
+
+			query=db:query(request);
+		end
+	end
+
 	query:setOption(mysqloo.OPTION_CACHE,true);
 	query.onError = fnError or (MySQLError)
 	query.onSuccess = function(self,dt)

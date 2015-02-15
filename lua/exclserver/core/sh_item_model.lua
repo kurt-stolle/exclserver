@@ -12,6 +12,7 @@ function ES.AddModel(n,d,p,t,bVip)
 		tab:SetModel(t);
 	else
 		ES.DebugPrint("Prevented unknown model: "..t);
+		return;
 	end
 	tab:SetVIP(bVip);
 
@@ -36,11 +37,9 @@ ES.DefaultModels = {
 
 local PLAYER = FindMetaTable("Player");
 function PLAYER:ESGetActiveModel()
-	if not self.excl or not self.excl.activemodel or not ES.Models[self.excl.activemodel] then
-		return table.Random(ES.DefaultModels);
-	end
+	local active=LocalPlayer():ESGetNetworkedVariable("active_model",nil);
 
-	return ES.Models[self.excl.activemodel].model;
+	return ES.Models[active] and ES.Models[active]:GetModel() or table.Random(ES.DefaultModels);
 end
 
 ES.AddModel("Dr. Breen","The city administrator",4000,"models/player/breen.mdl")
@@ -60,3 +59,4 @@ ES.AddModel("Rotting corpse","...",4000,"models/player/corpse1.mdl")
 ES.AddModel("Zombie","A headcrabless zombie",20000,"models/player/zombie_classic.mdl")
 ES.AddModel("Alyx","Gordon's company",4000,"models/player/alyx.mdl")
 ES.AddModel("Eli","A nigger with a metal leg.",4000,"models/player/eli.mdl")
+ES.AddModel("Skeleton","A scary skeleton",25000,"models/player/skeleton.mdl");

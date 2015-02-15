@@ -33,10 +33,7 @@
 
 
 -- Popup notifications
-net.Receive("ES.Notification.Popup",function()
-	local title=net.ReadString();
-	local message=net.ReadString();
-
+function ES.NotifyPopup(title,message)
 	if not title or not message then return end
 
 	local frame=vgui.Create("esFrame");
@@ -57,6 +54,13 @@ net.Receive("ES.Notification.Popup",function()
 	frame:Center();
 
 	frame:MakePopup();
+end
+
+net.Receive("ES.Notification.Popup",function()
+	local title=net.ReadString();
+	local message=net.ReadString();
+
+	ES.NotifyPopup(title,message);
 end)
 -- Fonts
 surface.CreateFont("ES.Notification",{
@@ -106,7 +110,7 @@ local matrixAngle = Angle(0, 0, 0)
 local matrixScale = Vector(0, 0, 0)
 local matrixTranslation = Vector(0, 0, 0)
 local halvedPi = math.pi/2;
-local color=Color(255,255,255,255);
+local color=ES.Color.White;
 local color_dark=Color(0,0,0,255);
 local clamp = math.Clamp;
 local scale=0;
@@ -116,17 +120,15 @@ local color_text = Color(255,255,255,0);
 local color_text_dark = Color(0,0,0,255);
 local matrix,width,height,rad
 local text = "";
-local xalign = 0;
 local function drawText(text)
-	simpleText(text,"ES.Notification.Shadow"	,x,y+(32/2),color_black,xalign,1);
-	simpleText(text,"ES.Notification"		,x,y+(32/2),color_white,xalign,1);
+	simpleText(text,"ES.Notification.Shadow"	,x,y+(32/2),color_black,0,1);
+	simpleText(text,"ES.Notification"		,x,y+(32/2),color_white,0,1);
 end
 
 local fpsAvgNum=0;
 hook.Add("HUDPaint","ESDrawScreenText",function()
 	x,y = 16,16;
 	p = LocalPlayer();
-	xalign = 0;
 
 	setDrawColor(color_white);
 	setMaterial(icon_bananas);
@@ -155,12 +157,6 @@ hook.Add("HUDPaint","ESDrawScreenText",function()
 
 		x=x+32+16
 		drawText(tostring(bananaDisplayRound));
-	end
-
-	if ES.Debug then
-		xalign=2;
-		x = ScrW()-16
-		drawText("FPS: "..tostring(math.Round(fpsAvgNum)));
 	end
 end)
 

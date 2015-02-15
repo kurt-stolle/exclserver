@@ -58,7 +58,7 @@ net.Receive("exclSetRank",function()
 	" has set ",
 	Color(102,255,51),
 	v:Nick(),
-	Color(255,255,255,255),
+	ES.Color.White,
 	"'s "..txt.."rank to ",
 	Color(102,255,51),
 	exclFixCaps(r));

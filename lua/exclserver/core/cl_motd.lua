@@ -127,7 +127,7 @@ local navigationOptions={
 			title="About",
 			icon=Material("exclserver/motd/info.png"),
 			fn=function(pnl)
-				local text=Label(ES.FormatLine("This server is running ExclServer. ExclServer is a all-in-one server system that includes a shop, donation system, motd, administration, group management and an elaborate plugin system.\n\nPlayers can use ExclServer by pressing F6. From this menu the player can choose a number of different actions.\n\nItems can be bought with the Bananas currency. Bananas are earned through playing and achieving in-game goals. Completing achievements, listed in the F6 menu, also award Bananas.\n\nExclServer is made by Casual Bananas Software Development.\nPlease report any bugs to info@casualbananas.com.\n\n\n\nCOPYRIGHT (c) 2011-2015 CASUALBANANAS.COM","ESDefault",pnl:GetWide()-40),pnl);
+				local text=Label(ES.FormatLine("This server is running ExclServer. ExclServer is a all-in-one server system that includes a shop, donation system, motd, administration, group management and an elaborate plugin system.\n\nPlayers can use ExclServer by pressing F5. From this menu the player can choose a number of different actions.\n\nItems can be bought with the Bananas currency. Bananas are earned through playing and achieving in-game goals. Completing achievements, listed in the F6 menu, also award Bananas.\n\nExclServer is made by Casual Bananas Software Development.\nPlease report any bugs to info@casualbananas.com.\n\n\n\nCOPYRIGHT (c) 2011-2015 CASUALBANANAS.COM","ESDefault",pnl:GetWide()-40),pnl);
 				text:SetPos(20,20);
 				text:SizeToContents();
 			end

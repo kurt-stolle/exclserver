@@ -5,42 +5,34 @@ util.AddNetworkString("ES.Player.UpdateOutfit");
 net.Receive("ES.Player.UpdateOutfit",function(len,ply)
 	ES.DebugPrint("Received outfit update request from "..ply:Nick().." len: "..len);
 
-	local outfit=net.ReadTable();
-	local max_slots = 2+ply:ESGetVIPTier();
-	if #outfit > max_slots then return end
+	local slot=net.ReadUInt(4)
+	local item=net.ReadUInt(8);
+	local pos=net.ReadVector();
+	local ang=net.ReadAngle();
+	local scale=net.ReadVector();
+	local color=ES.DBEscape(net.ReadString());
+	local bone=ES.DBEscape(net.ReadString());
 
-	if ply._es_outfit then
-		for k,v in pairs(ply._es_outfit) do
-			if ES.IsIdenticalTable(outfit[k],v) then
-				outfit[k]=false;
-			end
-		end
-	else
+	if not slot or not item or not pos or not ang or not color or not scale or slot > 2+ply:ESGetVIPTier() or not ES.Props[item] or not bone or not table.HasValue(ES.PropBones,bone) or not ES.HexToRGB(color) then return end
+
+	item=ES.Props[item]:GetName();
+
+	if not ply:ESHasItem(item,ES.ITEM_PROP) then return end
+
+	if not ply._es_outfit then
 		ply._es_outfit={};
 	end
 
-	for k,slot in pairs(outfit)do
-		if slot and slot.pos and slot.ang and slot.color then
-			ply._es_outfit[k]=slot;
+	ply._es_outfit[slot] = {pos=pos,ang=ang,item=item,bone=bone,scale=scale,color=color};
 
-			local x=slot.pos.x or 0;
-			local y=slot.pos.y or 0;
-			local z=slot.pos.z or 0;
-			local pitch=slot.ang.p or 0;
-			local yaw=slot.ang.y or 0;
-			local roll=slot.ang.r or 0;
-			local red=slot.color.r or 255;
-			local green=slot.color.g or 255;
-			local blue=slot.color.b or 255;
-
-			ES.DBQuery(string.format("INSERT INTO `es_player_outfit` (steamid,slot,x,y,z,pitch,yaw,roll,red,green,blue) VALUES ("..ply:SteamID()..",%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE slot=VALUES(slot), x=VALUES(x), y=VALUES(y), z=VALUES(z), pitch=VALUES(pitch), yaw=VALUES(yaw), roll=VALUES(roll), red=VALUES(red), green=VALUES(green), blue=VALUES(blue);",tostring(k),x,y,z,pitch,yaw,roll,red,green,blue));
-		end
-	end
+	ES.DBQuery(string.format("INSERT INTO `es_player_outfit` (steamid,slot,item,bone,pos,ang,scale,color) VALUES ('"..ply:SteamID().."',%s,'%s','%s','%s','%s', '%s', '%s') ON DUPLICATE KEY UPDATE slot=VALUES(slot), item=VALUES(item), bone=VALUES(bone), pos=VALUES(pos), ang=VALUES(ang), scale=VALUES(scale), color=VALUES(color);",tostring(slot),tostring(item),bone,tostring(pos),tostring(ang),tostring(scale),color));
 
 	net.Start("ES.Player.UpdateOutfit");
 	net.WriteEntity(ply);
-	net.WriteTable(outfit);
+	net.WriteTable(ply._es_outfit);
 	net.Broadcast();
+
+	ES.DebugPrint("Saved outfit of "..ply:Nick());
 end);
 
 hook.Add("ESPlayerReady","ES.Outfit.LoadOOnSpawn",function(ply)
@@ -49,16 +41,21 @@ hook.Add("ESPlayerReady","ES.Outfit.LoadOOnSpawn",function(ply)
 		
 		ply._es_outfit={};
 		for k,v in ipairs(data)do
+			if not v.item or not v.pos or not v.slot or not v.ang or not v.color or not v.scale or not v.bone or not ES.Props[v.item] then continue end
+
 			ply._es_outfit[v.slot]={
-				pos=Vector(v.x,v.y,v.z),
-				ang=Angle(v.pitch,v.yaw,v.roll),
-				color=Color(v.red,v.green,v.blue)
+				item=v.item,
+				pos=Vector(v.pos),
+				ang=Angle(v.ang),
+				scale=Vector(v.scale),
+				color=v.color,
+				bone=v.bone
 			}
 		end
 
 		net.Start("ES.Player.UpdateOutfit");
 		net.WriteEntity(ply);
-		net.WriteTable(outfit);
+		net.WriteTable(ply._es_outfit);
 		net.Broadcast();
 
 		for k,v in pairs(player.GetAll())do
@@ -66,7 +63,7 @@ hook.Add("ESPlayerReady","ES.Outfit.LoadOOnSpawn",function(ply)
 				net.Start("ES.Player.UpdateOutfit");
 				net.WriteEntity(v);
 				net.WriteTable(v._es_outfit);
-				net.Broadcast();
+				net.Send(ply);
 			end
 		end
 	end);

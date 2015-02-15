@@ -12,22 +12,22 @@ surface.CreateFont("ES.MainMenu.MainElementHeader",{
 surface.CreateFont("ES.MainMenu.MainElementInfoBnns",{
 	font = "Calibri",
 	weight = 400,
-	size = 36
+	size = 38
 })
 surface.CreateFont("ES.MainMenu.MainElementInfoBnnsSmall",{
 	font = "Calibri",
 	weight = 700;
-	size = 16,
+	size = 17
 })
 surface.CreateFont("ES.MainMenu.ChoiseElement",{
 	font = "Calibri",
-	weight = 400;
+	weight = 700;
 	size = 14,
 })
 surface.CreateFont("ES.MainMenu.ChoiseElementSub",{
 	font = "Calibri",
 	weight = 700;
-	size = 12,
+	size = 14,
 })
 
 local PNL = {}
@@ -220,6 +220,11 @@ function PNL:Paint(w,h)
 	surface.SetDrawColor(ES.GetColorScheme(1));
 	surface.DrawRect(self.ElementMainX,0,256,80);
 
+	surface.SetDrawColor(ES.Color["#000000FF"]);
+	surface.DrawRect(self.ElementMainX,79,256,1);
+	surface.SetDrawColor(ES.Color["#FFFFFF03"]);
+	surface.DrawRect(self.ElementMainX,80,256,1);
+
 	surface.SetDrawColor(ES.Color["#000"]);
 	surface.DrawRect(self.ElementMainX+256,0,1,h);
 	surface.SetDrawColor(ES.Color["#FFFFFF03"]);
@@ -232,12 +237,16 @@ function PNL:Paint(w,h)
 	surface.DrawTexturedRect(self.ElementMainX,80-64,256,64);
 
 	--display bananas
-	surface.SetDrawColor(colElementMainFoot);
-	surface.DrawRect(self.ElementMainX+10,h-10-60,256-20,60);
+	--[[surface.SetDrawColor(ES.Color["#00000077"]);
+	surface.DrawRect(self.ElementMainX,h-10-60,256,60);
 
-	draw.SimpleText("Bananas","ES.MainMenu.MainElementInfoBnnsSmall",self.ElementMainX+20,h-10-60+5,ES.Color.Black);
+	surface.SetDrawColor(ES.Color["#FFFFFF02"]);
+	surface.DrawRect(self.ElementMainX,h-10-60,256,1);
+	surface.DrawRect(self.ElementMainX,h-10,256,1);]]
+
+	draw.SimpleText("Bananas","ES.MainMenu.MainElementInfoBnnsSmall",self.ElementMainX+10,h-10-60+4,ES.Color.White);
 	if not (IsValid(p) or not p:ESGetNetworkedVariable("bananas",false) ) then
-		draw.SimpleText("Loading...","ES.MainMenu.MainElementInfoBnns",self.ElementMainX+20,h-10-60+18,ES.Color.Black);
+		draw.SimpleText("Loading...","ES.MainMenu.MainElementInfoBnns",self.ElementMainX+10,h-10-60+18,ES.Color.White);
 	else
 		if not didLoad then
 			bananaDisplay = p:ESGetBananas();
@@ -253,7 +262,7 @@ function PNL:Paint(w,h)
 		else
 			bananaDisplay = bananaDisplayRound;
 		end
-		draw.SimpleText(tostring(bananaDisplayRound),"ES.MainMenu.MainElementInfoBnns",self.ElementMainX+20,h-10-60+18,ES.Color.Black);
+		draw.SimpleText(tostring(bananaDisplayRound),"ES.MainMenu.MainElementInfoBnns",self.ElementMainX+10,h-10-60+18,ES.Color.White);
 	end
 end
 vgui.Register("ESMainMenu",PNL,"EditablePanel");
@@ -263,13 +272,13 @@ vgui.Register("ESMainMenu",PNL,"EditablePanel");
 surface.CreateFont("ES.MainMenu.MainElementButtonShad",{
 	font = "Calibri",
 	size = 16,
-	weight = 800,
+	weight = 700,
 	blursize=2,
 })
 surface.CreateFont("ES.MainMenu.MainElementButton",{
 	font = "Calibri",
 	size = 16,
-	weight = 800,
+	weight = 700,
 })
 local PNL = {};
 function PNL:Init()
@@ -377,105 +386,6 @@ function PNL:Paint(w,h)
 	draw.SimpleText(self.title,"ES.MainMenu.FrameHead",15,70/2,ES.Color.White,0,1);
 end
 vgui.Register("ES.MainMenu.Frame",PNL,"Panel")
-
---#### hat previes
-local PNL = {};
-function PNL:Init() 
-	self.useCurrentHat = false
-	self.focusBone = "";
-	self.zoom = 40;
-	self.rotate = 90;
-	self.up = 1;
-	self.slots = {};
-end
-function PNL:SetFocus(b)
-	local bone = self.Entity:LookupBone(b)
-	if not bone then ES.DebugPrint("ERROR! Bone not found! "..b) return end
-
-	self:SetLookAt(self.Entity:GetBonePosition(bone));
-	self:SetCamPos(self.Entity:GetBonePosition(bone) + Vector(math.sin(self.rotate)*self.zoom,math.cos(self.rotate)*self.zoom,self.up));
-	self.focusBone = b;
-end
-function PNL:LayoutEntity() end -- override so it doesn't fuck us over.
-function PNL:Paint()
-	if ( !IsValid( self.Entity ) ) then return end
-		
-	local p = LocalPlayer();
-
-	local x, y = self:LocalToScreen( 0, 0 )
-	
-	self:LayoutEntity( self.Entity )
-	
-	local ang = self.aLookAngle
-	if ( !ang ) then
-		ang = (self.vLookatPos-self.vCamPos):Angle()
-	end
-	
-	local w, h = self:GetSize()
-	cam.Start3D( self.vCamPos, ang, self.fFOV, x, y, w, h, 5, 4096 )
-	cam.IgnoreZ( true )
-	
-	render.SuppressEngineLighting( true )
-	render.SetLightingOrigin( self.Entity:GetPos() )
-	render.ResetModelLighting( self.colAmbientLight.r/255, self.colAmbientLight.g/255, self.colAmbientLight.b/255 )
-	render.SetColorModulation( self.colColor.r/255, self.colColor.g/255, self.colColor.b/255 )
-	render.SetBlend( self.colColor.a/255 )
-	
-
-	for i=0, 6 do
-		local col = self.DirectionalLight[ i ]
-		if ( col ) then
-			render.SetModelLighting( i, col.r/255, col.g/255, col.b/255 )
-		end
-	end
-
-	self.Entity:DrawModel()		
-	local item,pos,ang,scale,bone,color,drawang,drawpos;
-	for k,v in pairs(self.slots)do
-		item = ES.Items[v.item];
-		if not item or not item.cMdl or not IsValid(item.cMdl) then continue end
-
-		pos = v.pos;
-		ang = v.ang;
-		scale = Vector(item.scale,item.scale,item.scale) + v.scale;
-		bone = v.bone;
-		color = v.color;
-		item = item.cMdl;
-
-		bone = self.Entity:LookupBone(bone)
-		local mtr = Matrix();
-		if not bone or not mtr then continue end
-		mtr:Scale(scale);
-		item:EnableMatrix("RenderMultiply", mtr);
-
-		item:SetColor(color or ES.Color.White);
-				
-		drawpos, drawang = self.Entity:GetBonePosition(bone)
-		
-		drawpos = drawpos + (drawang:Up() * 			pos.z);
-		drawpos = drawpos +	(drawang:Forward() * 		pos.y);
-		drawpos = drawpos + (drawang:Right() * 			pos.x);
-			
-		drawang:RotateAroundAxis( drawang:Forward(), 	ang.p)
-		drawang:RotateAroundAxis( drawang:Up(), 		ang.y)
-		drawang:RotateAroundAxis( drawang:Right(), 		ang.r)
-
-		item:SetRenderOrigin( drawpos )
-		item:SetRenderAngles( drawang )
-		item:SetupBones()
-		item:DrawModel()
-		item:SetRenderOrigin()
-		item:SetRenderAngles()
-	end	
-
-	render.SuppressEngineLighting( false )
-	cam.IgnoreZ( false )
-	cam.End3D()
-
-	self.LastPaint = RealTime()
-	
-end
-vgui.Register("esMMHatPreview",PNL,"DModelPanel")
 
 --## FUCKING PLAYER ROWS
 

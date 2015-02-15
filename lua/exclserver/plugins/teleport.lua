@@ -83,9 +83,9 @@ net.Receive("exclTP",function()
 	if p == a then
 		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported to ",Color(102,255,51),b:Nick(),COLOR_WHITE,".");
 	elseif p == b then
-		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),Color(255,255,255,255)," to his/her location.");
+		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),ES.Color.White," to his/her location.");
 	else
-		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),Color(255,255,255,255)," to ",Color(102,255,51),b:Nick(),COLOR_WHITE,".");
+		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),ES.Color.White," to ",Color(102,255,51),b:Nick(),COLOR_WHITE,".");
 	end
 	chat.PlaySound()
 end)

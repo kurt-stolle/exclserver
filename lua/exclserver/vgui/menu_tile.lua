@@ -17,8 +17,8 @@ local matrix,x,y,width,height,rad
 
 surface.CreateFont("ES.TileFont",{
 	font="Calibri",
-	weight=300,
-	size=24
+	weight=200,
+	size=22
 })
 
 local PANEL={};
@@ -74,16 +74,17 @@ function PANEL:Paint(w,h)
 	pushModelMatrix( matrix )
 
 	if not self:GetVIP() then
-		surface.SetDrawColor(Color(255,255,255,20));
+		surface.SetDrawColor(Color(255,255,255,10));
 		surface.DrawRect(2,2,w-4,h-4);	
 	end
 
-	
-	if self:GetHover() then
-		surface.SetDrawColor(ES.GetColorScheme(1));		
-		surface.DrawRect(1,1,w-2,h-2);
-	else
-		surface.SetDrawColor(ES.Color["#1E1E1F"])
+	local clr=table.Copy(ES.GetColorScheme(1));
+	clr.a = math.Clamp((self.scale-1)*20,0,1)*255;
+	surface.SetDrawColor(clr);		
+	surface.DrawRect(1,1,w-2,h-2);
+
+	if not self:GetHover() then
+		surface.SetDrawColor(ES.Color["#1B1B1BFF"])
 		surface.DrawRect(3,3,w-6,h-6);
 	end
 	
@@ -96,7 +97,7 @@ function PANEL:Paint(w,h)
 		surface.DrawRect(w-3,3,2,h-6);
 	end
 
-	local col = ES.Color["#FFFFFF11"];
+	local col = ES.Color["#FFFFFF0F"];
 	if self:GetHover() then
 		col = color_white;
 	end
@@ -106,7 +107,7 @@ function PANEL:Paint(w,h)
 	end		
 end
 function PANEL:PaintOver(w,h)
-	if self:GetCost() >= 0 then
+	if self:GetCost() > 0 then
 		local text;
 		if LocalPlayer():ESHasItem(self:GetText(),self:GetType()) then 
 			text="Owned";

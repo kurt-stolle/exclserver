@@ -17,7 +17,7 @@ function ES.Log(logtype,text)
 			file.CreateDir("es_logs")
 		end
 		logfile = "es_logs/"..os.date("%d_%m_%Y_%I_%M_%p")..".txt"
-		file.Write(logfile, "ExclServer Log (session: "..os.date("%d/%m/%Y %I:%M %p")..")\n\n\n["..os.date().. "]\t".. text)
+		file.Write(logfile, "ExclServer Log (session at: "..os.date("%d/%m/%Y %I:%M %p")..")\n\n\n["..os.date().. "]\t".. text)
 		return
 	end
 	file.Append(logfile, "\n["..os.date().. "]\t"..(text or ""))
@@ -38,8 +38,8 @@ function ES.LogDB(ply,text,typ)
 	end)
 end
 
-hook.Add("PlayerSay","exclIsWatchingYouChatLogs",function(p,t)
-	if IsValid(p) and t then
+hook.Add("PlayerSay","ES.Logs.BigBrotherChat",function(p,t)
+	if IsValid(p) and p:IsPlayer() and t then
 		ES.Log(p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..string.gsub(t,"\\","/"));
 		ES.LogDB(p,t,"chat");
 	end

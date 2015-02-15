@@ -1,6 +1,6 @@
 local PLAYER = FindMetaTable("Player");
 function PLAYER:ESHasItem(name,itemtype)
-	if type(name) ~= "string" or type(itemtype) ~= "number" then return end
+	if type(name) ~= "string" or type(itemtype) ~= "number" then return false end
 
 	if itemtype == ES.ITEM_TRAIL and type(self._es_inventory_trails)=="table" then
 		return table.HasValue(self._es_inventory_trails,name);

@@ -29,7 +29,7 @@ function PNL:Paint(w,h)
 	end
 
 	surface.SetMaterial(self.Icon);
-	surface.SetDrawColor(Color(255,255,255,255));
+	surface.SetDrawColor(ES.Color.White);
 	surface.DrawTexturedRect(6,(h/2) - (16/2),16,16) ;
 end
 ES.UIAddHoverListener(PNL);

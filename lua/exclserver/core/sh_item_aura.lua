@@ -34,7 +34,7 @@ if CLIENT then
 
 			p._es_auraAngle = (p._es_auraAngle + FrameTime()*4) % 360;
 			
-			local tr=util.TraceHull{start=p:GetPos()+Vector(0,0,.5),endpos=p:GetPos()-Vector(0,0,10000),filter=p,maxs=Vector(16,16,.05),mins=Vector(-16,-16,0),mask=MASK_PLAYERSOLID};
+			local tr=util.TraceHull{start=p:GetPos()+Vector(0,0,.5),endpos=p:GetPos()-Vector(0,0,10000),filter=p,maxs=Vector(16,16,0),mins=Vector(-16,-16,0),mask=MASK_PLAYERSOLID};
 
 			if not tr then return end
 

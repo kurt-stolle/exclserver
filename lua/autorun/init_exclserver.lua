@@ -4,17 +4,16 @@ ES = {}
 ES.debug = true;
 ES.version = "4.7.0";
 ES.PostInitialize = false;
-COLOR_EXCLSERVER = Color(102,255,51,255);
-COLOR_EXCLSERVER_DEBUG_CLIENT = Color(255,204,51);
-COLOR_EXCLSERVER_DEBUG_SERVER = Color(51,204,255);
-COLOR_WHITE = Color(255,255,255,255);
-COLOR_EXCLSERVER_DEBUG = Color(213,213,213,255);
+
 -- Debug methods
+local color_debug_text=Color(255,255,255);
+local color_debug_client=Color(245,184,0);
+local color_debug_server=Color(0,200,255);
 function ES.DebugPrint(s)
 	if not ES.debug or not s then return end
 	
-	MsgC(SERVER and COLOR_EXCLSERVER_DEBUG_SERVER or COLOR_EXCLSERVER_DEBUG_CLIENT,"[ES] ");
-	MsgC(COLOR_EXCLSERVER_DEBUG,tostring(s).."\n");
+	MsgC(SERVER and color_debug_server or color_debug_client,"[ES] ");
+	MsgC(color_debug_text,tostring(s).."\n");
 end
 ES.DebugPrint("Initializing ExclServer @ version "..ES.version);
 

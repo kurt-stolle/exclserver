@@ -1,3 +1,36 @@
+-- Utilities
+function ES.RGBToHex(color)
+	local tab={color.r,color.g,color.b,color.a};
+
+	local hexadecimal="#";
+	for key, value in ipairs(tab) do
+		local hex = ''
+ 
+		while(value > 0)do
+			local index = math.fmod(value, 16) + 1
+			value = math.floor(value / 16)
+			hex = string.sub('0123456789ABCDEF', index, index) .. hex			
+		end
+ 
+		if(string.len(hex) == 0)then
+			hex = '00'
+ 
+		elseif(string.len(hex) == 1)then
+			hex = '0' .. hex
+		end
+ 
+		hexadecimal = hexadecimal .. hex
+	end
+ 
+	return hexadecimal
+end
+function ES.HexToRGB(key)
+	if string.len(key) < 9 or string.Left(key,1) != "#" then return nil end
+
+	return Color(tonumber("0x"..key:sub(2,3)), tonumber("0x"..key:sub(4,5)), tonumber("0x"..key:sub(6,7)), tonumber("0x"..key:sub(8,9)) );
+end
+
+-- Color caching function
 ES.Color = {}
 setmetatable(ES.Color,{
 	__index = function(tbl,key)
@@ -7,13 +40,11 @@ setmetatable(ES.Color,{
 			elseif #key == 7 then
 				return tbl[key.."FF"];
 			elseif #key == 9 then
-				rawset( tbl, key, Color(tonumber("0x"..key:sub(2,3)), tonumber("0x"..key:sub(4,5)), tonumber("0x"..key:sub(6,7)), tonumber("0x"..key:sub(8,9)) ) ); -- Cache the result - we may need it later!
+				rawset( tbl, key, ES.HexToRGB(key) ); -- Cache the result - we may need it later!
 				return rawget(tbl,key);
 			end
 		end
 
-		ES.DebugPrint("Invalid HEX-value passed to ES color parser.");
-		
 		return Color(math.random(0,255),math.random(0,255),math.random(0,255));
 	end
 });

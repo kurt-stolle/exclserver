@@ -6,11 +6,11 @@ end
 local PLUGIN=ES.Plugin();
 PLUGIN:SetInfo("Thirdperson","Allow you to toggle thirdperson.","Excl")
 PLUGIN:AddCommand("thirdperson",function(p,a)
-	if not p.excl or p:ESGetVIPTier() < 3  then return end
+	if p:ESGetVIPTier() < 3  then return end
 	net.Start("ESToggleTP"); net.Send(p);
 end);
 PLUGIN:AddCommand("firstperson",function(p,a)
-	if not p.excl or p:ESGetVIPTier() < 3 then return end
+	if p:ESGetVIPTier() < 3 then return end
 	net.Start("ESToggleTP"); net.Send(p);
 end);
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
@@ -20,16 +20,15 @@ if SERVER then return end
 
 net.Receive("ESToggleTP",function()
 	if not LocalPlayer().excl then return end
-	LocalPlayer().excl.thirdperson = !LocalPlayer().excl.thirdperson;
+	LocalPlayer()._es_thirdpersonMode = !LocalPlayer()._es_thirdpersonMode;
 	
-	if LocalPlayer().excl.thirdperson then
+	if LocalPlayer()._es_thirdpersonMode then
 		chat.AddText(Color(255,255,255),"You have enabled thirdperson mode.");
 	end
 	chat.PlaySound();
 end)
 
 local fov = 0;
-local thirdperson = true;
 local newpos
 local tracedata = {}
 local distance = 60;
@@ -39,12 +38,42 @@ local camAng = Angle(0, 0, 0)
 local newpos;
 local newangles;
 hook.Add("CalcView", "exclThirdperson", function(ply, pos , angles ,fov)
+	--[[local view = {};
+hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
+	if IsValid(mm) then
+		local bone=ply:LookupBone("ValveBiped.Bip01_Head1");
+
+		if bone then
+		
+			pos,angles=ply:GetBonePosition(bone);
+
+			if pos and angles then
+
+				angles:RotateAroundAxis(angles:Up(),110);
+				angles:RotateAroundAxis(angles:Forward(),90);
+				angles:RotateAroundAxis(angles:Up(),180);
+
+				view.origin=LerpVector(FrameTime()*10,view.origin,pos);
+				view.angles=LerpAngle(FrameTime()*10,view.angles,angles);
+
+				view.fov = fov;
+				
+				return view
+
+			end
+		end
+	else
+		view.origin=pos;
+		view.angles=angles;
+	end
+end);]]
+	
 	if !newpos then
 		newpos = pos;
 		newangles = angles;
 	end
 
-	if( ply.excl and ply.excl.thirdperson ) and distance > 2 then					
+	if( ply.excl and ply._es_thirdpersonMode ) and distance > 2 then					
 		local side = ply:GetActiveWeapon();
 		side = side and IsValid(side) and side.GetHoldType and side:GetHoldType() != "normal" and side:GetHoldType() != "melee" and side:GetHoldType() != "melee2" and side:GetHoldType() != "knife";
 
@@ -81,7 +110,7 @@ hook.Add("CalcView", "exclThirdperson", function(ply, pos , angles ,fov)
 end)
 
 hook.Add("ShouldDrawLocalPlayer", "ESThirdpersonDrawLocal", function()
-	if LocalPlayer().excl and LocalPlayer().excl.thirdperson == true then
+	if LocalPlayer().excl and LocalPlayer()._es_thirdpersonMode == true then
 		return true;
 	end
 end)
