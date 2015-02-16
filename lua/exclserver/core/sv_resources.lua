@@ -5,7 +5,7 @@ function ES.ResourceDir(dir)
 		resource.AddSingleFile( string.gsub(string.gsub(dir,"addons/exclserver/",""),"//","/").."/"..v )
 	end
 	for k,v in pairs(dirs)do
-		ES.ResourceDir(dir.."/"..v);
+		ES.ResourceDir(dir.."/"..v)
 	end
 end
 

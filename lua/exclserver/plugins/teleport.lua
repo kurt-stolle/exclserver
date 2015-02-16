@@ -1,7 +1,7 @@
 -- tp
 -- tp people
 
-local PLUGIN=ES.Plugin();
+local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Teleport","Allows you to teleport.","Excl")
 local function findLocation( from, to, force )
 	if not to:IsInWorld() and not force then return false end
@@ -41,51 +41,51 @@ end
 local function teleport(p,arg)
 	if not p or not IsValid(p) or not arg or not arg[2] then return end
 	
-	local a = exclPlayerByName(arg[1]);
-	local b = exclPlayerByName(arg[2]);
+	local a = exclPlayerByName(arg[1])
+	local b = exclPlayerByName(arg[2])
 
 	if !a or !b then return end
 	
-	a = a[1];
-	b = b[1];
+	a = a[1]
+	b = b[1]
 
 	if !a or !b or !IsValid(a) or !IsValid(b) then return end
 	
-	local pos = findLocation( a,b,p:GetMoveType() == MOVETYPE_NOCLIP or p:GetMoveType() == MOVETYPE_OBSERVER or tobool(a[3]) );
+	local pos = findLocation( a,b,p:GetMoveType() == MOVETYPE_NOCLIP or p:GetMoveType() == MOVETYPE_OBSERVER or tobool(a[3]) )
 	if not pos then p:ChatPrint("Not enough space to teleport, put \"1\" as third argument to force teleport (this will probably resuly in getting stuck).") return end
 
-	a:SetPos(pos);
+	a:SetPos(pos)
 
-	net.Start("exclTP");
-	net.WriteEntity(p);
-	net.WriteEntity(a);
-	net.WriteEntity(b);
-	net.Broadcast();
+	net.Start("exclTP")
+	net.WriteEntity(p)
+	net.WriteEntity(a)
+	net.WriteEntity(b)
+	net.Broadcast()
 end
-PLUGIN:AddCommand("tp",teleport,10);
-PLUGIN:AddCommand("teleport",teleport,10);
+PLUGIN:AddCommand("tp",teleport,10)
+PLUGIN:AddCommand("teleport",teleport,10)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
-PLUGIN();
+PLUGIN()
 
 if SERVER then 
-	util.AddNetworkString("exclTP");
+	util.AddNetworkString("exclTP")
 
 	return 
 end
 net.Receive("exclTP",function()
-	local p = net.ReadEntity();
-	local a = net.ReadEntity();
-	local b = net.ReadEntity();
+	local p = net.ReadEntity()
+	local a = net.ReadEntity()
+	local b = net.ReadEntity()
 
 	if not IsValid(p) or not IsValid(a) or not IsValid(b) then return end
 	
 	if p == a then
-		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported to ",Color(102,255,51),b:Nick(),COLOR_WHITE,".");
+		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported to ",Color(102,255,51),b:Nick(),COLOR_WHITE,".")
 	elseif p == b then
-		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),ES.Color.White," to his/her location.");
+		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),ES.Color.White," to his/her location.")
 	else
-		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),ES.Color.White," to ",Color(102,255,51),b:Nick(),COLOR_WHITE,".");
+		ES.ChatAddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),ES.Color.White," to ",Color(102,255,51),b:Nick(),COLOR_WHITE,".")
 	end
 	chat.PlaySound()
 end)

@@ -1,4 +1,4 @@
-local PLUGIN=ES.Plugin();
+local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Jokes",
 "Being funny has never been so easy.",
 "Excl")
@@ -6,25 +6,25 @@ PLUGIN:SetInfo("Jokes",
 PLUGIN:AddCommand("joke",function(p,a)
 	if not p or not p:IsValid() then return 
 	elseif p:ESGetVIPTier() < 1 then
-		p:ChatPrint("You must have bronze VIP to tell funny jokes.");
-		return;
+		p:ChatPrint("You must have bronze VIP to tell funny jokes.")
+		return
 	elseif (p.esNextJoke and p.esNextJoke > CurTime()) then
-		p:ChatPrint("Wait "..math.Round(p.esNextJoke - CurTime()).." seconds before telling another funny joke.");
-		return;
+		p:ChatPrint("Wait "..math.Round(p.esNextJoke - CurTime()).." seconds before telling another funny joke.")
+		return
 	end
 
-	p.esNextJoke = CurTime() + 30;
+	p.esNextJoke = CurTime() + 30
 
-	net.Start("ESFunny"); net.Send(p);
+	net.Start("ESFunny") net.Send(p)
 
 	p:ESAddAchievementProgress("funny",1)
-end);
-PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED);
-PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE);
-PLUGIN();
+end)
+PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
+PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
+PLUGIN()
 
 if SERVER then
-	util.AddNetworkString("ESFunny");
+	util.AddNetworkString("ESFunny")
 elseif CLIENT then
 	local funnyjokes = {"Why did the man put his money in the freezer? He wanted cold hard cash!",
 "Heh, javascript!",
@@ -188,11 +188,11 @@ elseif CLIENT then
 "Why do golfers wear two pairs of pants? In case they get a hole in one!",
 "What did the the tie say to the hat? You go on a head, I'll just hang around!",
 "What would you call two banana skins? A pair of slippers."
-};
+}
 
 	net.Receive("ESFunny",function()
 		timer.Simple(1.1,function()
-			LocalPlayer():ConCommand("say ^9"..table.Random(funnyjokes).." :D");
-		end);
+			LocalPlayer():ConCommand("say ^9"..table.Random(funnyjokes).." :D")
+		end)
 	end)
 end

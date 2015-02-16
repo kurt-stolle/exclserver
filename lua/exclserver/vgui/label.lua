@@ -2,7 +2,7 @@
 
 local PANEL={}
 function PANEL:Init()
-	self:SetFont("ESDefault");
-	self:SetMouseInputEnabled(false);
+	self:SetFont("ESDefault")
+	self:SetMouseInputEnabled(false)
 end
-vgui.Register("esLabel",PANEL,"DLabel"); 
+vgui.Register("esLabel",PANEL,"DLabel") 

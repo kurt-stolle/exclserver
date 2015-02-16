@@ -1,30 +1,30 @@
-local PNL = {};
-AccessorFunc(PNL,"useOutfit","UseOutfit",FORCE_BOOL);
-AccessorFunc(PNL,"focusBone","Focus",FORCE_STRING);
-AccessorFunc(PNL,"zoom","Zoom",FORCE_NUMBER);
-AccessorFunc(PNL,"rotate","Rotation",FORCE_NUMBER);
-AccessorFunc(PNL,"rotate_y","RotationY",FORCE_NUMBER);
+local PNL = {}
+AccessorFunc(PNL,"useOutfit","UseOutfit",FORCE_BOOL)
+AccessorFunc(PNL,"focusBone","Focus",FORCE_STRING)
+AccessorFunc(PNL,"zoom","Zoom",FORCE_NUMBER)
+AccessorFunc(PNL,"rotate","Rotation",FORCE_NUMBER)
+AccessorFunc(PNL,"rotate_y","RotationY",FORCE_NUMBER)
 
 function PNL:Init() 
-	self:SetZoom(40);
-	self:SetRotation(90);
-	self:SetRotationY(0);
+	self:SetZoom(40)
+	self:SetRotation(90)
+	self:SetRotationY(0)
 
-	self.Slots = {};
-	self.dragging=false;
+	self.Slots = {}
+	self.dragging=false
 end
 function PNL:OnMousePressed()
-	self.dragging = true;
-	self.startPos = Vector(gui.MousePos());
+	self.dragging = true
+	self.startPos = Vector(gui.MousePos())
 end
 function PNL:SetFocus(b)
 	if b then
 		local bone = self.Entity:LookupBone(b)
 		if not bone then ES.DebugPrint("ERROR! Bone not found! "..b) return end
 
-		self:SetLookAt(self.Entity:GetBonePosition(bone));
-		self:SetCamPos(self.Entity:GetBonePosition(bone) + Vector(math.sin(math.rad(self.rotate))*self.zoom,math.cos(math.rad(self.rotate))*self.zoom,0--[[self:GetRotationY()]]));
-		self.focusBone = b;
+		self:SetLookAt(self.Entity:GetBonePosition(bone))
+		self:SetCamPos(self.Entity:GetBonePosition(bone) + Vector(math.sin(math.rad(self.rotate))*self.zoom,math.cos(math.rad(self.rotate))*self.zoom,0--[[self:GetRotationY()]]))
+		self.focusBone = b
 	end
 end
 function PNL:LayoutEntity() end -- override so it doesn't fuck us over.
@@ -32,23 +32,23 @@ function PNL:Paint()
 	if ( !IsValid( self.Entity ) ) then return end
 
 	if self.dragging and self.startPos then
-		local p = Vector(gui.MousePos());
+		local p = Vector(gui.MousePos())
 		
-		local dx = p.x - self.startPos.x;
-		local dy = p.y - self.startPos.y;
+		local dx = p.x - self.startPos.x
+		local dy = p.y - self.startPos.y
 
 		if self.dragging and (input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)) then
-			self:SetRotation(self:GetRotation()+dx);
-			self:SetRotationY(self:GetRotationY()+dy);
-			self:SetFocus(self.focusBone);
+			self:SetRotation(self:GetRotation()+dx)
+			self:SetRotationY(self:GetRotationY()+dy)
+			self:SetFocus(self.focusBone)
 
-			self.startPos=p;
+			self.startPos=p
 		else
-			self.dragging = false;
+			self.dragging = false
 		end
 	end
 		
-	local p = LocalPlayer();
+	local p = LocalPlayer()
 
 	local x, y = self:LocalToScreen( 0, 0 )
 	
@@ -78,34 +78,34 @@ function PNL:Paint()
 	end
 
 	self.Entity:DrawModel()		
-	local item,pos,ang,scale,bone,color,drawang,drawpos,mtr;
+	local item,pos,ang,scale,bone,color,drawang,drawpos,mtr
 	for k,v in pairs(self.Slots)do
-		item = ES.Props[v.item];
+		item = ES.Props[v.item]
 		if not item or not IsValid(item.cMdl) or not v.pos or not v.ang or not v.scale or not v.bone or not v.color then continue end
 
-		pos = v.pos;
-		ang = v.ang;
-		scale = item.scale + v.scale;
-		bone = v.bone;
-		color = ES.Color[v.color];
-		item = item.cMdl;
+		pos = v.pos
+		ang = v.ang
+		scale = item.scale + v.scale
+		bone = v.bone
+		color = ES.Color[v.color]
+		item = item.cMdl
 
 		bone = self.Entity:LookupBone(bone)
 
 		if not bone then continue end
 
-		mtr = Matrix();
-		mtr:Scale(scale);
+		mtr = Matrix()
+		mtr:Scale(scale)
 
-		item:EnableMatrix("RenderMultiply", mtr);
+		item:EnableMatrix("RenderMultiply", mtr)
 
-		item:SetColor(color or ES.Color.White);
+		item:SetColor(color or ES.Color.White)
 				
 		drawpos, drawang = self.Entity:GetBonePosition(bone)
 		
-		drawpos = drawpos + (drawang:Up() * 			pos.z);
-		drawpos = drawpos +	(drawang:Forward() * 		pos.y);
-		drawpos = drawpos + (drawang:Right() * 			pos.x);
+		drawpos = drawpos + (drawang:Up() * 			pos.z)
+		drawpos = drawpos +	(drawang:Forward() * 		pos.y)
+		drawpos = drawpos + (drawang:Right() * 			pos.x)
 			
 		drawang:RotateAroundAxis( drawang:Forward(), 	ang.p)
 		drawang:RotateAroundAxis( drawang:Up(), 		ang.y)
