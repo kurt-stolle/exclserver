@@ -3,33 +3,34 @@
 
 local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Tool restrict","Allows you to restrict certain tools.","Excl")
-PLUGIN:AddCommand("restricttool",function(p,a)
-	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
-	if !(p:GetActiveWeapon() and IsValid(p:GetActiveWeapon()) and p:GetActiveWeapon():GetClass() == "gmod_tool") then return end
 
-	local toolmode = p:GetWeapon("gmod_tool").Mode
-	local req = tonumber(a[1])
-
-	ES.DBQuery("SELECT * FROM es_restrictions_tools WHERE toolmode='"..toolmode.."' LIMIT 1",function(res)
-		if res and res[1] then
-			ES.DBQuery("UPDATE es_restrictions_tools SET req = "..req.." WHERE toolmode='"..toolmode.."', serverid = "..ES.ServerID.."")
-		else
-			ES.DBQuery("INSERT INTO es_restrictions_tools SET toolmode='"..toolmode.."', req = "..req..", serverid = "..ES.ServerID.."")
-		end
-	end)
-
-	ES.ToolRestrictions[toolmode] = req
-
-	net.Start("exclRestrTool")
-	net.WriteEntity(p)
-	net.WriteString(toolmode)
-	net.WriteString(req <= 4 and "VIP tier "..tostring(req) or req == 5 and "Administrator" or req == 6 and "Super Administrator" or req == 7 and "Server Operator")
-	net.Broadcast()
-end,60)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
-PLUGIN()
 
 if SERVER then 
+	PLUGIN:AddCommand("restricttool",function(p,a)
+		if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
+		if !(p:GetActiveWeapon() and IsValid(p:GetActiveWeapon()) and p:GetActiveWeapon():GetClass() == "gmod_tool") then return end
+
+		local toolmode = p:GetWeapon("gmod_tool").Mode
+		local req = tonumber(a[1])
+
+		ES.DBQuery("SELECT * FROM es_restrictions_tools WHERE toolmode='"..toolmode.."' LIMIT 1",function(res)
+			if res and res[1] then
+				ES.DBQuery("UPDATE es_restrictions_tools SET req = "..req.." WHERE toolmode='"..toolmode.."', serverid = "..ES.ServerID.."")
+			else
+				ES.DBQuery("INSERT INTO es_restrictions_tools SET toolmode='"..toolmode.."', req = "..req..", serverid = "..ES.ServerID.."")
+			end
+		end)
+
+		ES.ToolRestrictions[toolmode] = req
+
+		net.Start("exclRestrTool")
+		net.WriteEntity(p)
+		net.WriteString(toolmode)
+		net.WriteString(req <= 4 and "VIP tier "..tostring(req) or req == 5 and "Administrator" or req == 6 and "Super Administrator" or req == 7 and "Server Operator")
+		net.Broadcast()
+	end,60)
+
 	ES.ToolRestrictions = {}
 
 	util.AddNetworkString("exclRestrTool")
@@ -83,3 +84,5 @@ net.Receive("exclNoTool",function()
 	
 	ES.ChatAddText("error",COLOR_EXCLSERVER,exclFixCaps(tool),COLOR_WHITE," is restricted to ",COLOR_EXCLSERVER,rank,COLOR_WHITE,".")
 end)
+
+PLUGIN()

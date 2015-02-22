@@ -1,38 +1,39 @@
 local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Slay","Allows you to slay people if you have the right rank.","Excl")
-PLUGIN:AddCommand("slay",function(p,a)
-	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
-	local vTbl = exclPlayerByName(a[1])
-	if not vTbl then return end
-	local r
-	if a[2] and a[2] != "" then
-		r = table.concat(a," ",2)
-	else
-		r = ""
-	end
-	for k,v in pairs(vTbl)do
-		if !v:ESIsImmuneTo(p) or v == p then 
-			v:Kill()
-			net.Start("exclSP")
-			net.WriteEntity(p)
-			net.WriteString(v:Nick())
-			net.WriteString(r)
-			net.Broadcast()
-		else
-			net.Start("exclNoSP")
-			net.WriteEntity(p)
-			net.WriteString(v:Nick())
-			net.Broadcast()
-		end
-	end
-end,10)
+
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
-
 
 if SERVER then 
 	util.AddNetworkString("exclNoSP")
 	util.AddNetworkString("exclSP")
+
+	PLUGIN:AddCommand("slay",function(p,a)
+		if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
+		local vTbl = exclPlayerByName(a[1])
+		if not vTbl then return end
+		local r
+		if a[2] and a[2] != "" then
+			r = table.concat(a," ",2)
+		else
+			r = ""
+		end
+		for k,v in pairs(vTbl)do
+			if !v:ESIsImmuneTo(p) or v == p then 
+				v:Kill()
+				net.Start("exclSP")
+				net.WriteEntity(p)
+				net.WriteString(v:Nick())
+				net.WriteString(r)
+				net.Broadcast()
+			else
+				net.Start("exclNoSP")
+				net.WriteEntity(p)
+				net.WriteString(v:Nick())
+				net.Broadcast()
+			end
+		end
+	end,10)
 
 	return 
 end
@@ -65,3 +66,5 @@ net.Receive("exclSP",function()
 	end
 	chat.PlaySound()
 end)
+
+PLUGIN();

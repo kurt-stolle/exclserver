@@ -30,10 +30,10 @@
 -- ##                                                                                ##
 -- ####################################################################################
 
-util.AddNetworkString("ES.SendNotification");
+util.AddNetworkString("ES.SendNotification")
 function ES.BroadcastNotification(kind,msg)
-	net.Start("ES.SendNotification");
-		net.WriteString(kind);
-		net.WriteString(msg);
-	net.Broadcast();
+	net.Start("ES.SendNotification")
+		net.WriteString(kind)
+		net.WriteString(msg)
+	net.Broadcast()
 end

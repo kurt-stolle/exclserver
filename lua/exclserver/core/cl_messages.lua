@@ -2,14 +2,14 @@
 
 --When a certain command can only be used on one player
 net.Receive("ESCmdOnlyOne",function()
-	ES.ChatAddText("error",Color(255,255,255),"This command can only be ran on one player at a time, specify only one player!");
-end);
+	ES.ChatAddText("error",Color(255,255,255),"This command can only be ran on one player at a time, specify only one player!")
+end)
 
 net.Receive("ESTriedRun",function()
 
-	local runner = net.ReadEntity();
-	local victim = net.ReadString();
-	local command = net.ReadString();
+	local runner = net.ReadEntity()
+	local victim = net.ReadString()
+	local command = net.ReadString()
 
 	ES.ChatAddText("accessdenied",
 
@@ -23,5 +23,5 @@ net.Receive("ESTriedRun",function()
 
 		Color(255,255,255),	"."
 
-	);
-end);
+	)
+end)

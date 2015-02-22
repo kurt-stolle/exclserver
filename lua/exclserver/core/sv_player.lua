@@ -1,21 +1,21 @@
 -- sv_player.lua
 
-local PLAYER = FindMetaTable("Player");
+local PLAYER = FindMetaTable("Player")
 
 
-util.AddNetworkString("ES.PlayerReady");
+util.AddNetworkString("ES.PlayerReady")
 net.Receive("ES.PlayerReady",function(len,ply)
-	hook.Call("ESPlayerReady",GAMEMODE,ply);
-end);
+	hook.Call("ESPlayerReady",GAMEMODE,ply)
+end)
 
 
 -- Synchronize the player
-util.AddNetworkString("ESSynchPlayer");
+util.AddNetworkString("ESSynchPlayer")
 function PLAYER:ESSynchPlayer()
 	if not self.excl then return end
-	net.Start("ESSynchPlayer");
-	net.WriteTable(self.excl);
-	net.Send(self);
+	net.Start("ESSynchPlayer")
+	net.WriteTable(self.excl)
+	net.Send(self)
 end
 
 -- Occasionally hand out bananas
@@ -23,18 +23,18 @@ timer.Create("ESHandOutBananas",600,0,function()
 	for k,v in pairs(player.GetAll())do
 		timer.Simple(math.random(0,120),function()
 			if IsValid(v) and v.excl and v:ESGetGlobalData("bananas",false) then
-				v:ESGiveBananas(math.random(2,8));
+				v:ESGiveBananas(math.random(2,8))
 			end
-		end);
+		end)
 	end
-end);
+end)
 
 -- Send a notification 
 function PLAYER:ESSendNotification(kind,msg)
-	net.Start("ES.SendNotification");
-		net.WriteString(kind);
+	net.Start("ES.SendNotification")
+		net.WriteString(kind)
 		net.WriteString(msg)
-	net.Send(self);
+	net.Send(self)
 end
 
 -- Make sure banned people stay out
@@ -49,7 +49,7 @@ hook.Add( "PhysgunPickup", "ESHandlePlayerPickup", function( p, e )
 		e:SetMoveType( MOVETYPE_NONE )
 		return true
 	end
-end);
+end)
 hook.Add( "PhysgunDrop", "ESHandlePlayerDrop", function(p,e)
 	if e:GetClass() == "player" then
 		e:SetMoveType( MOVETYPE_WALK )
@@ -57,29 +57,29 @@ hook.Add( "PhysgunDrop", "ESHandlePlayerDrop", function(p,e)
 end)
 
 -- ChatPrint
-util.AddNetworkString("ESChatPrint");
+util.AddNetworkString("ESChatPrint")
 function PLAYER:ESChatPrint(...)
 	if not IsValid(self) then return end
 
-	net.Start("ESChatPrint");
-	net.WriteTable({...});
-	net.Send(self);
+	net.Start("ESChatPrint")
+	net.WriteTable({...})
+	net.Send(self)
 end
 
 -- Buy VIP
-util.AddNetworkString("ES.BuyVIP");
+util.AddNetworkString("ES.BuyVIP")
 net.Receive("ES.BuyVIP",function(len,ply)
-	local tier=net.ReadUInt(4);
+	local tier=net.ReadUInt(4)
 
 	if not tier or not IsValid(ply) or tier <= ply:ESGetVIPTier() or tier > 4 then return end
 
-	local cost=(tier-ply:ESGetVIPTier())*5000;
+	local cost=(tier-ply:ESGetVIPTier())*5000
 
 	if ply:ESGetBananas() >= cost then
-		ply:ESTakeBananas(cost);
-		ply:ESSetNetworkedVariable("VIP",tier);
-		ply:ESSendNotificationPopup("Success","You have successfully upgraded your VIP status.\nThank you for your purchase!");
+		ply:ESTakeBananas(cost)
+		ply:ESSetNetworkedVariable("VIP",tier)
+		ply:ESSendNotificationPopup("Success","You have successfully upgraded your VIP status.\nThank you for your purchase!")
 	else
-		ply:ESSendNotificationPopup("Error","You do not have enough bananas to make this purchase.");
+		ply:ESSendNotificationPopup("Error","You do not have enough bananas to make this purchase.")
 	end
-end);
+end)

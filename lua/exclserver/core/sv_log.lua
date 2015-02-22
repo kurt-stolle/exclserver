@@ -1,14 +1,14 @@
 -- sv_log.lua
-ES.LOG_DEBUG = 1;
-ES.LOG_COMMAND = 2;
-ES.LOG_CHAT = 4;
-ES.LOG_ERROR = 8;
-ES.LOG_OTHER = 16;
+ES.LOG_DEBUG = 1
+ES.LOG_COMMAND = 2
+ES.LOG_CHAT = 4
+ES.LOG_ERROR = 8
+ES.LOG_OTHER = 16
 
-local logfile;
+local logfile
 function ES.Log(logtype,text)
 	if not logtype or not text then 
-		ES.DebugPrint("Failed to log; bad arguments!");
+		ES.DebugPrint("Failed to log bad arguments!")
 		return
 	end
 
@@ -23,24 +23,24 @@ function ES.Log(logtype,text)
 	file.Append(logfile, "\n["..os.date().. "]\t"..(text or ""))
 end
 
-local logTemp = {};
-local triggered = false;
+local logTemp = {}
+local triggered = false
 function ES.LogDB(ply,text,typ)
-	logTemp[#logTemp+1] = "('"..ply:SteamID().."', '"..ply:IPAddress().."', '"..ES.DBEscape(ply:Nick()).."', '"..ES.DBEscape(text).."', '"..typ.."', "..os.time()..", "..ES.ServerID..")";
+	logTemp[#logTemp+1] = "('"..ply:SteamID().."', '"..ply:IPAddress().."', '"..ES.DBEscape(ply:Nick()).."', '"..ES.DBEscape(text).."', '"..typ.."', "..os.time()..", "..ES.ServerID..")"
 
 	if triggered then return end
 	
-	triggered = true;
+	triggered = true
 	timer.Simple(6,function()
-		ES.DBQuery("INSERT INTO es_logs (steamid, ip, nick, text, type, time, serverid) VALUES "..table.concat(logTemp,", ")..";");
-		triggered = false;
-		logTemp = {};
+		ES.DBQuery("INSERT INTO es_logs (steamid, ip, nick, text, type, time, serverid) VALUES "..table.concat(logTemp,", ").."")
+		triggered = false
+		logTemp = {}
 	end)
 end
 
 hook.Add("PlayerSay","ES.Logs.BigBrotherChat",function(p,t)
 	if IsValid(p) and p:IsPlayer() and t then
-		ES.Log(p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..string.gsub(t,"\\","/"));
-		ES.LogDB(p,t,"chat");
+		ES.Log(p:Nick().." ("..p:SteamID().." | "..p:IPAddress()..") : "..string.gsub(t,"\\","/"))
+		ES.LogDB(p,t,"chat")
 	end
-end);
+end)

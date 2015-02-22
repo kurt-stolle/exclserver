@@ -32,71 +32,71 @@ surface.CreateFont("ESConnectionCloseRetry",{
 	weight = 500,
 })
 
-local crashPnl;
+local crashPnl
 local function createMenu()
 
         local menucrashtime = CurTime()
-        local retrytime = menucrashtime + reconnecttime;
+        local retrytime = menucrashtime + reconnecttime
        
         for k , v  in ipairs(player.GetAll()) do
             v.CrashedPing = v:Ping()
         end
  		
  		if crashPnl and IsValid(crashPnl) then
- 			crashPnl:Remove();
+ 			crashPnl:Remove()
  		end
 
- 		crashPnl = vgui.Create("Panel");
- 		crashPnl:SetSize(ScrW(),ScrH());
- 		crashPnl:SetPos(0,0);
+ 		crashPnl = vgui.Create("Panel")
+ 		crashPnl:SetSize(ScrW(),ScrH())
+ 		crashPnl:SetPos(0,0)
 
- 		surface.SetFont("ESConnectionProblem");
- 		local wideText = surface.GetTextSize("Connection Problem");
+ 		surface.SetFont("ESConnectionProblem")
+ 		local wideText = surface.GetTextSize("Connection Problem")
  		crashPnl.Paint = function(self,w,h)
- 			local a,b,c = ES.GetColorScheme();
+ 			local a,b,c = ES.GetColorScheme()
 
- 			surface.SetDrawColor(Color(50,50,50));
- 			surface.DrawRect(0,0,w,h);
+ 			surface.SetDrawColor(Color(50,50,50))
+ 			surface.DrawRect(0,0,w,h)
 
- 			surface.SetDrawColor(b);
- 			surface.DrawRect(0,0,w,4);
+ 			surface.SetDrawColor(b)
+ 			surface.DrawRect(0,0,w,4)
 
- 			surface.SetDrawColor(a);
- 			surface.DrawRect(0,ScrH()-60,w,60);
+ 			surface.SetDrawColor(a)
+ 			surface.DrawRect(0,ScrH()-60,w,60)
 
- 			draw.SimpleText("Connection Problem","ESConnectionProblem",10,40,COLOR_WHITE);
+ 			draw.SimpleText("Connection Problem","ESConnectionProblem",10,40,COLOR_WHITE)
  			
- 			draw.SimpleText(string.format("You will automatically try a reconnect in %d seconds", retrytime - CurTime()),"ESDefaultBold",15,95,COLOR_WHITE);
+ 			draw.SimpleText(string.format("You will automatically try a reconnect in %d seconds", retrytime - CurTime()),"ESDefaultBold",15,95,COLOR_WHITE)
 
- 			local txt = ES.FormatLine( apology, "ESDefault", wideText );
+ 			local txt = ES.FormatLine( apology, "ESDefault", wideText )
 
- 			draw.DrawText(txt,"ESDefault",15,95+100,COLOR_WHITE);
+ 			draw.DrawText(txt,"ESDefault",15,95+100,COLOR_WHITE)
 
  		end
 
  		local btnClose = vgui.Create("esIconButton",crashPnl)
-		btnClose:SetIcon(Material("exclserver/mmarrowicon.png"));
-		btnClose:SetPos((60-32)/2,ScrH() - (60-32)/2 - 32);
-		btnClose:SetSize(250,32);
+		btnClose:SetIcon(Material("exclserver/mmarrowicon.png"))
+		btnClose:SetPos((60-32)/2,ScrH() - (60-32)/2 - 32)
+		btnClose:SetSize(250,32)
 		btnClose.DoClick = function(self)
 			if crashPnl and IsValid(crashPnl) then
-			 	crashPnl:Remove();
+			 	crashPnl:Remove()
 			 end
 		end
 		btnClose.Paint = function(self,w,h)
 			if not self.Mat then return end
 			
 			surface.SetMaterial(self.Mat)
-			surface.SetDrawColor(COLOR_WHITE);
-			surface.DrawTexturedRectRotated(h/2,h/2,h,h,180);
+			surface.SetDrawColor(COLOR_WHITE)
+			surface.DrawTexturedRectRotated(h/2,h/2,h,h,180)
 
-			draw.SimpleText("Close","ESConnectionCloseRetry",40,h/2,COLOR_WHITE,0,1);
+			draw.SimpleText("Close","ESConnectionCloseRetry",40,h/2,COLOR_WHITE,0,1)
 		end
 
 		local btnClose = vgui.Create("esIconButton",crashPnl)
-		btnClose:SetIcon(Material("exclserver/mmarrowicon.png"));
-		btnClose:SetPos(ScrW() - 250 - (60-32)/2,ScrH() - (60-32)/2 - 32);
-		btnClose:SetSize(250,32);
+		btnClose:SetIcon(Material("exclserver/mmarrowicon.png"))
+		btnClose:SetPos(ScrW() - 250 - (60-32)/2,ScrH() - (60-32)/2 - 32)
+		btnClose:SetSize(250,32)
 		btnClose.DoClick = function(self)
 			if crashPnl and IsValid(crashPnl) then
 			 	LocalPlayer():ConCommand("retry")
@@ -106,86 +106,86 @@ local function createMenu()
 			if not self.Mat then return end
 			
 			surface.SetMaterial(self.Mat)
-			surface.SetDrawColor(COLOR_WHITE);
-			surface.DrawTexturedRectRotated(w-h/2,h/2,h,h,0);
+			surface.SetDrawColor(COLOR_WHITE)
+			surface.DrawTexturedRectRotated(w-h/2,h/2,h,h,0)
 
-			draw.SimpleText("Force reconnect","ESConnectionCloseRetry",w-40,h/2,COLOR_WHITE,2,1);
+			draw.SimpleText("Force reconnect","ESConnectionCloseRetry",w-40,h/2,COLOR_WHITE,2,1)
 		end
 
- 		local alt = crashPnl:Add("Panel");
- 		alt:SetPos(wideText + 40 + 40, 45);
+ 		local alt = crashPnl:Add("Panel")
+ 		alt:SetPos(wideText + 40 + 40, 45)
  		alt:SetSize(ScrW() - (wideText + 40 + 40) - 40, ScrH()-45-20-60)
 
- 		local lbAlt = Label("Alternative Servers:",alt);
- 		lbAlt:SetPos(0,0);
- 		lbAlt:SetFont("ESConnectionAlternatives");
- 		lbAlt:SizeToContents();
- 		lbAlt:SetColor(COLOR_WHITE);
+ 		local lbAlt = Label("Alternative Servers:",alt)
+ 		lbAlt:SetPos(0,0)
+ 		lbAlt:SetFont("ESConnectionAlternatives")
+ 		lbAlt:SizeToContents()
+ 		lbAlt:SetColor(COLOR_WHITE)
 
- 		local context = alt:Add("Panel");
- 		context:SetPos(0,40);
- 		context:SetSize(alt:GetWide(),alt:GetTall()-40);
+ 		local context = alt:Add("Panel")
+ 		context:SetPos(0,40)
+ 		context:SetSize(alt:GetWide(),alt:GetTall()-40)
 
 
  		http.Fetch("http://casualbananas.com/forums/inc/servers/cache/servers.gmod.json.php",
 			function(rtrn)
 				if !crashPnl or !IsValid(crashPnl) then return end
 
-				cbcservers = util.JSONToTable(rtrn);
+				cbcservers = util.JSONToTable(rtrn)
 				
 				if not cbcservers then return end
 				
-				local y = 0;
+				local y = 0
 				for k,v in pairs(cbcservers)do
 					if v.ip == exclGetIP() then continue end
 
-					local pnl = context:Add("esMMPanel");
-					local a,b,c = ES.GetColorScheme();
-					pnl:SetColor(b);
-					pnl:SetSize(context:GetWide()-15-2,40);
-					pnl:SetPos(0,y);
+					local pnl = context:Add("esMMPanel")
+					local a,b,c = ES.GetColorScheme()
+					pnl:SetColor(b)
+					pnl:SetSize(context:GetWide()-15-2,40)
+					pnl:SetPos(0,y)
 
-					local bar = pnl:Add("esMMPanel");
-					bar:SetColor(c);
-					bar:SetSize(6,pnl:GetTall()-4);
-					bar:SetPos(2,2);
+					local bar = pnl:Add("esMMPanel")
+					bar:SetColor(c)
+					bar:SetSize(6,pnl:GetTall()-4)
+					bar:SetPos(2,2)
 
-					local lbName = Label(string.gsub(v.name,"CasualBananas.com |",""),pnl);
-					lbName:SetFont("ESConnectionAlternativesName");
-					lbName:SetPos(10,2);
-					lbName:SizeToContents();
-					lbName:SetColor(COLOR_WHITE);
+					local lbName = Label(string.gsub(v.name,"CasualBananas.com |",""),pnl)
+					lbName:SetFont("ESConnectionAlternativesName")
+					lbName:SetPos(10,2)
+					lbName:SizeToContents()
+					lbName:SetColor(COLOR_WHITE)
 
-					local lbPlayers = Label(v.players.."/"..v.maxplayers.." players online, playing on "..v.mapname,pnl);
-					lbPlayers:SetFont("ESDefaultSmall");
-					lbPlayers:SetPos(15,lbName.y + lbName:GetTall()+2);
-					lbPlayers:SizeToContents();
-					lbPlayers:SetColor(Color(230,230,230));
+					local lbPlayers = Label(v.players.."/"..v.maxplayers.." players online, playing on "..v.mapname,pnl)
+					lbPlayers:SetFont("ESDefaultSmall")
+					lbPlayers:SetPos(15,lbName.y + lbName:GetTall()+2)
+					lbPlayers:SizeToContents()
+					lbPlayers:SetColor(Color(230,230,230))
 
-					local con = vgui.Create("esButton",pnl);
-					con:SetPos(pnl:GetWide()-150,5);
-					con:SetSize(145,(pnl:GetTall()-10));
+					local con = vgui.Create("esButton",pnl)
+					con:SetPos(pnl:GetWide()-150,5)
+					con:SetSize(145,(pnl:GetTall()-10))
 					con.DoClick = function()
-						LocalPlayer():ConCommand("connect "..v.ip);
+						LocalPlayer():ConCommand("connect "..v.ip)
 					end
-					con:SetText("Connect");					
+					con:SetText("Connect")					
 
-					y = y + pnl:GetTall() + 5;
+					y = y + pnl:GetTall() + 5
 
 				end	
 
 				if y > context:GetTall() then
-					local scr = context:Add("esScrollbar");
-					scr:SetPos(context:GetWide()-15,0);
-					scr:SetSize(15,context:GetTall());
+					local scr = context:Add("esScrollbar")
+					scr:SetPos(context:GetWide()-15,0)
+					scr:SetSize(15,context:GetTall())
 					scr:SetUp()
 				end
 			end,
 			function() end
-		);
+		)
 		
 
-	crashPnl:MakePopup();
+	crashPnl:MakePopup()
        
    hook.Add("Think" , "Crashed" , function()
 		for k , v in ipairs(player.GetAll()) do
@@ -202,7 +202,7 @@ local function createMenu()
 		for k , v in ipairs(ents.GetAll()) do
 			if v:GetVelocity():Length() > 5 then
 				moving = true
-				break;
+				break
 			end
 		end
 		
@@ -222,7 +222,7 @@ local function createMenu()
 			hook.Remove("Think" , "Crashed")
 			crashed = false
 			if crashPnl and IsValid(crashPnl) then
-			 	crashPnl:Remove();
+			 	crashPnl:Remove()
 			 end
 		end
 	end )
@@ -254,14 +254,14 @@ hook.Add("InitPostEntity" , "ESCrashReconnect" , function()
 	spawntime = CurTime() + 30
 end )
 
-local test = 0;
+local test = 0
 hook.Add("Think" , "ESCrashReconnect" , function()
 	if not game.SinglePlayer() then	
 		if not crashed and IsCrashed() and not pending then
 			pending = true
 			RunConsoleCommand("excl_ping")
 		
-			test = CurTime() + 3.5;
+			test = CurTime() + 3.5
 
 			ES.DebugPrint("Connection lost! Sending ping!")
 		end
@@ -280,7 +280,7 @@ hook.Add("Think" , "ESCrashReconnect" , function()
 				crashed = false
 			end
 
-			test = 0;
+			test = 0
 		end
 	end
 end )

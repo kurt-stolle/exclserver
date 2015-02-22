@@ -1,37 +1,39 @@
 
 local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Prop restrict","Handles prop restrictions.","Excl")
-PLUGIN:AddCommand("restrictmodelname",function(p,a)
-	if not p or not p:IsValid() or not a or not a[1] or not a[2] then return end
-	
-	ES.AddPropRestriction(a[1],tonumber(a[2]),a[3] and 0 or ES.ServerID)
 
-	net.Start("ESTellPropBlockAdded")
-	net.WriteString(a[1])
-	net.WriteString(tonumber(a[2]) < 5 and "VIP tier "..a[2] or tonumber(a[2]) == 5 and "Administrator" or tonumber(a[2]) == 6 and "Super Administrator" or tonumber(a[2]) == 7 and "Server Operator")
-	net.Broadcast()
-end,60)
-PLUGIN:AddCommand("restrictmodel",function(p,a)
-	if not p or not p:IsValid() or not a or not a[1] then return end
-	
-	local mdl = p:GetEyeTrace().Entity
-	if not IsValid(mdl) or not mdl.GetModel then return end
-	mdl = mdl:GetModel()
-
-	ES.AddPropRestriction(mdl,tonumber(a[1]),a[2] and 0 or ES.ServerID)
-
-	net.Start("ESTellPropBlockAdded")
-	net.WriteString(mdl)
-	net.WriteString(tonumber(a[1]) < 5 and "VIP tier "..a[1] or tonumber(a[1]) == 5 and "Administrator" or tonumber(a[1]) == 6 and "Super Administrator" or tonumber(a[1]) == 7 and "Server Operator")
-	net.Broadcast()
-
-end,60)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
-PLUGIN()
+
 
 if SERVER then
 	util.AddNetworkString("ESTellPropBlocked")
 	util.AddNetworkString("ESTellPropBlockAdded")
+
+	PLUGIN:AddCommand("restrictmodelname",function(p,a)
+		if not p or not p:IsValid() or not a or not a[1] or not a[2] then return end
+		
+		ES.AddPropRestriction(a[1],tonumber(a[2]),a[3] and 0 or ES.ServerID)
+
+		net.Start("ESTellPropBlockAdded")
+		net.WriteString(a[1])
+		net.WriteString(tonumber(a[2]) < 5 and "VIP tier "..a[2] or tonumber(a[2]) == 5 and "Administrator" or tonumber(a[2]) == 6 and "Super Administrator" or tonumber(a[2]) == 7 and "Server Operator")
+		net.Broadcast()
+	end,60)
+	PLUGIN:AddCommand("restrictmodel",function(p,a)
+		if not p or not p:IsValid() or not a or not a[1] then return end
+		
+		local mdl = p:GetEyeTrace().Entity
+		if not IsValid(mdl) or not mdl.GetModel then return end
+		mdl = mdl:GetModel()
+
+		ES.AddPropRestriction(mdl,tonumber(a[1]),a[2] and 0 or ES.ServerID)
+
+		net.Start("ESTellPropBlockAdded")
+		net.WriteString(mdl)
+		net.WriteString(tonumber(a[1]) < 5 and "VIP tier "..a[1] or tonumber(a[1]) == 5 and "Administrator" or tonumber(a[1]) == 6 and "Super Administrator" or tonumber(a[1]) == 7 and "Server Operator")
+		net.Broadcast()
+
+	end,60)
 
 	ES.RestrictedProps = {}
 	ES.CreateSetting("props_blacklist_is_whitelist",0,true)
@@ -118,3 +120,5 @@ elseif CLIENT then
 		ES.ChatAddText("error",COLOR_EXCLSERVER,mdl,COLOR_WHITE," is restricted to ",COLOR_EXCLSERVER,rank,COLOR_WHITE,".")
 	end)	
 end
+
+PLUGIN()

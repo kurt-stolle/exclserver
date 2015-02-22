@@ -4,9 +4,7 @@
 local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Vote kick","Create a vote to kick a certain user from the server.","Excl")
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
-PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
 
-local votekick
 if SERVER then 
 	util.AddNetworkString("ESOpenVoteKick")
 	local votes = {}
@@ -16,7 +14,8 @@ if SERVER then
 	concommand.Add("excl_vote_yes",function(p)
 		votes[p:UniqueID()] = true
 	end)
-	votekick = function(p,a)
+
+	PLUGIN:AddCommand("votekick",function(p,a)
 		if not p or not p:IsValid() or not a or not a[1] then return end
 		if nextVoteKick > CurTime() then p:ChatPrint("The vote kick system is currently on cooldown, wait "..math.Round(nextVoteKick-CurTime()).." more seconds.") return end
 		if voteKickPlayer and IsValid(voteKickPlayer) then p:ChatPrint("There already is a vote kick in progress.") return end
@@ -66,7 +65,7 @@ if SERVER then
 				p:ESChatPrint("server",COLOR_WHITE,"The vote kick failed, ",Color(102,255,51),p:Nick(),COLOR_WHITE," will not be kicked off.")
 			end
 		end)
-	end
+	end,0)
 elseif CLIENT then
 	local pnl
 	net.Receive("ESOpenVoteKick",function()
@@ -140,5 +139,4 @@ elseif CLIENT then
 	end)
 end
 
-PLUGIN:AddCommand("votekick",votekick,0)
 PLUGIN()

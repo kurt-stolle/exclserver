@@ -3,7 +3,7 @@
 hook.Add("PostGamemodeLoaded","ES.ImplementHooks",function()
 	if type(GAMEMODE.ESPlayerReady) ~= "function" then
 		GAMEMODE.ESPlayerReady = function(ply)
-			return nil;
+			return nil
 		end
 	end
-end);
+end)

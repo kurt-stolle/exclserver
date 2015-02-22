@@ -49,6 +49,7 @@ setmetatable(ES.Color,{
 	end
 })
 
+ES.Color.Invisible  = ES.Color["#00000000"];
 ES.Color.Black 		= ES.Color["#000"]
 ES.Color.White 		= ES.Color["#FFF"]
 ES.Color.Red 		= ES.Color["#e51c23"]

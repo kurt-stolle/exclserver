@@ -5,18 +5,24 @@ end
 
 local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Thirdperson","Allow you to toggle thirdperson.","Excl")
-PLUGIN:AddCommand("thirdperson",function(p,a)
-	if p:ESGetVIPTier() < 3  then return end
-	net.Start("ESToggleTP") net.Send(p)
-end)
-PLUGIN:AddCommand("firstperson",function(p,a)
-	if p:ESGetVIPTier() < 3 then return end
-	net.Start("ESToggleTP") net.Send(p)
-end)
+
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN()
 
-if SERVER then return end
+if SERVER then 
+
+	PLUGIN:AddCommand("thirdperson",function(p,a)
+		if p:ESGetVIPTier() < 3  then return end
+		net.Start("ESToggleTP") net.Send(p)
+	end)
+	PLUGIN:AddCommand("firstperson",function(p,a)
+		if p:ESGetVIPTier() < 3 then return end
+		net.Start("ESToggleTP") net.Send(p)
+	end)
+
+	return;
+
+end
 
 net.Receive("ESToggleTP",function()
 	if not LocalPlayer().excl then return end
@@ -38,36 +44,6 @@ local camAng = Angle(0, 0, 0)
 local newpos
 local newangles
 hook.Add("CalcView", "exclThirdperson", function(ply, pos , angles ,fov)
-	--[[local view = {}
-hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
-	if IsValid(mm) then
-		local bone=ply:LookupBone("ValveBiped.Bip01_Head1")
-
-		if bone then
-		
-			pos,angles=ply:GetBonePosition(bone)
-
-			if pos and angles then
-
-				angles:RotateAroundAxis(angles:Up(),110)
-				angles:RotateAroundAxis(angles:Forward(),90)
-				angles:RotateAroundAxis(angles:Up(),180)
-
-				view.origin=LerpVector(FrameTime()*10,view.origin,pos)
-				view.angles=LerpAngle(FrameTime()*10,view.angles,angles)
-
-				view.fov = fov
-				
-				return view
-
-			end
-		end
-	else
-		view.origin=pos
-		view.angles=angles
-	end
-end)]]
-	
 	if !newpos then
 		newpos = pos
 		newangles = angles

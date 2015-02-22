@@ -7,7 +7,7 @@ function ES.FixGrammar(s)
 
 	return build
 end
-function ES.FormatLine(str,font,size) --note to self: size equals width in pixes
+function ES.FormatLine(str,font,size,margin)
 	surface.SetFont( font )
 	
 	local start = 1
@@ -21,7 +21,7 @@ function ES.FormatLine(str,font,size) --note to self: size equals width in pixes
 			lastspace = c
 		end
 
-		if( surface.GetTextSize( sub ) >= size ) then
+		if( surface.GetTextSize( sub ) >= (n==0 and margin and size+margin or size) ) then
 			local sub2
 			
 			if( lastspace == 0 ) then
@@ -45,5 +45,5 @@ function ES.FormatLine(str,font,size) --note to self: size equals width in pixes
 		endstr = endstr .. string.sub( str, start )
 	end
 	
-	return endstr, n
+	return endstr, n, start
 end

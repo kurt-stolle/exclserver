@@ -1,22 +1,22 @@
 -- sh_models.lua
 -- gets a player's desired model.
 ES.Models = {}
-ES.ImplementIndexMatcher(ES.Models,"_name");
+ES.ImplementIndexMatcher(ES.Models,"_name")
 
 function ES.AddModel(n,d,p,t,bVip)
-	local tab=ES.Item( ES.ITEM_MODEL );
-	tab:SetName(n);
-	tab:SetDescription(d);
-	tab:SetCost(p);
+	local tab=ES.Item( ES.ITEM_MODEL )
+	tab:SetName(n)
+	tab:SetDescription(d)
+	tab:SetCost(p)
 	if file.Exists(t,"GAME") then
-		tab:SetModel(t);
+		tab:SetModel(t)
 	else
-		ES.DebugPrint("Prevented unknown model: "..t);
-		return;
+		ES.DebugPrint("Prevented unknown model: "..t)
+		return
 	end
-	tab:SetVIP(bVip);
+	tab:SetVIP(bVip)
 
-	table.insert(ES.Models,tab);
+	table.insert(ES.Models,tab)
 end
 
 ES.DefaultModels = {
@@ -35,11 +35,11 @@ ES.DefaultModels = {
 	Model("models/player/group01/female_01.mdl"),
 }
 
-local PLAYER = FindMetaTable("Player");
+local PLAYER = FindMetaTable("Player")
 function PLAYER:ESGetActiveModel()
-	local active=LocalPlayer():ESGetNetworkedVariable("active_model",nil);
+	local active=LocalPlayer():ESGetNetworkedVariable("active_model",nil)
 
-	return ES.Models[active] and ES.Models[active]:GetModel() or table.Random(ES.DefaultModels);
+	return ES.Models[active] and ES.Models[active]:GetModel() or table.Random(ES.DefaultModels)
 end
 
 ES.AddModel("Dr. Breen","The city administrator",4000,"models/player/breen.mdl")
@@ -54,9 +54,9 @@ ES.AddModel("American WWII soldier","An American WWII soldier.",5000,"models/pla
 ES.AddModel("German WWII soldier","A German WWII soldier.",5000,"models/player/dod_german.mdl")
 ES.AddModel("Dr. Magnusson","The character you've never heard about before.",4000,"models/player/magnusson.mdl")
 ES.AddModel("Mossman Arctic","...",5500,"models/player/mossman_arctic.mdl")
-ES.AddModel("Burned corpse","2spooky",4300,"models/player/charple.mdl");
+ES.AddModel("Burned corpse","2spooky",4300,"models/player/charple.mdl")
 ES.AddModel("Rotting corpse","...",4000,"models/player/corpse1.mdl")
 ES.AddModel("Zombie","A headcrabless zombie",20000,"models/player/zombie_classic.mdl")
 ES.AddModel("Alyx","Gordon's company",4000,"models/player/alyx.mdl")
 ES.AddModel("Eli","A nigger with a metal leg.",4000,"models/player/eli.mdl")
-ES.AddModel("Skeleton","A scary skeleton",25000,"models/player/skeleton.mdl");
+ES.AddModel("Skeleton","A scary skeleton",25000,"models/player/skeleton.mdl")

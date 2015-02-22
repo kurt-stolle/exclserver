@@ -3,21 +3,21 @@ setmetatable(ES.Expressions,{
 	__index = function(self,key)
 		for k,v in ipairs(self) do
 			if v:GetExpression() == key or v:GetID() == key then
-				return v;
+				return v
 			end
 		end
-		return nil;
+		return nil
 	end
 }) 
 
 local meta = {}
-AccessorFunc(meta,"expression","Expression",FORCE_STRING);
-AccessorFunc(meta,"id","ID",FORCE_STRING);
-AccessorFunc(meta,"prettyExpression","PrettyExpression",FORCE_STRING);
+AccessorFunc(meta,"expression","Expression",FORCE_STRING)
+AccessorFunc(meta,"id","ID",FORCE_STRING)
+AccessorFunc(meta,"prettyExpression","PrettyExpression",FORCE_STRING)
 function ES.Expression(expr, id)
 	if not expr or type(expr) != "string" or not id or type(id) != "string" then
-		ES.DebugPrint("Failed to contruct new expression.");
-		return;
+		ES.DebugPrint("Failed to contruct new expression.")
+		return
 	end
 
 	local obj = {}
@@ -25,68 +25,69 @@ function ES.Expression(expr, id)
 	setmetatable(obj, meta)
 	meta.__index = meta
 
-	obj:SetExpression(expr);
-	obj:SetPrettyExpression(expr); -- Should be overriden if the expression is ugly because of patterns, etc.
-	obj:SetID(id);
+	obj:SetExpression(expr)
+	obj:SetPrettyExpression(expr) -- Should be overriden if the expression is ugly because of patterns, etc.
+	obj:SetID(id)
 
-	table.insert(ES.Expressions,obj);
+	table.insert(ES.Expressions,obj)
 
-	return obj;
+	return obj
 end
 function meta:GetPlayer()
 	return self.player
 end
 
 -- EMOTES
-local emotes = {};
-emotes[":)"] = "icon16/emoticon_smile.png";
-emotes[":D"] = "icon16/emoticon_happy.png";
-emotes[":O"] = "icon16/emoticon_surprised.png";
-emotes[":p"] = "icon16/emoticon_tongue.png";
-emotes[":P"] = "icon16/emoticon_tongue.png";
-emotes[":("] = "icon16/emoticon_unhappy.png";
+local emotes = {}
+emotes[":)"] = "icon16/emoticon_smile.png"
+emotes[":D"] = "icon16/emoticon_happy.png"
+emotes[":O"] = "icon16/emoticon_surprised.png"
+emotes[":p"] = "icon16/emoticon_tongue.png"
+emotes[":P"] = "icon16/emoticon_tongue.png"
+emotes[":("] = "icon16/emoticon_unhappy.png"
 -- NOTE: Add new emotes under this line.
 
 -- NOTE: Add new emotes above this line.
+
+local escape = '(['..("%^$().[]*+-?"):gsub("(.)", "%%%1")..'])'
 for k,v in pairs(emotes) do
-	local expression = ES.Expression(k,k);
-	expression.image = true;
-	expression.noPattern = true;
+	local expression = ES.Expression("("..string.gsub(k,escape, "%%%1")..")",k)
+	expression.image = true
 	
 	function expression:Execute(base)
-		local img = base:Add("DImage");
-		img:SetImage(v);
-		img:SetSize(16, 16);
-		img:SetMouseInputEnabled(true);
+		local img = base:Add("DImage")
+		img:SetImage(v)
+		img:SetSize(16, 16)
+		img:SetMouseInputEnabled(true)
 				
 		return img
 	end
 end
 
 -- NO PARSING
-local expression = ES.Expression("<noparse>(.-)</noparse>","noparse");
-expression:SetPrettyExpression("<noparse> </noparse>");
+local expression = ES.Expression("<noparse>(.-)</noparse>","noparse")
+expression:SetPrettyExpression("<noparse> </noparse>")
 function expression:Execute(base,text)
-	local label = vgui.Create("esLabel");
+	local label = vgui.Create("esLabel")
 	label:SetParent(base)
 	label:SetText(text)
 	label:SetColor(ES.Color.White)
-	label:SizeToContents()
+	label:SizeToContents(base)
 	
 	return label
 end
 
 -- CLICKABLE URL :)
 local expression = ES.Expression("<url>(.-)</url>", "url")
-expression:SetPrettyExpression("<url> </url>");
+expression:SetPrettyExpression("<url> </url>")
 
-local color_url=ES.Color["#03F"];
+local color_url=ES.Color["#03F"]
 function expression:Execute(base,text)
-	local label = vgui.Create("esLabel");
+	local label = vgui.Create("esLabel")
 	label:SetParent(base)
 	label:SetText(text)
 	label:SetColor(color_url)
-	label:SizeToContents()
+	label:SizeToContents(base)
 	
 	function label:PaintOver(w, h)
 		surface.SetDrawColor(color_url)
@@ -109,66 +110,64 @@ function expression:Execute(base,text)
 end
 
 -- COLOURED TEXT
-local expression = ES.Expression("<c=#(%x%x%x%x%x%x)>(.-)</c>", "color");
-expression:SetPrettyExpression("<c=#HEX> </c>");
+local expression = ES.Expression("<c=#(%x%x%x%x%x%x)>(.-)</c>", "color")
+expression:SetPrettyExpression("<c=#HEX> </c>")
 
 function expression:Execute(base, color, text)
-	local color = ES.Color["#"..color];
+	local color = ES.Color["#"..color]
 
-	local label = vgui.Create("esLabel");
+	local label = vgui.Create("esLabel")
 	label:SetParent(base)
 	label:SetText(text)
 	label:SetColor(color)
-	label:SizeToContents()
+	label:SizeToContents(base)
 	
 	return label
 end
 
 -- AVATARS
-local av_size=16; -- easy changing later.
-local expression = ES.Expression("<avatar>","avatar");
-expression.noPattern = true;
+local av_size=16 -- easy changing later.
+local expression = ES.Expression("<avatar>","avatar")
+expression.noPattern = true
 function expression:Execute(base)
-	local size = 16;
-	
-	local avatar = vgui.Create("AvatarImage");
-	avatar:SetParent(base);
-	avatar:SetSize(av_size, av_size);
-	avatar:SetPlayer(self:GetPlayer(), av_size);
+	local avatar = vgui.Create("AvatarImage")
+	avatar:SetParent(base)
+	avatar:SetSize(av_size, av_size)
+	avatar:SetPlayer(self:GetPlayer(), av_size)
 		
-	return avatar;
+	return avatar
 end
 
-local expression = ES.Expression("<avatar=(STEAM_[0-5]:[01]:%d+)>","avatar_steamid");
-expression:SetPrettyExpression("<avatar=STEAMID>");
+local expression = ES.Expression("<avatar=(STEAM_[0-5]:[01]:%d+)>","avatar_steamid")
+expression:SetPrettyExpression("<avatar=STEAMID>")
 function expression:Execute(base, sid)
 	if not sid then return end
 
-	sid = util.SteamIDTo64(sid);
+	sid = util.SteamIDTo64(sid)
 	
-	local avatar = vgui.Create("AvatarImage");
-	avatar:SetParent(base);
-	avatar:SetSize(av_size, av_size);
-	avatar:SetSteamID(sid, av_size);
+	local avatar = vgui.Create("AvatarImage")
+	avatar:SetParent(base)
+	avatar:SetSize(av_size, av_size)
+	avatar:SetSteamID(sid, av_size)
 
 	return avatar
 end
 
 -- SPOILER
 local expression = ES.Expression("<spoiler>(.-)</spoiler>", "spoiler")
-expression:SetPrettyExpression("<spoiler> </spoiler>");
+expression:SetPrettyExpression("<spoiler> </spoiler>")
 function expression:Execute(base, text)
-	local label = vgui.Create("esLabel");
+	local label = vgui.Create("esLabel")
 	label:SetParent(base)
 	label:SetText(text)
 	label:SetColor(ES.Color.White)
-	label:SizeToContents()
+	label:SizeToContents(base)
 	label:SetMouseInputEnabled(true)
 	
 	function label:PaintOver(w, h)
 		if (!self.clicked) then
-			surface.SetDrawColor(ES.Color["#1E1E1E"]);
-			surface.DrawRect(0,0,w,h);
+			surface.SetDrawColor(ES.Color["#555"])
+			surface.DrawRect(0,0,w,h)
 		end
 	end
 	
@@ -181,15 +180,16 @@ end
 
 -- REVERSE
 local expression = ES.Expression("<reverse>(.-)</reverse>", "reverse")
-expression:SetPrettyExpression("<reverse> </reverse>");
+expression:SetPrettyExpression("<reverse> </reverse>")
 
 function expression:Execute(base, text)
-	local text = string.utf8reverse(text)
+	local text = string.reverse(text)
 	
-	local label = vgui.Create("esLabel");
+	local label = vgui.Create("esLabel")
 	label:SetParent(base)
 	label:SetText(text)
-	label:SizeToContents()
+	label:SizeToContents(base)
+	label:SetColor(base.activeColor);
 	
-	return label;
+	return label
 end

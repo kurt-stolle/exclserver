@@ -8,4 +8,4 @@ concommand.Add("excl_ping",function(p)
    		net.Start("ESCrashPong")
     	net.Send( p )
     end
-end);
+end)

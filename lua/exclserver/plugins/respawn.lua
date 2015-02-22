@@ -1,41 +1,43 @@
 local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Respawn","Respawn people.","Excl")
-PLUGIN:AddCommand("respawn",function(p,a)
-	if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
-	local vTbl = exclPlayerByName(a[1])
-	if not vTbl then return end
-	local r = ""
-	if table.concat(a," ",2) and table.concat(a," ",2) != "" then
-		r = table.concat(a," ",2)
-	end
-	for k,v in pairs(vTbl)do
-		if ( v==p and !p:IsSuperAdmin() ) or (v:ESIsImmuneTo(p) and v != p) then 
-			net.Start("exclNoRP")
-			net.WriteEntity(p)
-			net.WriteEntity(v)
-			net.Broadcast()
-		else
-			--let's just add compatibility for some gamemodes
-			if GAMEMODE and GAMEMODE.Name == "Deathrun" and TEAM_GOODIE then --excl's deathrun gamemode (casualbananas.com)
-				v:SetTeam(TEAM_GOODIE)
-				v:Spawn()
-			else
-				v:Spawn()
-			end
-			net.Start("exclRP")
-			net.WriteEntity(p)
-			net.WriteEntity(v)
-			net.WriteString(r)
-			net.Broadcast()
-		end
-	end
-end,20)
+
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
-PLUGIN()
+
 
 if SERVER then 
 	util.AddNetworkString("exclNoRP")
 	util.AddNetworkString("exclRP")
+
+	PLUGIN:AddCommand("respawn",function(p,a)
+		if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
+		local vTbl = exclPlayerByName(a[1])
+		if not vTbl then return end
+		local r = ""
+		if table.concat(a," ",2) and table.concat(a," ",2) != "" then
+			r = table.concat(a," ",2)
+		end
+		for k,v in pairs(vTbl)do
+			if ( v==p and !p:IsSuperAdmin() ) or (v:ESIsImmuneTo(p) and v != p) then 
+				net.Start("exclNoRP")
+				net.WriteEntity(p)
+				net.WriteEntity(v)
+				net.Broadcast()
+			else
+				--let's just add compatibility for some gamemodes
+				if GAMEMODE and GAMEMODE.Name == "Deathrun" and TEAM_GOODIE then --excl's deathrun gamemode (casualbananas.com)
+					v:SetTeam(TEAM_GOODIE)
+					v:Spawn()
+				else
+					v:Spawn()
+				end
+				net.Start("exclRP")
+				net.WriteEntity(p)
+				net.WriteEntity(v)
+				net.WriteString(r)
+				net.Broadcast()
+			end
+		end
+	end,20)
 
 	return 
 end
@@ -68,3 +70,5 @@ net.Receive("exclRP",function()
 	end
 	chat.PlaySound()
 end)
+
+PLUGIN()
