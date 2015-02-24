@@ -113,7 +113,7 @@ function PANEL:Paint(w,h)
 					draw.SimpleText(self.rows[i][j],"ESDefaultBold",10,y + 20/2,COLOR_WHITE,0,1)
 				else
 					surface.SetDrawColor(COLOR_WHITE)
-					if !self.rows[i][j] or self.rows[i][j] != true then
+					if !self.rows[i][j] or self.rows[i][j] ~= true then
 						surface.SetMaterial(matNo)
 					else
 						surface.SetMaterial(matYes)

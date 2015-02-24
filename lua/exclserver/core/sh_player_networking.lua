@@ -1,7 +1,7 @@
 ES.NetworkedVariables={}
 
 function ES.DefineNetworkedVariable(var,kind,size,shouldSave)
-	if (type(size) != "number" and type(size) != "nil") or (type(shouldSave) != "string" and type(shouldSave) != "nil") then
+	if (type(size) ~= "number" and type(size) ~= "nil") or (type(shouldSave) ~= "string" and type(shouldSave) ~= "nil") then
 		return ES.DebugPrint("Couldn't register NWVar "..var..", invalid argument #3 or #4.")
 	end
 

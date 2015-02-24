@@ -132,7 +132,7 @@ function PNL:Think()
 			if IsValid(v) then v:SetPos(self.ElementMainX,v.y) end
 		end
 		self.rm:SetPos(self.ElementMainX + 256 + 16,16)
-	elseif self.ElementMainX != 0 then
+	elseif self.ElementMainX ~= 0 then
 		self.ElementMainX = 0
 		self.rm:SetPos(self.ElementMainX + 256 + 16,16)
 	end
@@ -253,7 +253,7 @@ function PNL:Paint(w,h)
 			didLoad = true
 		end
 		local bananaDisplayRound = math.Round(bananaDisplay)
-			if bananaDisplayRound != p:ESGetBananas() then
+			if bananaDisplayRound ~= p:ESGetBananas() then
 			if bananaDisplay - p:ESGetBananas() > 0 then
 				bananaDisplay = Lerp(FrameTime(),bananaDisplay-1,p:ESGetBananas())
 			else
@@ -424,7 +424,7 @@ function PNL:Init()
 	self.recordWaveForm = {}
 end
 function PNL:Think()
-	if self.Mute and ( self.Muted == nil || self.Muted != self.Player:IsMuted() ) then
+	if self.Mute and ( self.Muted == nil || self.Muted ~= self.Player:IsMuted() ) then
 		self.Muted = self.Player:IsMuted()
 		if ( self.Muted ) then
 			self.Mute:SetImage( "icon32/muted.png" )
@@ -442,7 +442,7 @@ function PNL:Think()
 	end
 
 	if self.mic then
-		if IsValid(self.Player) and self.Player != LocalPlayer() then
+		if IsValid(self.Player) and self.Player ~= LocalPlayer() then
 			table.remove(self.recordWaveform,1)
 			table.insert(self.recordWaveform,self.Player:VoiceVolume() * 30)
 		end
@@ -479,7 +479,7 @@ function PNL:Setup(p,plain)
 	self.LblNick:SetText(p:Nick() or "Undefined")
 	self.LblNick:SetColor(colOozyGreenB)
 
-	if p:ESGetRank() != "user" and p:ESGetRank() and p:ESGetRank().pretty and self.LblRank then
+	if p:ESGetRank() ~= "user" and p:ESGetRank() and p:ESGetRank().pretty and self.LblRank then
 		self.LblRank:SetText("("..(p:ESGetRank().pretty or p:ESGetRank().name or "Unknown")..")")
 	elseif self.LblRank then
 		self.LblRank:SetVisible(false)

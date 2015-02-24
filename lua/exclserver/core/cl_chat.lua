@@ -1,6 +1,25 @@
 -- cl_chat.lua
 
+surface.CreateFont("ESChatFont",{
+	font="Calibri",
+	size=20,
+	weight=500
+})
+surface.CreateFont("ESChatFont.Italic",{
+	font="Calibri",
+	size=20,
+	weight=500,
+	italic=true
+})
+surface.CreateFont("ESChatFont.Bold",{
+	font="Calibri",
+	size=20,
+	weight=800
+})
+
 local chatPanel
+
+local lineHeight=24;
 
 -- Hooks
 hook.Add("HUDShouldDraw", "ES.Chat.DisableCHudChat", function(item)
@@ -46,7 +65,7 @@ hook.Add("ChatText", "ES.Chat.ChatText", function(index, name, text, filter)
 		elseif filter == "none" and name == "Console" then
 			chat.AddText(ES.Color.White, text)
 		elseif filter == "chat" then
-			if name and name != "" then
+			if name and name ~= "" then
 				chat.AddText(ES.Color["#FAFAFA"], name, ES.Color.White, text)
 			else
 				timer.Simple(0, function() chat.AddText(ES.Color.White, text) end)
@@ -73,9 +92,12 @@ end
 function chat.AddText(...)
 	if not IsValid(chatPanel) then return end
 
+	chatPanel.becomeInvisible=CurTime()+3;
+
 	local tab={};
 	for k,v in ipairs{...}do
 		if type(v)=="Player" then
+			table.insert(tab,"<av="..v:SteamID().."> ");
 		 	table.insert(tab,team.GetColor(v:Team()));
 		 	table.insert(tab,v:Nick());
 		elseif type(v)=="string" then
@@ -100,7 +122,9 @@ function chat.AddText(...)
 	local base=vgui.Create("esPanel",chatPanel.container);
 	base:SetColor(ES.Color.Invisible);
 	base:SetWide(chatPanel.container:GetWide());
+	base:SetTall(lineHeight);
 	base:Dock(TOP);
+	base:DockMargin(4,4,4,2);
 	base.activeColor=ES.Color.White
 
 	local margin=0;
@@ -111,54 +135,64 @@ function chat.AddText(...)
 			continue;
 		end
 
-		MsgC(base.activeColor,v);
+		--MsgC(base.activeColor,v);
 
-		local text=v;
-		while (text) do
-			local noMatch=true;
+		local panels={};
+		local startposEarliest,endposEarliest,expressionFound,noMatch;
+		local function parse(text)
+
+			noMatch=true;
+			startposEarliest,endposEarliest,expressionFound=nil,nil,nil;
 
 			for _,exp in ipairs(ES.Expressions)do
-				local startpos,endpos=string.find(v,exp:GetExpression());
+				local startpos,endpos=string.find(text,exp:GetExpression());
 
 				if not startpos or not endpos then continue end
 
+				if not startposEarliest or startposEarliest > startpos then
+					startposEarliest=startpos;
+					endposEarliest=endpos;
+					expressionFound=exp;
+				end
+
 				noMatch=false;
-
-				local before=string.sub(text,1,startpos-1);
-				local after=string.sub(text,endpos+1,string.len(text));
-
-				if before and before ~="" then
-					local lbl=base:Add("esLabel");
-					lbl:SetText(before);
-					lbl:SetColor(base.activeColor);
-					lbl:SetFont("ESDefault");
-					lbl:SizeToContents();
-
-					base:Inline(lbl);
-				end
-
-				base:Inline(exp:Execute(base,string.match(string.sub(text,startpos,endpos),exp:GetExpression())));
-
-				if after and after ~= "" then
-					text=after;
-				else
-					text=nil;
-				end
-
-				break;
 			end
 
 			if noMatch then 
 				local lbl=base:Add("esLabel");
-					lbl:SetText(text);
+				lbl:SetText(text);
+				lbl:SetColor(base.activeColor);
+				lbl:SetFont("ESChatFont");
+				lbl:SizeToContents();
+
+				table.insert(panels,lbl);
+			elseif startposEarliest and endposEarliest and expressionFound then
+				local before=string.sub(text,1,startposEarliest-1);
+				local current=string.sub(text,startposEarliest,endposEarliest);
+				local after=string.sub(text,endposEarliest+1,string.len(text));
+
+				if before and before ~= "" then
+					local lbl=base:Add("esLabel");
+					lbl:SetText(before);
 					lbl:SetColor(base.activeColor);
-					lbl:SetFont("ESDefault");
+					lbl:SetFont("ESChatFont");
 					lbl:SizeToContents();
 
-					base:Inline(lbl);
-				break 
+					table.insert(panels,lbl);
+				end
+				table.insert(panels,expressionFound:Execute(base,string.match(current,expressionFound:GetExpression())));
+				if after and after ~="" then
+					parse(after)
+				end
 			end
 		end
+		parse(v);
+
+		for k,v in ipairs(panels)do
+			base:Inline(v);
+		end
+
+		base:UpdateTall();
 	end
 
 	MsgC(color,"\n");

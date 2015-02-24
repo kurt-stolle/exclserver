@@ -29,7 +29,7 @@ if SERVER then
 		if vic.nextVoteKick and vic.nextVoteKick > CurTime() then p:ChatPrint("You can currently not kick this user, as he has recently been victim to a vote kick.") return end
 
 		local r
-		if a[2] and a[2] != "" then
+		if a[2] and a[2] ~= "" then
 			r = table.concat(a," ",2)
 		else
 			r = ""

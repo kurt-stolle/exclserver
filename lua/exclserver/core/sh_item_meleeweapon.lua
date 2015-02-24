@@ -40,12 +40,12 @@ function PLAYER:ESReplaceMelee()
 	for k,v in pairs(self:GetWeapons())do
 		if !IsValid(v) or !v:ESIsMelee() then continue end
 
-		if self:ESGetMeleeWeapon() and (v:GetClass() != ( "es_melee_"..string.gsub(string.lower(self:ESGetMeleeWeapon().name)," ","_")) or v:GetClass() == ES.MeleeBaseClass) then
+		if self:ESGetMeleeWeapon() and (v:GetClass() ~= ( "es_melee_"..string.gsub(string.lower(self:ESGetMeleeWeapon().name)," ","_")) or v:GetClass() == ES.MeleeBaseClass) then
 			v:Remove()
 
 			print("replaced")
 			self:Give( "es_melee_"..string.gsub(string.lower(self:ESGetMeleeWeapon().name)," ","_") )
-		elseif not self:ESGetMeleeWeapon() and v:GetClass() != ES.MeleeBaseClass then
+		elseif not self:ESGetMeleeWeapon() and v:GetClass() ~= ES.MeleeBaseClass then
 			v:Remove()
 
 			self:Give( ES.MeleeBaseClass )

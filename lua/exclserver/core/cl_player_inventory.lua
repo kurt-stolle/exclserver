@@ -63,7 +63,7 @@ net.Receive("ESSynchInvRemove",function()
 		tab=LocalPlayer()._es_inventory_props
 	end  
 
-	if type(tab) != "table" then return end
+	if type(tab) ~= "table" then return end
 
 	for k,v in ipairs(tab)do
 		if v == name then

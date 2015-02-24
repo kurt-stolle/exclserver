@@ -66,7 +66,7 @@ function PLAYER:ESIsRankOrHigher(r)
 	return (ES.Ranks[r] and self:ESGetRank() >= ES.Ranks[r])
 end
 function PLAYER:ESIsImmuneTo(p)
-	return ( IsValid(p) and p != self and self:ESIsRankOrHigher( tostring(self:ESGetRank()) ) )
+	return ( IsValid(p) and p ~= self and self:ESIsRankOrHigher( tostring(self:ESGetRank()) ) )
 end
 function PLAYER:ESGetRank()
 	return ES.Ranks[self:ESGetNetworkedVariable("rank","user")]

@@ -25,7 +25,7 @@ function ES.RGBToHex(color)
 	return hexadecimal
 end
 function ES.HexToRGB(key)
-	if string.len(key) < 9 or string.Left(key,1) != "#" then return nil end
+	if string.len(key) < 9 or string.Left(key,1) ~= "#" then return nil end
 
 	return Color(tonumber("0x"..key:sub(2,3)), tonumber("0x"..key:sub(4,5)), tonumber("0x"..key:sub(6,7)), tonumber("0x"..key:sub(8,9)) )
 end

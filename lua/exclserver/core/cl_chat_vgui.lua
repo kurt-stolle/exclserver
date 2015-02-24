@@ -13,6 +13,7 @@ function PANEL:Init()
 	local top=self:Add("esPanel");
 	top:SetTall(32);
 	top:SizeToContents();
+	top:SetColor(ES.GetColorScheme(1));
 	top:Dock(TOP);
 
 		local title=top:Add("esLabel");
@@ -23,9 +24,23 @@ function PANEL:Init()
 		title:DockMargin((32-title:GetTall())/2,(32-title:GetTall())/2,(32-title:GetTall())/2,(32-title:GetTall())/2)
 		title:SetColor(ES.Color.White)
 
-	local container=self:Add("Panel");
-	container:Dock(FILL);
-	container:DockMargin(6,6,6,6);
+	local scrollpanel=self:Add("esPanel")
+	scrollpanel:SetColor(ES.Color.Invisible)
+	scrollpanel:Dock(FILL)
+	scrollpanel:DockMargin(0,0,0,2)
+	scrollpanel:AddScrollbar()
+
+		local container=scrollpanel:Add("Panel")
+		function container.PerformLayout(_self)
+				local hMax = 0
+				for k,v in ipairs(_self:GetChildren())do
+					if v.y + v:GetTall() > hMax then
+						hMax = v.y + v:GetTall()
+					end
+				end
+				_self:SetTall(hMax)
+				_self:SetWide(_self:GetParent():GetWide()-4*2-_self:GetParent().scrollbar:GetWide())
+		end
 
 	local bottom=self:Add("esPanel");
 	bottom:Dock(BOTTOM);
@@ -36,6 +51,7 @@ function PANEL:Init()
 		entry:Dock(BOTTOM);
 		entry:DockMargin((32-24)/2,(32-24)/2,(32-24)/2,(32-24)/2);
 		entry:SetHistoryEnabled(true);
+		entry:SetFont("ESChatFont");
 
 		local send=bottom:Add("esIconButton");
 		send:SetIcon(Material("exclserver/arrow_right.png"));
@@ -51,18 +67,25 @@ function PANEL:Init()
 		end
 
 		entry.OnEnter=send.DoClick;
-	
+
 
 	self.bottom=bottom;
 	self.top=top;
 	self.container=container
 	self.title=title
 	self.entry=entry
+
+	self.becomeInvisible=0;
 end
 function PANEL:Think()
-
+	if CurTime() > self.becomeInvisible then
+		self:HardSetVisible(false);
+	end
 end
+PANEL.HardSetVisible = PANEL.SetVisible;
 function PANEL:SetVisible(b)
+	self:HardSetVisible(true);
+
 	if b==true then
 		self:MakePopup();
 
@@ -72,12 +95,15 @@ function PANEL:SetVisible(b)
 
 		self:SetKeyBoardInputEnabled(true);
 		self:SetMouseInputEnabled(true);
+
+		self.becomeInvisible=CurTime()+99999999
 	elseif b==false then
 		self.top:SetVisible(false);
 		self.bottom:SetVisible(false);
 
 		self:SetKeyBoardInputEnabled(false);
 		self:SetMouseInputEnabled(false);
+		self.becomeInvisible=CurTime()+3;
 	end
 
 	self._visible=b;

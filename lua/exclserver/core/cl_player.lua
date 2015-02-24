@@ -3,7 +3,7 @@ hook.Add("PostPlayerDraw", "ESPostPlayerDraw", function(p)
 	--[[local drawpos,drawang,slotdata,pos,ang,item,scale,bone,color
 	for i=1, 2+(p:ESGetVIPTier()) do
 		slotdata = p:ESGetGlobalData("slot"..i,false)
-		if slotdata and type( slotdata ) == "string" and slotdata != "" then
+		if slotdata and type( slotdata ) == "string" and slotdata ~= "" then
 			local exp = string.Explode("|",slotdata)
 			if not exp or not exp[1] or not exp[2] or not exp[3] or not exp[4] or not exp[5] or not exp[6] then continue end
 
@@ -74,7 +74,7 @@ function ES.TauntCamera()
             
         if ( !ply:Alive() ) then on = false end
 
-        if ( WasOn != on ) then
+        if ( WasOn ~= on ) then
 
             if ( on ) then InLerp = 0 end
             if ( !on ) then OutLerp = 0 end

@@ -189,7 +189,7 @@ local function createMenu()
        
    hook.Add("Think" , "Crashed" , function()
 		for k , v in ipairs(player.GetAll()) do
-			if v.CrashedPing != v:Ping() then
+			if v.CrashedPing ~= v:Ping() then
 				ES.DebugPrint("Connection regained (ping changed)")
 				hook.Remove("Think" , "Crashed")
 				crashed = false
@@ -266,7 +266,7 @@ hook.Add("Think" , "ESCrashReconnect" , function()
 			ES.DebugPrint("Connection lost! Sending ping!")
 		end
 
-		if test and test != 0 and test < CurTime() then
+		if test and test ~= 0 and test < CurTime() then
 			if lastmovetime + crashtime < CurTime() then
 				ES.DebugPrint("Connection to gameserver lost")
 				crashed = true

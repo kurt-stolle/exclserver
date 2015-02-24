@@ -1,7 +1,7 @@
 --pannel
-vgui.Register( "esPanel", {
+local PNL= {
 	Paint = function(self,w,h)
-		draw.RoundedBox(2,0,0,w,h,self.color) 
+		draw.RoundedBox(2,0,0,w,h,self.color)
 
 		surface.SetDrawColor(ES.Color["#00000022"])
 		surface.DrawRect(0,0,w,1)
@@ -9,17 +9,39 @@ vgui.Register( "esPanel", {
 		surface.DrawRect(0,1,1,h-2)
 		surface.DrawRect(w-1,1,1,h-2)
 
-		
+	end,
+	AddScrollbar=function(self)
+		self.scrollbar=vgui.Create( "esScrollbar", self );
 	end,
 	PerformLayout = function(self)
 		if self._inlineElements then
 			local w,h=self:GetWide(),self:GetTall();
 
-			local x=0;
+			local x,y=0,0;
 			for k,v in ipairs(self._inlineElements)do
 				v.x=x;
+				v.y=y+(self:GetTall()/2 - v:GetTall()/2);
+
 				x=x+v:GetWide();
+
+				if x > w then
+					if v.IsESLabel then
+
+					else
+						x=0;
+						y=y+self:GetTall();
+
+						v.x=x;
+						v.y=y+(self:GetTall()/2 - v:GetTall()/2);
+					end
+				end
+
+
 			end
+		end
+
+		if IsValid(self.scrollbar) then
+			self.scrollbar:Setup();
 		end
 	end,
 	SetColor = function(self,color)
@@ -27,6 +49,9 @@ vgui.Register( "esPanel", {
 	end,
 	Init = function(self)
 		self.color = ES.GetColorScheme(2)
+	end,
+	Think = function(self)
+
 	end,
 	Inline=function(self,panel)
 		if not IsValid(panel) then return end
@@ -38,4 +63,10 @@ vgui.Register( "esPanel", {
 		table.insert(self._inlineElements,panel);
 
 	end,
-}, "Panel" )
+	UpdateTall=function(self)
+
+	end
+}
+AccessorFunc(PNL,"_alwaysScrollToBottom","AlwaysScrollToBottom",FORCE_BOOL);
+AccessorFunc(PNL,"_scrolling","Scrolling",FORCE_BOOL);
+vgui.Register( "esPanel",PNL, "Panel" )

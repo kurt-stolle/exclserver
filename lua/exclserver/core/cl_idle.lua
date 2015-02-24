@@ -21,12 +21,12 @@ timer.Create("ESIdleCheck", 5, 0, function()
          end
 
          if client:GetObserverMode() == OBS_MODE_NONE and client:Alive() then
-            if client:GetAngles() != idle.ang then
+            if client:GetAngles() ~= idle.ang then
                -- Normal players will move their viewing angles all the time
                idle.ang = client:GetAngles()
                idle.t = CurTime()
                idle.flagged = false
-            elseif gui.MouseX() != idle.mx or gui.MouseY() != idle.my then
+            elseif gui.MouseX() ~= idle.mx or gui.MouseY() ~= idle.my then
                -- Players in eg. the F6 will move their mouse occasionally
                idle.mx = gui.MouseX()
                idle.my = gui.MouseY()

@@ -51,7 +51,7 @@ hook.Add("CalcView", "exclThirdperson", function(ply, pos , angles ,fov)
 
 	if( ply.excl and ply._es_thirdpersonMode ) and distance > 2 then					
 		local side = ply:GetActiveWeapon()
-		side = side and IsValid(side) and side.GetHoldType and side:GetHoldType() != "normal" and side:GetHoldType() != "melee" and side:GetHoldType() != "melee2" and side:GetHoldType() != "knife"
+		side = side and IsValid(side) and side.GetHoldType and side:GetHoldType() ~= "normal" and side:GetHoldType() ~= "melee" and side:GetHoldType() ~= "melee2" and side:GetHoldType() ~= "knife"
 
 		if side then
 			tracedata.start = pos

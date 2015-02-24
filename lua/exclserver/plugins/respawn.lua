@@ -13,11 +13,11 @@ if SERVER then
 		local vTbl = exclPlayerByName(a[1])
 		if not vTbl then return end
 		local r = ""
-		if table.concat(a," ",2) and table.concat(a," ",2) != "" then
+		if table.concat(a," ",2) and table.concat(a," ",2) ~= "" then
 			r = table.concat(a," ",2)
 		end
 		for k,v in pairs(vTbl)do
-			if ( v==p and !p:IsSuperAdmin() ) or (v:ESIsImmuneTo(p) and v != p) then 
+			if ( v==p and !p:IsSuperAdmin() ) or (v:ESIsImmuneTo(p) and v ~= p) then 
 				net.Start("exclNoRP")
 				net.WriteEntity(p)
 				net.WriteEntity(v)
@@ -63,7 +63,7 @@ net.Receive("exclRP",function()
 	local r = net.ReadString()
 	if not IsValid(p) or not IsValid(v) then return end
 	
-	if r and r != "" and r != " " then
+	if r and r ~= "" and r ~= " " then
 		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has respawned ",Color(102,255,51),v:Nick(),ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
 	else
 		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has respawned ",Color(102,255,51),v:Nick(),ES.Color.White,".")

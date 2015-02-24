@@ -17,7 +17,7 @@ if SERVER then
 		local vTbl = exclPlayerByName(a[1])
 		if not vTbl then return end
 		local r
-		if a[2] and a[2] != "" then
+		if a[2] and a[2] ~= "" then
 			r = table.concat(a," ",2)
 		else
 			r = ""
@@ -40,7 +40,7 @@ if SERVER then
 		local vTbl = exclPlayerByName(a[1])
 		if not vTbl then return end
 		local r
-		if a[2] and a[2] != "" then
+		if a[2] and a[2] ~= "" then
 			r = table.concat(a," ",2)
 		else
 			r = ""
@@ -67,7 +67,7 @@ net.Receive("exclUFP",function()
 	local r = net.ReadString()
 	if not IsValid(p) then return end
 	
-	if r and r != "" and r != " " then
+	if r and r ~= "" and r ~= " " then
 		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unfrozen ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
 	else
 		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unfrozen ",Color(102,255,51),v,ES.Color.White,".")
@@ -80,7 +80,7 @@ net.Receive("exclFP",function()
 	local r = net.ReadString()
 	if not IsValid(p) then return end
 	
-	if r and r != "" and r != " " then
+	if r and r ~= "" and r ~= " " then
 		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has frozen ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
 	else
 		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has frozen ",Color(102,255,51),v,ES.Color.White,".")

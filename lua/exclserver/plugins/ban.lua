@@ -46,7 +46,7 @@ if SERVER then
 			net.WriteInt(tonumber(a[2]),32)
 			net.WriteString(reason or "No reason given.")
 			net.Broadcast()
-		elseif #exclPlayerByName(user) != 1 then
+		elseif #exclPlayerByName(user) ~= 1 then
 			net.Start("ESCmdOnlyOne") net.Send(p)
 		end
 	end,20)

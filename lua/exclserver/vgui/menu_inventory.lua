@@ -66,7 +66,7 @@ function PNL:Init()
 	self.rm:SetVisible(false)
 end
 function PNL:Think()
-	if self.curX != self.scrollTo*100 then
+	if self.curX ~= self.scrollTo*100 then
 		self.curX = math.Approach(self.curX,self.scrollTo*100,32)
 
 		local x = 0

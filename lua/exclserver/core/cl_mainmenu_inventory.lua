@@ -311,7 +311,7 @@ function ES._MMGenerateInventoryOutfit(base)
 		tab:SetSize(64,64)	
 		tab.OnCursorEntered = function(self) self.Hover = true end tab.OnCursorExited = function(self) self.Hover = false end	
 		tab.Paint = function(self,w,h)	
-			if slotSelected != i then	
+			if slotSelected ~= i then	
 				draw.RoundedBox(0,1,1,w-2,h-1,self.Hover and ES.GetColorScheme(3) or Color(255,255,255,1))	
 			else	
 				draw.RoundedBox(0,0,0,w,h,ES.Color["#1E1E1E"])	

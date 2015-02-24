@@ -56,7 +56,7 @@ function ES.DeRussianify(str)
 end
 
 function ES.GetPlayerByName(n)
-	if type(n) != "string" or n == " " or n == "" then 
+	if type(n) ~= "string" or n == " " or n == "" then 
 		return {}
 	elseif n == "*" then 
 		return player.GetAll()

@@ -165,7 +165,7 @@ function ES.DBQuery(request,fn,fnError)
 	query:setOption(mysqloo.OPTION_CACHE,true)
 	query.onError = fnError or (MySQLError)
 	query.onSuccess = function(self,dt)
-		if not fn or type(fn) != "function" then return end
+		if not fn or type(fn) ~= "function" then return end
 		fn( dt )
 	end
 	query:start()

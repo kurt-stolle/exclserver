@@ -144,7 +144,7 @@ hook.Add("HUDPaint","ESDrawScreenText",function()
 		end
 		local add = 0
 		local bananaDisplayRound = math.Round(bananaDisplay)
-		if bananaDisplayRound != p:ESGetBananas() then
+		if bananaDisplayRound ~= p:ESGetBananas() then
 			if bananaDisplay - p:ESGetBananas() > 0 then
 				bananaDisplay = Lerp(0.01,bananaDisplay-1,p:ESGetBananas())
 			else
@@ -185,7 +185,7 @@ TEXT NOTIFICATIONS
 local queue={}
 
 function ES.Notify(kind,msg)
-	if type(kind) != "string" or type(msg) != "string" or (kind != "generic" and kind != "error") then
+	if type(kind) ~= "string" or type(msg) ~= "string" or (kind ~= "generic" and kind ~= "error") then
 		return
 	end
 

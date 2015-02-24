@@ -58,7 +58,7 @@ function PNL:AddTab(title,icon)
 	b.title = title or "Untitled"
 	b.OnMouseReleased= function(btn)
 		for k,v in pairs(self._tabs)do
-			if b.Position != v.button.Position then
+			if b.Position ~= v.button.Position then
 				v:SetVisible(false)
 				v.button.Selected=false
 			end
