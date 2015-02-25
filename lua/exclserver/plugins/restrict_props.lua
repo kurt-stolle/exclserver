@@ -40,7 +40,7 @@ if SERVER then
 
 	local loadedGlobal = {}
 	local loadedLocal = {}
-	PLUGIN:AddHook("ES.MySQLReady",function()
+	PLUGIN:AddHook("ESDatabaseReady",function()
 		if !GAMEMODE.IsSandboxDerived then ES.DebugPrint("Not loading prop restriction - we are not on a sandbox derived gamemode.") return end -- thanks garry, now we can not load this ESPlugin when we are not in a sandbox derive.
 
 		ES.DBQuery("SELECT * FROM es_restrictions_props WHERE serverid = "..ES.ServerID.." OR serverid = 0",function(res)
@@ -110,14 +110,14 @@ elseif CLIENT then
 	net.Receive("ESTellPropBlockAdded",function()
 		local mdl = net.ReadString()
 		local tier = net.ReadString()
-		ES.ChatAddText("server",COLOR_EXCLSERVER,mdl,COLOR_WHITE," was added to the model blacklist (or whitelist) for everyone below ",COLOR_EXCLSERVER,tier,COLOR_WHITE,".")
+		chat.AddText("server",COLOR_EXCLSERVER,mdl,COLOR_WHITE," was added to the model blacklist (or whitelist) for everyone below ",COLOR_EXCLSERVER,tier,COLOR_WHITE,".")
 	end)
 	net.Receive("ESTellPropBlocked",function()
 
 		local mdl = net.ReadString()
 		local rank = net.ReadString()
 		
-		ES.ChatAddText("error",COLOR_EXCLSERVER,mdl,COLOR_WHITE," is restricted to ",COLOR_EXCLSERVER,rank,COLOR_WHITE,".")
+		chat.AddText("error",COLOR_EXCLSERVER,mdl,COLOR_WHITE," is restricted to ",COLOR_EXCLSERVER,rank,COLOR_WHITE,".")
 	end)	
 end
 

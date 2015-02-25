@@ -14,7 +14,7 @@ require "mysqloo"
 
 ES.ServerID = -1
 
-if not mysqloo then 
+if not mysqloo then
 	ES.DebugPrint("MySQLOO module not found. Please install the MySQLOO module before using ExclServer.")
 	return
 end
@@ -35,7 +35,7 @@ db.onConnected = function(database)
 	local serverIP=ES.GetServerIP()
 
 	-- Query to check whether the required tables exist.
-	ES.DBQuery("SELECT `table_name` FROM information_schema.tables WHERE `table_schema` = '"..DATABASE_SCHEMA.."' LIMIT 12",function(res)
+	ES.DBQuery("SELECT `table_name` FROM information_schema.tables WHERE `table_schema` = '"..DATABASE_SCHEMA.."';",function(res)
 		local notFound = false
 
 		-- Check whether we have at least 11 tab
@@ -44,23 +44,18 @@ db.onConnected = function(database)
 			notFound=true
 
 		else
+			for _,lookup in ipairs{"es_restrictions_props","es_restrictions_tools","es_blockades","es_settings","es_player_inventory","es_player_fields","es_player_outfit","es_ranks","es_bans","es_ranks_config","es_logs","es_servers"} do
+				local found=false;
+				for _,v in ipairs(res)do
+					if v.table_name == lookup then
+						found=true
+						break;
+					end
+				end
 
-			for k,v in ipairs(res)do
-				if 
-					v.table_name ~= "es_restrictions_props" and
-					v.table_name ~= "es_restrictions_tools" and 
-					v.table_name ~= "es_blockades" and
-					v.table_name ~= "es_settings" and
-					v.table_name ~= "es_player_inventory" and
-					v.table_name ~= "es_player_fields" and
-					v.table_name ~= "es_player_outfit" and
-					v.table_name ~= "es_ranks" and
-					v.table_name ~= "es_bans" and
-					v.table_name ~= "es_ranks_config" and
-					v.table_name ~= "es_servers" and 
-					v.table_name ~= "es_logs"
-				then
+				if not found then
 					notFound=true
+					break;
 				end
 			end
 
@@ -80,7 +75,7 @@ db.onConnected = function(database)
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_ranks` ( `id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(50), serverid int(10), rank varchar(100), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1" ):wait()
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_bans` (`ban_id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), steamidAdmin varchar(100), name varchar(100), nameAdmin varchar(100), serverid int(8), unbanned tinyint(1), time int(32), timeStart int(32), reason varchar(255), PRIMARY KEY (`ban_id`), UNIQUE KEY `ban_id` (`ban_id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8"):wait()
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_ranks_config` ( `id` int(10) unsigned NOT NULL AUTO_INCREMENT, name varchar(100), prettyname varchar(200), power int(16), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1"):wait()
-			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_logs` (`id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), ip varchar(100), nick varchar(100), text varchar(255), type varchar(100), time int(32), serverid int(32), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8"):wait()
+			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_logs` (`id` int unsigned NOT NULL AUTO_INCREMENT, text varchar(255), type tinyint unsigned not null, time int unsigned not null, serverid tinyint unsigned not null, PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8"):wait()
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_servers` ( `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT, ip varchar(100), prettyname varchar(100), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1"):wait()
 
 			ES.DebugPrint("Reloading server to finalise data setup (1/2)...")
@@ -93,7 +88,7 @@ db.onConnected = function(database)
 				if r and r[1] then
 					ES.DebugPrint("Server ID found: "..r[1].id)
 					ES.ServerID = r[1].id
-					hook.Call("ES.MySQLReady",GM or GAMEMODE,ES.ServerID)
+					hook.Call("ESDatabaseReady",GM or GAMEMODE,ES.ServerID)
 				else
 					ES.DebugPrint("No server ID found! Registering server...")
 					ES.DBQuery("INSERT INTO es_servers SET ip = '"..serverIP.."'",function()
@@ -108,16 +103,16 @@ db.onConnected = function(database)
 			for k,v in pairs(ES.NetworkedVariables)do
 				if v.save then
 					ES.DebugPrint("Checking player field: "..k)
-					ES.DBQuery("ALTER TABLE `es_player_fields` ADD "..ES.DBEscape(k).." "..v.save.."",function() 
-						ES.DebugPrint("Added column.") 
-					end,function() 
-						ES.DebugPrint("Column already exists.") 
+					ES.DBQuery("ALTER TABLE `es_player_fields` ADD "..ES.DBEscape(k).." "..v.save.."",function()
+						ES.DebugPrint("Added column.")
+					end,function()
+						ES.DebugPrint("Column already exists.")
 					end):wait()
 				end
 			end
 
 			ES.DebugPrint("Loading custom ranks...")
-			
+
 			ES.DBQuery("SELECT * FROM es_ranks_config",function(data)
 				if not data or not data[1] then return end
 				for k,v in pairs(data)do
@@ -127,7 +122,7 @@ db.onConnected = function(database)
 		end
 	end):wait()
 end
-db.onConnectionFailed = function(Q,e) 
+db.onConnectionFailed = function(Q,e)
 	ES.DebugPrint("Could not connect to mysql, "..e)
 end
 
@@ -145,10 +140,10 @@ local function MySQLError(q,e,sql)
 	ES.DebugPrint("   < error: "..e)
 end
 
-function ES.DBQuery(request,fn,fnError)		
+function ES.DBQuery(request,fn,fnError)
 	local query = db:query(request)
 
-	if not query then 
+	if not query then
 		if void then
 			Error("Voided MySQL call - called too early!")
 			return
@@ -175,4 +170,3 @@ end
 function ES.DBEscape(t)
  	return db:escape(t)
 end
-

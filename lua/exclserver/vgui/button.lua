@@ -1,8 +1,8 @@
 local color_white = ES.Color.White
 local color_gray = ES.Color["#DDD"]
 
-surface.CreateFont("ES.ButtonFont",{
-	font = "Calibri",
+ES.CreateFont("ES.ButtonFont",{
+	font = "Roboto",
 	weight = 700,
 	size = 16,
 })

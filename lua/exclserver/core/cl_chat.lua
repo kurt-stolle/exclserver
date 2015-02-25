@@ -1,20 +1,20 @@
 -- cl_chat.lua
 
-surface.CreateFont("ESChatFont",{
-	font="Calibri",
-	size=20,
-	weight=500
+ES.CreateFont("ESChatFont",{
+	font="Roboto",
+	size=18,
+	weight=400
 })
-surface.CreateFont("ESChatFont.Italic",{
-	font="Calibri",
-	size=20,
-	weight=500,
+ES.CreateFont("ESChatFont.Italic",{
+	font="Roboto",
+	size=18,
+	weight=400,
 	italic=true
 })
-surface.CreateFont("ESChatFont.Bold",{
-	font="Calibri",
-	size=20,
-	weight=800
+ES.CreateFont("ESChatFont.Bold",{
+	font="Roboto",
+	size=18,
+	weight=700
 })
 
 local chatPanel
@@ -53,7 +53,7 @@ hook.Add("PlayerBindPress", "ES.Chat.OpenOnBind", function(ply,bind,pressed)
 			chatPanel._team = true
 			chat.Open()
 			hook.Run("StartChat", true)
-			
+
 			return true
 		end
 	end
@@ -76,7 +76,7 @@ end)
 
 -- Override chat library
 function chat.Open()
-	if IsValid(chatPanel) then 
+	if IsValid(chatPanel) then
 		chatPanel:SetVisible(true);
 	end
 end
@@ -158,7 +158,7 @@ function chat.AddText(...)
 				noMatch=false;
 			end
 
-			if noMatch then 
+			if noMatch then
 				local lbl=base:Add("esLabel");
 				lbl:SetText(text);
 				lbl:SetColor(base.activeColor);

@@ -15,8 +15,8 @@ local matrixTranslation = Vector(0, 0, 0)
 local matrix,x,y,width,height,rad
 
 
-surface.CreateFont("ES.TileFont",{
-	font="Calibri",
+ES.CreateFont("ES.TileFont",{
+	font="Roboto",
 	weight=200,
 	size=22
 })

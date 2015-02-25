@@ -1,39 +1,70 @@
--- cl_fonts
-surface.CreateFont( "ESDefaultSmall.Shadow", { 
-	font = "Calibri", 
-	size = 13,
+function ES.CreateFont(name,tab)
+	if type(name) ~= "string" or type(tab) ~= "table" then return end
+
+	if tab.font=="Roboto" then
+		if tab.weight then
+			if tab.weight > 0 and tab.weight <= 100 then
+				tab.weight=100
+				tab.font="Roboto Thin"
+			elseif tab.weight > 100 and tab.weight <= 300 then
+				tab.weight=300
+				tab.font="Roboto Light"
+			elseif tab.weight > 300 and tab.weight <= 400 then
+				tab.weight=400
+				tab.font="Roboto"
+			elseif tab.weight > 400 and tab.weight <= 500 then
+				tab.weight=500
+				tab.font="Roboto Medium"
+			elseif tab.weight > 500 and tab.weight <= 700 then
+				tab.weight=700
+				tab.font="Roboto Bold"
+			elseif tab.weight > 700 and tab.weight <= 900 then
+				tab.weight=900
+				tab.font="Roboto Black"
+			end
+		else
+			tab.weight=400
+		end
+	end
+
+	surface.CreateFont(name,tab);
+end
+
+ES.CreateFont( "ESDefaultSmall.Shadow", {
+	font = "Roboto",
+	size = 12,
 	weight = 500,
 	blursize = 2
 })
-surface.CreateFont( "ESDefaultSmall", { 
-	font = "Calibri", 
-	size = 13,
+ES.CreateFont( "ESDefaultSmall", {
+	font = "Roboto",
+	size = 12,
 	weight = 500
 })
-surface.CreateFont( "ESDefault", { 
-	font = "Calibri", 
-	size = 15,
-	weight = 500
+ES.CreateFont( "ESDefault", {
+	font = "Roboto",
+	size = 14,
+	weight = 400
 })
-surface.CreateFont( "ESDefault.Shadow", { 
-	font = "Calibri", 
-	size = 15,
-	weight = 500,
+ES.CreateFont( "ESDefault.Shadow", {
+	font = "Roboto",
+	size = 14,
+	weight = 400,
 	blursize = 2
 })
-surface.CreateFont( "ESDefaultBold", { 
-	font = "Calibri", 
-	size = 15,
-	weight = 800
+ES.CreateFont( "ESDefaultBold", {
+	font = "Roboto",
+	size = 14,
+	weight = 700
 })
-surface.CreateFont( "ESDefaultBold.Shadow", { 
-	font = "Calibri", 
-	size = 15,
-	weight = 800,
+ES.CreateFont( "ESDefaultBold.Shadow", {
+	font = "Roboto",
+	size = 14,
+	weight = 700,
 	blursize = 2
 })
-surface.CreateFont( "ESDefaultBig", {
-	font = "Calibri",
+ES.CreateFont( "ESDefaultBig", {
+	font = "Roboto",
 	size=27,
 	weight=400
 })

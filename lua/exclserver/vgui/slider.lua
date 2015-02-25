@@ -1,5 +1,5 @@
-surface.CreateFont( "ESSlidebutton", { 
-	font = "Calibri", 
+ES.CreateFont( "ESSlidebutton", { 
+	font = "Roboto", 
 	weight = 700,
 	size = 16,
 	italic = true

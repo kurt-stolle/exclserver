@@ -1,5 +1,5 @@
-surface.CreateFont("ES.Chat.Title",{
-	font="Calibri",
+ES.CreateFont("ES.Chat.Title",{
+	font="Roboto",
 	size=20,
 	weight=700
 })
@@ -29,6 +29,7 @@ function PANEL:Init()
 	scrollpanel:Dock(FILL)
 	scrollpanel:DockMargin(0,0,0,2)
 	scrollpanel:AddScrollbar()
+	scrollpanel:SetAutoScroll(true)
 
 		local container=scrollpanel:Add("Panel")
 		function container.PerformLayout(_self)
@@ -72,6 +73,7 @@ function PANEL:Init()
 	self.bottom=bottom;
 	self.top=top;
 	self.container=container
+	self.scrollpanel=scrollpanel
 	self.title=title
 	self.entry=entry
 
@@ -91,6 +93,7 @@ function PANEL:SetVisible(b)
 
 		self.top:SetVisible(true);
 		self.bottom:SetVisible(true);
+		self.scrollpanel.scrollbar:SetVisible(true);
 		self.entry:RequestFocus();
 
 		self:SetKeyBoardInputEnabled(true);
@@ -100,6 +103,7 @@ function PANEL:SetVisible(b)
 	elseif b==false then
 		self.top:SetVisible(false);
 		self.bottom:SetVisible(false);
+		self.scrollpanel.scrollbar:SetVisible(false);
 
 		self:SetKeyBoardInputEnabled(false);
 		self:SetMouseInputEnabled(false);

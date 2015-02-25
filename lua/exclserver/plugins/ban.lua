@@ -72,7 +72,7 @@ elseif CLIENT then
 		local v = net.ReadString()
 		if not IsValid(p) then return end
 		
-		ES.ChatAddText("accessdenied",Color(255,255,255),
+		chat.AddText("accessdenied",Color(255,255,255),
 		exclFixCaps(p:ESGetRank().name).." ",
 		Color(102,255,51),p:Nick(),
 		Color(255,255,255),
@@ -93,9 +93,9 @@ elseif CLIENT then
 		end
 		if not IsValid(p) or not t then return end
 		if t > 0 then	
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has banned ",Color(102,255,51),v,ES.Color.White, " for ",Color(102,255,51),string.ToMinutesSeconds(tostring(t)),ES.Color.White," hours with reason: "..(r or "No reason specified.")..".")
+			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has banned ",Color(102,255,51),v,ES.Color.White, " for ",Color(102,255,51),string.ToMinutesSeconds(tostring(t)),ES.Color.White," hours with reason: "..(r or "No reason specified.")..".")
 		else
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has banned ",Color(102,255,51),v,ES.Color.White, " permanently with reason: "..(r or "No reason specified.")..".")
+			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has banned ",Color(102,255,51),v,ES.Color.White, " permanently with reason: "..(r or "No reason specified.")..".")
 		end
 		chat.PlaySound()
 	end)
@@ -103,7 +103,7 @@ elseif CLIENT then
 		local p = net.ReadEntity()
 		local ub = net.ReadString()
 		if not IsValid(p) then return end
-		ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unbanned ",Color(102,255,51),ub,ES.Color.White, ".")
+		chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unbanned ",Color(102,255,51),ub,ES.Color.White, ".")
 		chat.PlaySound()
 	end)
 end

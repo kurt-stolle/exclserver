@@ -63,20 +63,20 @@ net.Receive("ES.Notification.Popup",function()
 	ES.NotifyPopup(title,message)
 end)
 -- Fonts
-surface.CreateFont("ES.Notification",{
-	font = "roboto",
+ES.CreateFont("ES.Notification",{
+	font = "Roboto",
 	weight = 400,
 	size = 22
 })
 
-surface.CreateFont("ES.Notification.Shadow",{
-	font = "roboto",
+ES.CreateFont("ES.Notification.Shadow",{
+	font = "Roboto",
 	weight = 400,
 	size = 22,
 	blursize = 2,
 })
 
-/* 
+/*
 
 BANANAS NOTIFICATIONS
 
@@ -228,7 +228,7 @@ hook.Add("HUDPaint","ES.Notifications",function()
 		rad = -deg2rad( ang )
 		x = 32 - ( sin( rad + halvedPi ) * 64*scale / 2 + sin( rad ) * 64*scale / 2 )
 		y = 64+32 - ( cos( rad + halvedPi ) * 64*scale / 2 + cos( rad ) * 64*scale / 2 )
-		
+
 		color_circle.a = scale*255
 
 		matrix=Matrix()

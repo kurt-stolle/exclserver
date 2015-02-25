@@ -165,7 +165,7 @@ function expression:Execute(base, text)
 	label:SetFont("ESChatFont");
 	label:SetParent(base)
 	label:SetText(text)
-	label:SetColor(ES.GetColorScheme(2));
+	label:SetColor(ES.GetColorScheme(1));
 	label:SizeToContents(base)
 
 	return label

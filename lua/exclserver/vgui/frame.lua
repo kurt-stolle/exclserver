@@ -13,13 +13,13 @@ local matrixTranslation = Vector(0, 0, 0)
 local matrix,x,y,width,height,rad
 
 local PANEL = {}
-surface.CreateFont( "ESFrameText", { 
-font = "Calibri", 
+ES.CreateFont( "ESFrameText", { 
+font = "Roboto", 
 size = 21,
 weight=400 } 
 )
-surface.CreateFont( "ESFrameTextShadow", { 
-font = "Calibri", 
+ES.CreateFont( "ESFrameTextShadow", { 
+font = "Roboto", 
 size = 21,
 weight=500,
 blursize=2 } 

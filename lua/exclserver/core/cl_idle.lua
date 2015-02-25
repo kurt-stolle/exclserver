@@ -41,10 +41,10 @@ timer.Create("ESIdleCheck", 5, 0, function()
                -- we are afk
                RunConsoleCommand("excl_idle")
                idle.flagged = true
-               ES.ChatAddText("server",COLOR_WHITE,"You have been flagged as idle and set to spectate only mode.")
+               chat.AddText("server",COLOR_WHITE,"You have been flagged as idle and set to spectate only mode.")
             elseif CurTime() > (idle.t + 140) and !idle.flagged then
                -- will repeat
-               ES.ChatAddText("error",COLOR_WHITE,"You appear to be idle, show activity or you will be set to spectate only mode.")
+               chat.AddText("error",COLOR_WHITE,"You appear to be idle, show activity or you will be set to spectate only mode.")
             end
          end
       end)

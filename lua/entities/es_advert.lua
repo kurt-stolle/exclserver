@@ -33,13 +33,13 @@ end
 
 if SERVER then return end
 
-surface.CreateFont("ESAdvertFont",{
-	font = "Calibri",
+ES.CreateFont("ESAdvertFont",{
+	font = "Roboto",
 	size = 98,
 	weight = 300,
 })
-surface.CreateFont("ESAdvertFontBlur",{
-	font = "Calibri",
+ES.CreateFont("ESAdvertFontBlur",{
+	font = "Roboto",
 	size = 98,
 	weight = 300,
 	blursize = 2,

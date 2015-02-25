@@ -2,7 +2,7 @@
 local PANEL = {}
 
 AccessorFunc(PANEL,"_dragging","Dragging",FORCE_BOOL);
-
+AccessorFunc(PANEL,"_autoScroll","AutoScroll",FORCE_BOOL);
 function PANEL:Init()
 	self:SetWide(8);
 	self:DockMargin(4,4,4,4);
@@ -25,33 +25,34 @@ function PANEL:Setup()
 	self.Elements = self:GetParent():GetChildren()
 
 	for k,v in ipairs(self.Elements)do
-		if v == self or v == self.button then
+		if v.ClassName == "esScrollbar" then
 			table.remove(self.Elements,k)
-			break;
 		end
 	end
 
 	local hMax = 0
-	for k,v in ipairs(self:GetParent():GetChildren()) do
+	for k,v in ipairs(self.Elements) do
 		v._esScrollbar_originalY = v.y + self.curScroll;
 		if v._esScrollbar_originalY + v:GetTall() > hMax then
 			hMax = v._esScrollbar_originalY + v:GetTall();
 		end
 	end
 
-	self.button:SetTall(math.Clamp(self:GetParent():GetTall()/hMax * (self:GetTall()-2),self:GetWide()-2,self:GetTall()-2))
+	self.button:SetTall(math.Clamp( (self:GetParent():GetTall()/hMax) * (self:GetTall()-2),self:GetWide()-2,self:GetTall()-2))
 
+	self.oldMax=self.maxScroll;
 	self.maxScroll=hMax;
-end
-function PANEL:Scroll(y)
-	local yMax = 0
-	for k,v in ipairs(self.Elements)do
-		if v.y + v:GetTall() - self:GetTall() > yMax then
-			yMax=v.y + v:GetTall() - self:GetParent():GetTall()
-		end
-	end
 
-	y = math.Clamp(y,0,yMax);
+	if self:GetAutoScroll() and self.oldMax ~= self.maxScroll then
+		self:Scroll(99999,true)
+	end
+end
+function PANEL:Scroll(y,setButton)
+	y = math.Clamp(y,0,self.maxScroll-self:GetParent():GetTall());
+
+	if setButton then
+		self.button.y = (y/(self.maxScroll-self:GetParent():GetTall()) * (self:GetTall()-2-self.button:GetTall()))+1
+	end
 
 	for k,v in ipairs(self.Elements)do
 		v.y = (v._esScrollbar_originalY or 0) - y
@@ -72,7 +73,7 @@ function PANEL:Think()
 	self.button.y = math.Clamp(self.button.y + (y-self.startDrag),1,self:GetTall()-2-self.button:GetTall());
 	self.startDrag = y;
 
-	self:Scroll( math.ceil((self.button.y-2) / (self:GetTall()-4-self.button:GetTall()) * self.maxScroll) )
+	self:Scroll( math.ceil(((self.button.y-1) / (self:GetTall()-2-self.button:GetTall())) * (self.maxScroll-self:GetParent():GetTall())) )
 end
 function PANEL:Paint(w,h)
 	local a,b,c = ES.GetColorScheme()
@@ -94,6 +95,6 @@ function PANEL:OnMousePressed()
 	self:GetParent().startDrag = y
 end
 function PANEL:Paint(w,h)
-	draw.RoundedBox(4,0,0,w,h,ES.GetColorScheme(2));
+	draw.RoundedBox(4,0,0,w,h,ES.GetColorScheme(1));
 end
 vgui.Register( "esScrollbar.Button", PANEL, "Panel")

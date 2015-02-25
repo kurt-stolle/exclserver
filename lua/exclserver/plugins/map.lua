@@ -30,7 +30,7 @@ net.Receive("exclChMap",function()
 	local m = net.ReadString()
 	if not IsValid(p) then return end
 
-	ES.ChatAddText("global",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p,Color(255,255,255)," has changed the map to ",Color(102,255,51),m)
+	chat.AddText("global",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p,Color(255,255,255)," has changed the map to ",Color(102,255,51),m)
 	chat.PlaySound()
 end)
 

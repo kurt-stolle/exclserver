@@ -1,11 +1,11 @@
 -- Buttons
-surface.CreateFont( "ES.ToggleButton", { 
-font = "Calibri", 
+ES.CreateFont( "ES.ToggleButton", { 
+font = "Roboto", 
 size = 16,
 weight=700 } 
 )
-surface.CreateFont( "ES.ToggleButton.Shadow", { 
-font = "Calibri", 
+ES.CreateFont( "ES.ToggleButton.Shadow", { 
+font = "Roboto", 
 size = 16,
 weight=700,
 blursize=2 } 

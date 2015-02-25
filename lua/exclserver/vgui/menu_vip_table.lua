@@ -14,13 +14,13 @@ local mat = Material("exclserver/bananas_16.png")
 local margin = 10
 COLOR_BLACK = COLOR_BLACK or Color(0,0,0)
 
-surface.CreateFont("ES.VIPTableFont",{
-	font = "Calibri",
+ES.CreateFont("ES.VIPTableFont",{
+	font = "Roboto",
 	size = 20,
 	weight = 700
 })
-surface.CreateFont("ES.VIPTableFont.Shadow",{
-	font = "Calibri",
+ES.CreateFont("ES.VIPTableFont.Shadow",{
+	font = "Roboto",
 	size = 20,
 	weight = 700,
 	blursize=2

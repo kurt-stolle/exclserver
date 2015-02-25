@@ -5,14 +5,14 @@ hook.Add("HUDShouldDraw","ES.MM.SupressHUD",function()
 end)
 
 local fx = {
-	["$pp_colour_addr"] = 0, 
-	["$pp_colour_addg"] = 0, 
-	["$pp_colour_addb"] = 0, 
-	["$pp_colour_brightness"] = -.1, 
-	["$pp_colour_contrast"] = 1.1, 
-	["$pp_colour_colour"] = 0, 
-	["$pp_colour_mulr"] = 0, 
-	["$pp_colour_mulg"] = 0, 
+	["$pp_colour_addr"] = 0,
+	["$pp_colour_addg"] = 0,
+	["$pp_colour_addb"] = 0,
+	["$pp_colour_brightness"] = -.1,
+	["$pp_colour_contrast"] = 1.1,
+	["$pp_colour_colour"] = 0,
+	["$pp_colour_mulr"] = 0,
+	["$pp_colour_mulg"] = 0,
 	["$pp_colour_mulb"] = 0
 }
 hook.Add("RenderScreenspaceEffects","ES.MMBlackWhite",function()
@@ -38,7 +38,7 @@ hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
 		local bone=ply:LookupBone("ValveBiped.Bip01_Spine")
 
 		if bone then
-		
+
 			pos,angles=ply:GetBonePosition(bone)
 
 			if pos and angles then
@@ -57,7 +57,7 @@ hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
 				view.origin = LerpVector(FrameTime(),view.origin,tr.HitPos + angles:Forward()*10)
 				view.angles = LerpAngle(FrameTime(),view.angles,angles)
 				view.fov = fov
-				
+
 				return view
 
 			end
@@ -65,8 +65,8 @@ hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
 	end
 end)
 
-surface.CreateFont("ES.MainMenu.HeadingText",{
-	font = "Calibri",
+ES.CreateFont("ES.MainMenu.HeadingText",{
+	font = "Roboto",
 	size = 28,
 })
 
@@ -92,14 +92,14 @@ end
 
 function ES.CreateMainMenu()
 	if IsValid(mm) then mm:Remove() return end
-	
+
 	mm = vgui.Create("ESMainMenu")
 	mm:SetPos(0,0)
 	mm:SetSize(ScrW(),ScrH())
 	mm:MakePopup()
 
 	--### main items
-	mm:AddButton("General",Material("icon16/car.png"),function() 
+	mm:AddButton("General",Material("icon16/car.png"),function()
 		mm:OpenChoisePanel({
 			{icon = Material("exclserver/menuicons/generic.png"), name = "About",func = function()
 				local p = mm:OpenFrame(640)
@@ -151,7 +151,7 @@ ExclServer is created and constructed by Excl.]],"ESDefault",640-20*2),p)
 					ES.PushColorScheme(firstCube:GetColor(),secondCube:GetColor(),thirdCube:GetColor())
 				end
 
-				
+
 				secondCube:SetPos(15,firstCube.y+firstCube:GetTall()+10)
 				secondCube:SetSize(256,200)
 				secondCube:SetLabel("Secondary Color")
@@ -192,7 +192,7 @@ ExclServer is created and constructed by Excl.]],"ESDefault",640-20*2),p)
 		})
 	end)
 	mm:AddWhitespace()
-	mm:AddButton("Shop",Material("icon16/basket.png"),function() 
+	mm:AddButton("Shop",Material("icon16/basket.png"),function()
 		mm:OpenChoisePanel({
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Items",func = function()
 				ES._MMGenerateShop(mm,"Prop",ES.ITEM_PROP)
@@ -211,7 +211,7 @@ ExclServer is created and constructed by Excl.]],"ESDefault",640-20*2),p)
 			end}
 		})
 	end)
-	mm:AddButton("Inventory",Material("icon16/plugin.png"),function() 
+	mm:AddButton("Inventory",Material("icon16/plugin.png"),function()
 		mm:OpenChoisePanel({
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Effects",func = function()
 				ES._MMGenerateInventoryEffects(mm)
@@ -219,11 +219,11 @@ ExclServer is created and constructed by Excl.]],"ESDefault",640-20*2),p)
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Outfit",func = function()
 
 				ES._MMGenerateInventoryOutfit(mm)
-				
+
 			end},
 		})
 	end)
-	mm:AddButton("VIP",Material("icon16/star.png"),function() 
+	mm:AddButton("VIP",Material("icon16/star.png"),function()
 		mm:CloseChoisePanel()
 		local p = mm:OpenFrame(600)
 		p:SetTitle("VIP")
@@ -233,9 +233,9 @@ ExclServer is created and constructed by Excl.]],"ESDefault",640-20*2),p)
 		lblVIPHelp:Dock(TOP)
 		lblVIPHelp:DockMargin(15,15,15,0)
 		lblVIPHelp:SizeToContents()
-		local lblVIPInfo = Label([[VIP is divided into three tiers bronze, silver, gold and carebear. Each tier has its own benefits. 
-			The higher your VIP tier, the more benefits you will receive. The current gamemode may also have 
-			certain VIP features implemented. Becoming VIP is a way to both support the server you are 
+		local lblVIPInfo = Label([[VIP is divided into three tiers bronze, silver, gold and carebear. Each tier has its own benefits.
+			The higher your VIP tier, the more benefits you will receive. The current gamemode may also have
+			certain VIP features implemented. Becoming VIP is a way to both support the server you are
 			currently playing on, and get yourself access to	features that are not accessible by non-VIP players.]],p)
 		lblVIPInfo:SetFont("ESDefault")
 		lblVIPInfo:SizeToContents()
@@ -257,7 +257,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		lblVIPInfo:DockMargin(15,15,15,15)
 		lblVIPInfo:SetColor(Color(255,255,255,200))
 
-		local curtier = LocalPlayer():ESGetVIPTier()	
+		local curtier = LocalPlayer():ESGetVIPTier()
 		local tbl = vgui.Create("ES.MMVIPTable",p)
 		tbl:Dock(TOP)
 		tbl:DockMargin(15,15,15,15)
@@ -353,29 +353,12 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		local p = mm:OpenFrame(640)
 		p:SetTitle("Achievements")
 
-		local stat = p:Add("esMMPanel")
-		stat:SetSize(p:GetWide()-30,60)
-		stat:SetPos(15,15)
-		stat:SetColor(ES.GetColorScheme(3))
-
-		local cnt = 0
-		for k,v in pairs(ES.Achievements)do
-			if LocalPlayer():ESHasCompletedAchievement(k) then
-				cnt = cnt+1
-			end
-		end
-		local lbl = Label(cnt.." / "..table.Count(ES.Achievements).." Unlocked",stat)
-		lbl:SetFont("ES.MainMenu.MainElementInfoBnns")
-		lbl:SizeToContents()
-		lbl:SetPos(12,12)
-		lbl:SetColor(COLOR_WHITE)
-
 		local context = p:Add("Panel")
-		context:SetSize(p:GetWide()-30,p:GetTall() - (stat:GetTall() + 15 + stat.y + 15))
-		context:SetPos(15,stat:GetTall() + 15 + stat.y)
+		context:SetSize(p:GetWide()-20,p:GetTall()-20);
+		context:SetPos(10,10);
 		local y = 0
 		for k,v in pairs(ES.Achievements)do
-			local ach = context:Add("esMMPanel")
+			local ach = context:Add("esPanel")
 			ach:SetPos(0,y)
 			ach:SetSize(context:GetWide()-15-2,110)
 
@@ -390,7 +373,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			lb2:SizeToContents()
 			lb2:SetColor(COLOR_WHITE)
 
-			local lbl = Label(v.hidden and !LocalPlayer():ESHasCompletedAchievement(k) and "<secret>" or ES.FormatLine(v.descr,"ESDefault",ach:GetWide() - 80 - 4 - 4) or "Unknown",ach)
+			local lbl = Label(v.hidden and not LocalPlayer():ESHasCompletedAchievement(k) and "<secret>" or ES.FormatLine(v.descr,"ESDefault",ach:GetWide() - 80 - 4 - 4) or "Unknown",ach)
 			lbl:SetFont("ESDefault")
 			lbl:SizeToContents()
 			lbl:SetPos(lb2.x+2,lb2.y + lb2:GetTall()+3)
@@ -403,21 +386,19 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			dr.Paint = function(self,w,h)
 				draw.RoundedBox(2,0,0,w,h,COLOR_BLACK)
 
-				--[[if (LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0) > 0 then
-					draw.RoundedBox(2,1,1,(w-2)*((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0)/ES.Achievements[v.id].progressNeeded),h-2,a)
+				if (LocalPlayer()._es_achievements and LocalPlayer()._es_achievements[v.id] or 0) > 0 then
+					draw.RoundedBox(2,1,1,(w-2)*((LocalPlayer()._es_achievements and LocalPlayer()._es_achievements[v.id] or 0)/ES.Achievements[v.id].progressNeeded),h-2,a)
 				end
-				draw.SimpleText((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold.Shadow",w/2,h/2,COLOR_BLACK,1,1)
-				--draw.SimpleText(p.excl.achievements[id].." / "..ES.Achievements[id].progressNeeded,"ESDefaultBold",w/2 +1,h/2 +1,COLOR_BLACK,1,1)
-				draw.SimpleText((LocalPlayer().excl.achievements and LocalPlayer().excl.achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1)]]
+				draw.SimpleText((LocalPlayer()._es_achievements and LocalPlayer()._es_achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold.Shadow",w/2,h/2,COLOR_BLACK,1,1)
+				draw.SimpleText((LocalPlayer()._es_achievements and LocalPlayer()._es_achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1)
 			end
 
 			y = y + ach:GetTall() + 1
 		end
 
 		local scr = context:Add("esScrollbar")
-		scr:SetPos(context:GetWide()-15,0)
-		scr:SetSize(15,context:GetTall())
-		scr:SetUp()
+		scr:SetTall(context:GetTall()-8);
+		scr:Setup()
 	end)
 	mm:AddButton("Server list",Material("icon16/server.png"),function()
 		mm:CloseChoisePanel()
@@ -432,7 +413,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			local c = 0
 			for k,v in pairs(cbcservers)do
 				if k > (page-1)*perPage and k <= page*perPage then
-					
+
 					local row = vgui.Create("esMMServerRow",p)
 					row:SetSize(p:GetWide()-30,130)
 					row:SetPos(15,15 + c*(130+10))
@@ -465,11 +446,11 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 
 				buildServers()
 
-				lblPage:SetText(page.."/"..math.ceil(#cbcservers/perPage))				
+				lblPage:SetText(page.."/"..math.ceil(#cbcservers/perPage))
 			end,
 			function()end
 		)
-		
+
 		lblPage:SetColor(COLOR_WHITE)
 		lblPage:SetFont("ESDefaultBold")
 		lblPage:SizeToContents()
@@ -484,19 +465,19 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 
 					buildServers()
 
-					
+
 					lblPage:SetText(page.."/"..math.ceil(#cbcservers/perPage))
 				end
 				butPrev.Paint = function(self,w,h)
 					if not self.Mat then return end
-					
+
 					surface.SetMaterial(self.Mat)
 					if page-1 < 0 then
 						surface.SetDrawColor(Color(150,150,150))
 					else
 						surface.SetDrawColor(COLOR_WHITE)
 					end
-					
+
 					surface.DrawTexturedRectRotated(w/2,w/2,w,w,180)
 
 				end
@@ -506,8 +487,8 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 				butNext:SetPos(butPrev.x+32+10,butPrev.y)
 				butNext.DoClick = function(self)
 					page = page + 1
-					if page > math.ceil(#cbcservers/perPage) then 
-						page = math.ceil(#cbcservers/perPage) 
+					if page > math.ceil(#cbcservers/perPage) then
+						page = math.ceil(#cbcservers/perPage)
 						return
 					end
 
@@ -517,7 +498,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 				end
 				butNext.Paint = function(self,w,h)
 					if not self.Mat then return end
-					
+
 					surface.SetMaterial(self.Mat)
 					--if !models[page+1] then
 					--	surface.SetDrawColor(Color(150,150,150))
@@ -542,10 +523,10 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		local tickskip = 0
 		local oldAll
 		function context:Think()
-			if not self.rows then 
-				self.rows = {} 
+			if not self.rows then
+				self.rows = {}
 			end
-			
+
 				for k,v in pairs(player.GetAll())do
 					if not v.esMMPlayerRow or not IsValid(v.esMMPlayerRow) then
 						v.esMMPlayerRow = vgui.Create("esMMPlayerRow",self)
@@ -590,7 +571,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		end
 		butPrev.Paint = function(self,w,h)
 			if not self.Mat then return end
-						
+
 			surface.SetMaterial(self.Mat)
 			surface.SetDrawColor(COLOR_WHITE)
 			surface.DrawTexturedRectRotated(w/2,w/2,w,w,180)
@@ -608,7 +589,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		end
 		butNext.Paint = function(self,w,h)
 			if not self.Mat then return end
-						
+
 			surface.SetMaterial(self.Mat)
 			surface.SetDrawColor(COLOR_WHITE)
 			surface.DrawTexturedRectRotated(w/2,w/2,w,w,0)
@@ -623,7 +604,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			self:SetText("Page "..tostring(page+1).."/".. math.ceil( #player.GetAll() / (max*2) ) )
 			self:SizeToContents()
 		end
-	
+
 
 		local lblPl = Label("0 active players",p)
 		lblPl:SetFont("ESDefaultBold")

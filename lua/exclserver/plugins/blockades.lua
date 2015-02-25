@@ -10,7 +10,7 @@ if SERVER then
 	util.AddNetworkString("ESBlockEnd")
 	util.AddNetworkString("ESBlockConfirm")
 
-	hook.Add("ES.MySQLReady","ES.SpawnBlockades",function()
+	hook.Add("ESDatabaseReady","ES.SpawnBlockades",function()
 		ES.DBQuery("SELECT * FROM es_blockades WHERE mapname = '"..game.GetMap().."'",function(r) 
 			ES.DebugPrint("Attempting to spawn blockades")
 

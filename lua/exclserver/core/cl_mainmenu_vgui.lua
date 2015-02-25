@@ -4,30 +4,30 @@ local colTransBlack = Color(0,0,0,200)
 local colElementMainFoot = Color(213,213,213)
 local colElementChoise = Color(30,30,30)
 
-surface.CreateFont("ES.MainMenu.MainElementHeader",{
-	font = "Calibri",
+ES.CreateFont("ES.MainMenu.MainElementHeader",{
+	font = "Roboto",
 	weight = 400,
 	size = 48,
 })
-surface.CreateFont("ES.MainMenu.MainElementInfoBnns",{
-	font = "Calibri",
+ES.CreateFont("ES.MainMenu.MainElementInfoBnns",{
+	font = "Roboto",
 	weight = 400,
 	size = 38
 })
-surface.CreateFont("ES.MainMenu.MainElementInfoBnnsSmall",{
-	font = "Calibri",
-	weight = 700,
+ES.CreateFont("ES.MainMenu.MainElementInfoBnnsSmall",{
+	font = "Roboto",
+	weight = 400,
 	size = 17
 })
-surface.CreateFont("ES.MainMenu.ChoiseElement",{
-	font = "Calibri",
-	weight = 700,
+ES.CreateFont("ES.MainMenu.ChoiseElement",{
+	font = "Roboto",
+	weight = 400,
 	size = 14,
 })
-surface.CreateFont("ES.MainMenu.ChoiseElementSub",{
-	font = "Calibri",
-	weight = 700,
-	size = 14,
+ES.CreateFont("ES.MainMenu.ChoiseElementSub",{
+	font = "Roboto",
+	weight = 400,
+	size = 12,
 })
 
 local PNL = {}
@@ -45,7 +45,7 @@ function PNL:Init()
 	end
 	self.rm.Paint = function(self,w,h)
 		if not self.Mat then return end
-		
+
 		surface.SetMaterial(self.Mat)
 		surface.SetDrawColor(ES.Color.White)
 		surface.DrawTexturedRectRotated(w/2,w/2,w,w,180)
@@ -68,13 +68,13 @@ function PNL:Init()
 end
 function PNL:OpenFrame(w,h)
 	if self.ActiveFrame and IsValid(self.ActiveFrame) then self.ActiveFrame:Remove() end
-	
+
 	self.ActiveFrame = self:Add("ES.MainMenu.Frame")
 	local width_max = (self:GetWide()-(256+10+64+10+10))
-	if not w or w > width_max then 
+	if not w or w > width_max then
 		w = width_max
 	end
-	
+
 	self.ActiveFrame:SetSize(w,h and h+70 or (self:GetTall()-20))
 	self.ActiveFrame.y = 10
 	self.ActiveFrame.x = self:GetWide()
@@ -149,13 +149,13 @@ function PNL:Paint(w,h)
 	Derma_DrawBackgroundBlur(self,self.TimeCreate)
 
 	-- THE CHOISE ELEMENT
-	
+
 	if self.ElementChoiseEnabled then
 		render.PushFilterMag( TEXFILTER.ANISOTROPIC )
 		render.PushFilterMin( TEXFILTER.ANISOTROPIC )
 
 		local x,y
-		
+
 		for k,v in pairs(self.ElementChoiseElements)do
 			if not v.wait then
 				v.wait = CurTime()+(k-1)*.1
@@ -169,7 +169,7 @@ function PNL:Paint(w,h)
 			cam.Start2D()
 
 			if not v.scale then v.scale=0 end
-			
+
 			v.Matrix=Matrix()
 			v.Matrix:SetTranslation(Vector(32-v.scale*32,32-v.scale*32,0))
 			v.Matrix:Scale( Vector(v.scale,v.scale,0) )
@@ -192,7 +192,7 @@ function PNL:Paint(w,h)
 				surface.DrawRect(1,h-2,w-2,1)
 				surface.DrawRect(1,2,1,h-4)
 				surface.DrawRect(w-2,2,1,h-4)
-				
+
 				surface.SetMaterial(v.icon)
 
 				surface.SetDrawColor(ES.Color.Black)
@@ -269,15 +269,15 @@ vgui.Register("ESMainMenu",PNL,"EditablePanel")
 
 --### MAIN ELEMENT BUTTON
 
-surface.CreateFont("ES.MainMenu.MainElementButtonShad",{
-	font = "Calibri",
-	size = 16,
+ES.CreateFont("ES.MainMenu.MainElementButtonShad",{
+	font = "Roboto",
+	size = 14,
 	weight = 700,
 	blursize=2,
 })
-surface.CreateFont("ES.MainMenu.MainElementButton",{
-	font = "Calibri",
-	size = 16,
+ES.CreateFont("ES.MainMenu.MainElementButton",{
+	font = "Roboto",
+	size = 14,
 	weight = 700,
 })
 local PNL = {}
@@ -330,10 +330,10 @@ end
 vgui.Register("ES.MainMenu.NavigationItem",PNL,"Panel")
 
 
-surface.CreateFont("ES.MainMenu.FrameHead",{
-	font = "Calibri",
+ES.CreateFont("ES.MainMenu.FrameHead",{
+	font = "Roboto",
 	size = 48,
-	weight = 300,
+	weight = 900,
 })
 local PNL = {}
 function PNL:Init()
@@ -419,7 +419,7 @@ function PNL:Init()
 	self.LblRank:SetFont("ESDefault")
 	self.LblSteam = self:Add("esLabel")
 	self.LblSteam:SetFont("ESDefault")
-	
+
 	self.mic = false
 	self.recordWaveForm = {}
 end
@@ -548,13 +548,13 @@ end
 vgui.Register("esMMPlayerRow",PNL,"Panel")
 
 --### SERVER ROW
-surface.CreateFont("esMMServerRowBoldSmall",{
+ES.CreateFont("esMMServerRowBoldSmall",{
 	font="Arial Narrow",
 	weight = 500,
 	size = 12,
 	italic = true
 })
-surface.CreateFont("esMMServerRowBold",{
+ES.CreateFont("esMMServerRowBold",{
 	font="Arial Narrow",
 	weight = 500,
 	size = 32
@@ -628,7 +628,7 @@ function PNL:PerformLayout()
 	self.btnConnect:SetPos(self.btnCopy.x + self.btnCopy:GetWide() + 10,self.btnCopy.y)
 	self.btnConnect:SetSize((self:GetWide() - 10 - 130 - 10 - 10)/2 ,22)
 	self.btnConnect.Text = "Connect"
-	if self.players == self.maxplayers then 
+	if self.players == self.maxplayers then
 		self.btnConnect.Evil = true
 		self.btnConnect.Text = "Connect (full)"
 	end
@@ -644,7 +644,7 @@ end
 function PNL:Paint(w,h)
 	surface.SetDrawColor(ES.Color.Black)
 	surface.DrawRect(0,0,w,h)
-	
+
 	surface.SetDrawColor(Color(40,40,40))
 	surface.SetMaterial( texGradient)
 	surface.DrawTexturedRect(1,1,w-2,h-2)
@@ -652,12 +652,12 @@ end
 vgui.Register("esMMServerRow",PNL,"Panel")
 
 --### MUSIC PLAYER
-surface.CreateFont("esMMPlayButton",{
+ES.CreateFont("esMMPlayButton",{
 	font = "Arial",
 	size = 120,
 	weight = 700
 })
-surface.CreateFont("esMMSongTitle",{
+ES.CreateFont("esMMSongTitle",{
 	font = "Arial",
 	size = 34,
 	weight = 700
@@ -686,8 +686,8 @@ vgui.Register("esMMMusicPlayer",{
 
 vgui.Register("esMMPanel",{
 	Paint = function(self,w,h)
-		surface.SetDrawColor(self.color) 
-		surface.DrawRect(0,0,w,h) 
+		surface.SetDrawColor(self.color)
+		surface.DrawRect(0,0,w,h)
 
 		surface.SetDrawColor(Color(0,0,0,150))
 		surface.DrawRect(0,0,w,1)
@@ -702,4 +702,3 @@ vgui.Register("esMMPanel",{
 		self.color = colMainElementBg
 	end
 },"Panel")
-

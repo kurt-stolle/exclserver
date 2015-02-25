@@ -3,12 +3,17 @@ local PNL= {
 	Paint = function(self,w,h)
 		draw.RoundedBox(2,0,0,w,h,self.color)
 
-		surface.SetDrawColor(ES.Color["#00000022"])
+		surface.SetDrawColor(Color(0,0,0,self.color.a))
 		surface.DrawRect(0,0,w,1)
 		surface.DrawRect(0,h-1,w,1)
 		surface.DrawRect(0,1,1,h-2)
 		surface.DrawRect(w-1,1,1,h-2)
 
+	end,
+	SetAutoScroll=function(self,b)
+		if IsValid(self.scrollbar) then
+				self.scrollbar:SetAutoScroll(b);
+		end
 	end,
 	AddScrollbar=function(self)
 		self.scrollbar=vgui.Create( "esScrollbar", self );

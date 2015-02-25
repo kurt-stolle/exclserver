@@ -80,7 +80,7 @@ net.Receive("exclNoVMuP",function()
 	local v = net.ReadString()
 	if not IsValid(p) then return end
 	
-	ES.ChatAddText("accessdenied",Color(255,255,255),
+	chat.AddText("accessdenied",Color(255,255,255),
 	exclFixCaps(p:ESGetRank().name).." ",
 	Color(102,255,51),p:Nick(),
 	Color(255,255,255),
@@ -100,15 +100,15 @@ net.Receive("exclVMuP",function()
 	
 	if mute then
 		if r and r ~= "" and r ~= " " then
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
+			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
 		else
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,ES.Color.White,".")
+			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,ES.Color.White,".")
 		end
 	else
 		if r and r ~= "" and r ~= " " then
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
+			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
 		else
-			ES.ChatAddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,ES.Color.White,".")
+			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,ES.Color.White,".")
 		end
 	end
 	chat.PlaySound()

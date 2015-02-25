@@ -12,21 +12,21 @@ local apology = [[There appears to be a problem with your connection to the serv
 This can be caused by two things, your connection to the internet or the server's connection to the internet is experiencing problems.
 ]]
 
-surface.CreateFont("ESConnectionProblem",{
+ES.CreateFont("ESConnectionProblem",{
 	font = "Arial Narrow",
 	size = 52,
 })
-surface.CreateFont("ESConnectionAlternatives",{
+ES.CreateFont("ESConnectionAlternatives",{
 	font = "Arial Narrow",
 	size = 32
 })
-surface.CreateFont("ESConnectionAlternativesName",{
+ES.CreateFont("ESConnectionAlternativesName",{
 	font = "Arial",
 	size = 20,
 	weight = 700,
 })
 
-surface.CreateFont("ESConnectionCloseRetry",{
+ES.CreateFont("ESConnectionCloseRetry",{
 	font = "Arial Narrow",
 	size = 24,
 	weight = 500,

@@ -30,12 +30,12 @@ end)
 concommand.Add("excl",function(p,c,a)
 	if p.esNextCmd and p.esNextCmd > CurTime() then return end
 	p.esNextCmd = CurTime()+.5
-	
+
 	c = a[1]
 
-	if not ES.Commands or not ES.Commands[c] then 
+	if not ES.Commands or not ES.Commands[c] then
 		ES.DebugPrint(p:Nick().." attempted to run invalid command "..c)
-		return 
+		return
 	end
 	if ES.Commands[c] then
 		if ES.Commands[c].power and (ES.Commands[c].power > 0 and !p:ESHasPower(ES.Commands[c].power)) then
@@ -80,7 +80,7 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 			local c = string.lower(t[1])
 			if ES.Commands and ES.Commands[c] then
 				if ES.Commands[c].power and (ES.Commands[c].power > 0 and !p:ESHasPower(ES.Commands[c].power)) then
-					p:ESSendNotificationPopup("Error","You do not have the required authorization level for this command.\nAre you sure '"..c.."' is the command you want to run?\n\nYour current rank is: "..ply:ESGetRank():GetPrettyName())
+					p:ESSendNotificationPopup("Error","You do not have the required authorization level for this command.\nAre you sure '"..c.."' is the command you want to run?\n\nYour current rank is: "..p:ESGetRank():GetPrettyName())
 					return false
 				end
 				table.remove(t,1)
