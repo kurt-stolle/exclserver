@@ -22,7 +22,7 @@ if SERVER then
 		if p:ESGetVIPTier() < 2 then p:ChatPrint("You need at least Silver VIP to start a vote kick.") return end
 		if not a[2] then p:ChatPrint("You must specify a reason.") return end
 
-		local vic = exclPlayerByName(a[1])
+		local vic = ES.GetPlayerByName(a[1])
 		if not vic then p:ChatPrint("No target found with the specified name") return end
 		vic = vic[1]
 		if not vic or not IsValid(vic) then p:ChatPrint("No target found with the specified name") return end
@@ -58,7 +58,7 @@ if SERVER then
 			if count > #player.GetAll()/2 then
 				p:ESChatPrint("server",COLOR_WHITE,"The vote kick succeeded, ",Color(102,255,51),p:Nick(),COLOR_WHITE," has been kicked and banned for 30 minutes.")
 				if IsValid(voteKickPlayer) then
-					exclDropUser(voteKickPlayer:UserID(),"Voted off the server.")
+					ES.DropUser(voteKickPlayer:UserID(),"Voted off the server.")
 				end
 				ES.AddBan(voteKickPlayerID,"EXCLSERVER",30,false,"Voted off the server",IsValid(voteKickPlayer) and voteKickPlayer:Nick() or voteKickPlayer:SteamID(),"EXCLSERVER")
 			else

@@ -5,23 +5,23 @@ function ES.RGBToHex(color)
 	local hexadecimal="#"
 	for key, value in ipairs(tab) do
 		local hex = ''
- 
+
 		while(value > 0)do
 			local index = math.fmod(value, 16) + 1
 			value = math.floor(value / 16)
-			hex = string.sub('0123456789ABCDEF', index, index) .. hex			
+			hex = string.sub('0123456789ABCDEF', index, index) .. hex
 		end
- 
+
 		if(string.len(hex) == 0)then
 			hex = '00'
- 
+
 		elseif(string.len(hex) == 1)then
 			hex = '0' .. hex
 		end
- 
+
 		hexadecimal = hexadecimal .. hex
 	end
- 
+
 	return hexadecimal
 end
 function ES.HexToRGB(key)
@@ -73,35 +73,38 @@ ES.Color.Grey 	 	= ES.Color["#9e9e9e"]
 ES.Color.BlueGrey 	= ES.Color["#607d8b"]
 
 -- Allow users to customize
-local firstColor = Color(20,160,160)
-local secondColor = Color(60,140,140)
-local thirdColor = Color(60,80,80)
-hook.Add("InitPostEntity","esLoadPlayerCustomizations",function()
-	if file.Read("es_color_customization.txt","DATA") then
-		for k,v in pairs(util.JSONToTable(file.Read("es_color_customization.txt","DATA")))do
-			ES.PushColorScheme(v.first,v.second,v.third)
-		end 
-	end
-end)
-function ES.SaveColorScheme()
+local firstColor = Color(20,165,180)
+local secondColor = Color(24,135,150)
+local thirdColor = Color(28,105,120)
 
+function ES.SaveColorScheme()
+	if not file.IsDir("exclserver","DATA") then
+		file.CreateDir("exclserver")
+	end
+
+	file.Write("exclserver/colors.txt",util.TableToJSON{first=firstColor,second=secondColor,third=thirdColor});
 end
 function ES.GetColorScheme(n)
-	if n and n == 1 then
-		return firstColor
-	elseif n and n == 2 then
-		return secondColor
-	elseif n and n == 3 then
-		return thirdColor
+	if type(n) == "number" then
+		if n == 1 then
+			return firstColor
+		elseif n == 2 then
+			return secondColor
+		elseif n == 3 then
+			return thirdColor
+		end
 	end
 
 	return firstColor, secondColor, thirdColor
 end
 function ES.PushColorScheme(f,s,t)
-	if not f or not s or not t then -- reset
-		firstColor = Color(20,160,160)
-		secondColor = Color(60,140,140)
-		thirdColor = Color(60,80,80)
+	if not f or not s or not t then
+		ES.DebugPrint("Color scheme has been reset.");
+
+		firstColor = Color(20,165,180)
+		secondColor = Color(24,135,150)
+		thirdColor = Color(28,105,120)
+		
 		return
 	end
 
@@ -114,4 +117,10 @@ function ES.PushColorScheme(f,s,t)
 	thirdColor.r = t.r
 	thirdColor.g = t.g
 	thirdColor.b = t.b
+end
+
+
+if file.Exists("exclserver/colors.txt","DATA") then
+	local v=util.JSONToTable(file.Read("exclserver/colors.txt","DATA"));
+	ES.PushColorScheme(v.first,v.second,v.third)
 end

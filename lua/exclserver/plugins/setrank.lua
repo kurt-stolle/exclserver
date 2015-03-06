@@ -11,7 +11,7 @@ if SERVER then
 
 	PLUGIN:AddCommand("rank",function(p,a)
 		if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
-		local vTbl = exclPlayerByName(a[1])
+		local vTbl = ES.GetPlayerByName(a[1])
 		if not vTbl or #vTbl > 1 then net.Start("exclSetRankOnlyOne") net.Send(p) return end
 		
 		local r = a[2]

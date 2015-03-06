@@ -126,67 +126,82 @@ ExclServer is created and constructed by Excl.]],"ESDefault",640-20*2),p)
 				addCheckbox(p,"Bind ExclServer to F6","es_bind_to_f6",function() end)
 			end},
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Colors",func = function()
-				local p = mm:OpenFrame(15+256+15+256+15)
+				local p = mm:OpenFrame(10+256+10+256+10)
 				p:SetTitle("Colors")
-
-				local l = Label("Color scheme",p)
-				l:SetFont("ES.MainMenu.HeadingText")
-				l:SetPos(15,15)
-				l:SizeToContents()
-				l:SetColor(COLOR_WHITE)
-
-				local f,s,t = ES.GetColorScheme()
 
 				local firstCube = p:Add("DColorMixer")
 				local secondCube = p:Add("DColorMixer")
 				local thirdCube = p:Add("DColorMixer")
 
-				firstCube:SetPos(15,l.y+l:GetTall()+10)
+				local ignore=true
+
+				firstCube:SetPos(10,10)
 				firstCube:SetSize(256,200)
 				firstCube:SetLabel("Primary Color")
 				firstCube.label:SetFont("ESDefaultBold")
 				firstCube.label:SetColor(ES.Color.White)
-				firstCube:SetColor(f)
+				firstCube:SetColor(ES.GetColorScheme(1))
 				function firstCube:ValueChanged()
+					if ignore then return end
+
 					ES.PushColorScheme(firstCube:GetColor(),secondCube:GetColor(),thirdCube:GetColor())
+					ES.SaveColorScheme()
 				end
 
 
-				secondCube:SetPos(15,firstCube.y+firstCube:GetTall()+10)
+				secondCube:SetPos(10,firstCube.y+firstCube:GetTall()+10)
 				secondCube:SetSize(256,200)
 				secondCube:SetLabel("Secondary Color")
 				secondCube.label:SetFont("ESDefaultBold")
 				secondCube.label:SetColor(ES.Color.White)
-				secondCube:SetColor(s)
+				secondCube:SetColor(ES.GetColorScheme(2))
 				function secondCube:ValueChanged()
+					if ignore then return end
+
 					ES.PushColorScheme(firstCube:GetColor(),secondCube:GetColor(),thirdCube:GetColor())
+					ES.SaveColorScheme()
 				end
 
-				thirdCube:SetPos(15+256+15,l.y+l:GetTall()+10)
+				thirdCube:SetPos(10+256+10,10)
 				thirdCube:SetSize(256,200)
 				thirdCube:SetLabel("Third Color")
 				thirdCube.label:SetFont("ESDefaultBold")
 				thirdCube.label:SetColor(ES.Color.White)
-				thirdCube:SetColor(t)
+				thirdCube:SetColor(ES.GetColorScheme(3))
 				function thirdCube:ValueChanged()
+					if ignore then return end
+
 					ES.PushColorScheme(firstCube:GetColor(),secondCube:GetColor(),thirdCube:GetColor())
+					ES.SaveColorScheme()
 				end
 
 				local b = vgui.Create("esButton",p)
-				b:SetSize(p:GetWide()-15*2,30)
-				b:SetPos(15,p:GetTall()-15-30)
+				b:SetSize(p:GetWide()-10*2,30)
+				b:SetPos(10,p:GetTall()-30-10)
 				b:SetText("Reset")
 				b.DoClick = function()
 					ES.PushColorScheme()
-					f,s,t = ES.GetColorScheme()
-					firstCube:SetColor(f)
-					secondCube:SetColor(s)
-					thirdCube:SetColor(t)
 
-					ES.SaveColorScheme()
+					local f,s,t = ES.GetColorScheme()
+
+					ignore=true
+
+					timer.Simple(0,function()
+						firstCube:SetColor(f)
+						timer.Simple(0,function()
+							secondCube:SetColor(s)
+							timer.Simple(0,function()
+								thirdCube:SetColor(t)
+								ES.SaveColorScheme()
+								ignore=false
+							end)
+						end)
+					end)
 
 					ES.NotifyPopup("Success","The ExclServer color scheme has been reset.")
 				end
+
+				ignore=false
 
 			end},
 		})
@@ -350,12 +365,12 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 	mm:AddWhitespace()
 	mm:AddButton("Achievements",Material("icon16/rosette.png"),function()
 		mm:CloseChoisePanel()
-		local p = mm:OpenFrame(640)
+		local p = mm:OpenFrame(500)
 		p:SetTitle("Achievements")
 
 		local context = p:Add("Panel")
-		context:SetSize(p:GetWide()-20,p:GetTall()-20);
-		context:SetPos(10,10);
+		context:SetSize(p:GetWide()-30,p:GetTall()-30);
+		context:SetPos(15,15);
 		local y = 0
 		for k,v in pairs(ES.Achievements)do
 			local ach = context:Add("esPanel")
@@ -393,7 +408,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 				draw.SimpleText((LocalPlayer()._es_achievements and LocalPlayer()._es_achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1)
 			end
 
-			y = y + ach:GetTall() + 1
+			y = y + ach:GetTall() + 15
 		end
 
 		local scr = context:Add("esScrollbar")
@@ -401,113 +416,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		scr:Setup()
 	end)
 	mm:AddButton("Server list",Material("icon16/server.png"),function()
-		mm:CloseChoisePanel()
-		local p = mm:OpenFrame(640)
-		p:SetTitle("Servers")
-		local page = 1
-		local cbcservers = {}
-		local perPage = 4
-		local pnls = {}
-		local function buildServers()
-			for k,v in pairs(pnls)do if v and IsValid(v) then v:Remove() end end
-			local c = 0
-			for k,v in pairs(cbcservers)do
-				if k > (page-1)*perPage and k <= page*perPage then
-
-					local row = vgui.Create("esMMServerRow",p)
-					row:SetSize(p:GetWide()-30,130)
-					row:SetPos(15,15 + c*(130+10))
-					row.name = v.name
-					row.ip = v.ip
-					row.mapname = v.mapname
-					row.password = v.password
-					row.players = v.players
-					row.maxplayers = v.maxplayers
-					row.mapicon = v.mapicon
-
-					c=c+1
-					table.insert(pnls,1,row)
-				end
-			end
-		end
-
-		local lblPage = Label("Page 1/1",p)
-		http.Fetch("http://casualbananas.com/forums/inc/servers/cache/servers.gmod.json.php",
-			function(rtrn)
-				if !IsValid(p) then return end
-
-				cbcservers = util.JSONToTable(rtrn)
-				perPage = 0
-				local tall = 15+15+34+15+128
-				while tall < p:GetTall() do
-					perPage = perPage+1
-					tall = tall + 138
-				end
-
-				buildServers()
-
-				lblPage:SetText(page.."/"..math.ceil(#cbcservers/perPage))
-			end,
-			function()end
-		)
-
-		lblPage:SetColor(COLOR_WHITE)
-		lblPage:SetFont("ESDefaultBold")
-		lblPage:SizeToContents()
-		lblPage:SetPos(15+32+10+32+15,p:GetTall()-15-25)
-		local butPrev = vgui.Create("esIconButton",p)
-				butPrev:SetIcon(Material("exclserver/mmarrowicon.png"))
-				butPrev:SetSize(32,32)
-				butPrev:SetPos(15,p:GetTall()-15-32)
-				butPrev.DoClick = function(self)
-					page = page - 1
-					if page < 0 then page = 1 return end
-
-					buildServers()
-
-
-					lblPage:SetText(page.."/"..math.ceil(#cbcservers/perPage))
-				end
-				butPrev.Paint = function(self,w,h)
-					if not self.Mat then return end
-
-					surface.SetMaterial(self.Mat)
-					if page-1 < 0 then
-						surface.SetDrawColor(Color(150,150,150))
-					else
-						surface.SetDrawColor(COLOR_WHITE)
-					end
-
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,180)
-
-				end
-			local butNext = vgui.Create("esIconButton",p)
-				butNext:SetIcon(Material("exclserver/mmarrowicon.png"))
-				butNext:SetSize(32,32)
-				butNext:SetPos(butPrev.x+32+10,butPrev.y)
-				butNext.DoClick = function(self)
-					page = page + 1
-					if page > math.ceil(#cbcservers/perPage) then
-						page = math.ceil(#cbcservers/perPage)
-						return
-					end
-
-					buildServers()
-
-					lblPage:SetText(page.."/"..math.ceil(#cbcservers/perPage))
-				end
-				butNext.Paint = function(self,w,h)
-					if not self.Mat then return end
-
-					surface.SetMaterial(self.Mat)
-					--if !models[page+1] then
-					--	surface.SetDrawColor(Color(150,150,150))
-					--else
-						surface.SetDrawColor(COLOR_WHITE)
-					--end
-					surface.DrawTexturedRectRotated(w/2,w/2,w,w,0)
-
-				end
+		ES._MMGenerateServerList(mm)
 	end)
 	mm:AddButton("Player list",Material("icon16/user.png"),function()
 		mm:CloseChoisePanel()

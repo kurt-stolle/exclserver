@@ -23,13 +23,13 @@ hook.Add("PostPlayerDraw", "ESPostPlayerDraw", function(p)
 			mtr:Scale(scale)
 			item:EnableMatrix("RenderMultiply", mtr)
 			item:SetColor(color or COLOR_WHITE)
-		
+
 			drawpos, drawang = p:GetBonePosition(bone)
-			
+
 			drawpos = drawpos + (drawang:Up() * 			pos.z)
 			drawpos = drawpos +	(drawang:Forward() * 		pos.y)
 			drawpos = drawpos + (drawang:Right() * 			pos.x)
-			
+
 			drawang:RotateAroundAxis( drawang:Forward(), 	ang.p)
 			drawang:RotateAroundAxis( drawang:Up(), 		ang.y)
 			drawang:RotateAroundAxis( drawang:Right(), 		ang.r)
@@ -64,14 +64,14 @@ function ES.TauntCamera()
 
     local InLerp                = 0
     local OutLerp                = 1
-    
+
     CAM.ShouldDrawLocalPlayer = function( self, ply, on )
 
         return on || OutLerp < 1
 
     end
     CAM.CalcView = function( self, view, ply, on )
-            
+
         if ( !ply:Alive() ) then on = false end
 
         if ( WasOn ~= on ) then
@@ -83,12 +83,12 @@ function ES.TauntCamera()
 
         end
 
-        if ( !on && OutLerp >= 1 ) then 
+        if ( !on && OutLerp >= 1 ) then
 
             CustomAngles = view.angles * 1
             PlayerLockAngles = nil
             InLerp = 0
-            return 
+            return
 
         end
 
@@ -98,7 +98,7 @@ function ES.TauntCamera()
         trace.start = view.origin
 		trace.endpos = view.origin - CustomAngles:Forward() * 128
 		trace.filter = player.GetAll()
-		
+
 	    trace = util.TraceLine(trace)
         local TargetOrigin = trace.HitPos + trace.HitNormal*2
 
@@ -126,7 +126,7 @@ function ES.TauntCamera()
 
     end
     CAM.CreateMove = function( self, cmd, ply, on )
-            
+
         if ( !ply:Alive() ) then on = false end
         if ( !on ) then return end
 
@@ -146,11 +146,11 @@ function ES.TauntCamera()
         cmd:SetViewAngles( PlayerLockAngles )
         cmd:ClearButtons()
         cmd:ClearMovement()
-        
+
         return true
 
     end
-        
+
     return CAM
 end
 

@@ -1,19 +1,38 @@
 -- cl_chat.lua
 
+ES.CreateFont("ESChatFont.Shadow",{
+	font="Roboto",
+	size=19,
+	weight=500,
+	blursize=2
+})
 ES.CreateFont("ESChatFont",{
 	font="Roboto",
-	size=18,
-	weight=400
+	size=19,
+	weight=500
+})
+ES.CreateFont("ESChatFont.Italic.Shadow",{
+	font="Roboto",
+	size=19,
+	weight=500,
+	italic=true,
+	blursize=2
 })
 ES.CreateFont("ESChatFont.Italic",{
 	font="Roboto",
-	size=18,
-	weight=400,
+	size=19,
+	weight=500,
 	italic=true
+})
+ES.CreateFont("ESChatFont.Bold.Shadow",{
+	font="Roboto",
+	size=19,
+	weight=700,
+	blursize=2
 })
 ES.CreateFont("ESChatFont.Bold",{
 	font="Roboto",
-	size=18,
+	size=19,
 	weight=700
 })
 
@@ -128,14 +147,14 @@ function chat.AddText(...)
 	base.activeColor=ES.Color.White
 
 	local margin=0;
-	MsgC(base.activeColor,os.date("[%dth %b %Y @ %H:%M] "));
+	MsgC(base.activeColor,os.date("[%d %b %Y @ %H:%M] "));
 	for k,v in ipairs(tab)do
 		if type(v) == "table" then
 			base.activeColor=v;
-			continue;
+			continue
 		end
 
-		--MsgC(base.activeColor,v);
+		MsgC(base.activeColor,v);
 
 		local panels={};
 		local startposEarliest,endposEarliest,expressionFound,noMatch;
@@ -163,7 +182,9 @@ function chat.AddText(...)
 				lbl:SetText(text);
 				lbl:SetColor(base.activeColor);
 				lbl:SetFont("ESChatFont");
+				lbl:SetShadow(2)
 				lbl:SizeToContents();
+				lbl:SetLineHeight(lineHeight);
 
 				table.insert(panels,lbl);
 			elseif startposEarliest and endposEarliest and expressionFound then
@@ -177,6 +198,7 @@ function chat.AddText(...)
 					lbl:SetColor(base.activeColor);
 					lbl:SetFont("ESChatFont");
 					lbl:SizeToContents();
+					lbl:SetShadow(2)
 
 					table.insert(panels,lbl);
 				end
@@ -210,3 +232,7 @@ hook.Add("Initialize","ES.CreateChatBox",function()
 	chatPanel:SetPos(10,ScrH()-chatPanel:GetTall()-110);
 	chatPanel:SetVisible(false);
 end);
+
+net.Receive("ES.ChatBroadcast",function()
+	chat.AddText(unpack(net.ReadTable()))
+end)

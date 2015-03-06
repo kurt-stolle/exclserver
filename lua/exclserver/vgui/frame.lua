@@ -13,16 +13,10 @@ local matrixTranslation = Vector(0, 0, 0)
 local matrix,x,y,width,height,rad
 
 local PANEL = {}
-ES.CreateFont( "ESFrameText", { 
-font = "Roboto", 
-size = 21,
-weight=400 } 
-)
-ES.CreateFont( "ESFrameTextShadow", { 
-font = "Roboto", 
-size = 21,
-weight=500,
-blursize=2 } 
+ES.CreateFont( "ESFrameText", {
+font = "Roboto",
+size = 20,
+weight=500 }
 )
 
 AccessorFunc(PANEL,"title","Title",FORCE_STRING)
@@ -57,7 +51,6 @@ function PANEL:Think()
 	if self.kill and self.scale <= 0.01 then
 		self:SetVisible(false)
 		self:oldRemove()
-		ES.DebugPrint("Closed ES Frame.")
 	end
 end
 function PANEL:Paint(w,h)
@@ -89,9 +82,9 @@ function PANEL:Paint(w,h)
 		matrix:SetTranslation( matrixTranslation )
 		matrixScale.x = self.scale
 		matrixScale.y = self.scale
-		matrix:Scale( matrixScale )	
+		matrix:Scale( matrixScale )
 	end
- 
+
 	-- push matrix
 	pushModelMatrix( matrix )
 

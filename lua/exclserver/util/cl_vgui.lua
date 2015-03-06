@@ -30,13 +30,13 @@ function ES.CreateFont(name,tab)
 	surface.CreateFont(name,tab);
 end
 
-ES.CreateFont( "ESDefaultSmall.Shadow", {
+ES.CreateFont( "ESDefault-.Shadow", {
 	font = "Roboto",
 	size = 12,
 	weight = 500,
 	blursize = 2
 })
-ES.CreateFont( "ESDefaultSmall", {
+ES.CreateFont( "ESDefault-", {
 	font = "Roboto",
 	size = 12,
 	weight = 500
@@ -63,9 +63,9 @@ ES.CreateFont( "ESDefaultBold.Shadow", {
 	weight = 700,
 	blursize = 2
 })
-ES.CreateFont( "ESDefaultBig", {
+ES.CreateFont( "ESDefault+", {
 	font = "Roboto",
-	size=27,
+	size=20,
 	weight=400
 })
 

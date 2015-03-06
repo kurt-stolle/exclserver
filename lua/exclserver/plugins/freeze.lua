@@ -8,82 +8,65 @@ PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
 PLUGIN()
 
-if SERVER then 
+if SERVER then
 	util.AddNetworkString("exclFP")
 	util.AddNetworkString("exclUFP")
 
 	PLUGIN:AddCommand("freeze",function(p,a)
-		if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
-		local vTbl = exclPlayerByName(a[1])
-		if not vTbl then return end
+		if type(a[1]) ~= "string" then
+			p:ESChatPrint("Invalid arguments passed to command <hl>freeze</hl>.")
+			return
+		end
+
+		local vTbl = ES.GetPlayerByName(a[1])
+		if not vTbl then
+		  p:ESChatPrint("No player matching <hl>"..a[1].."</hl> could be found. Try finding the player by SteamID.")
+		  return
+		end
+
 		local r
 		if a[2] and a[2] ~= "" then
-			r = table.concat(a," ",2)
+			r = ", reason: <hl>"..table.concat(a," ",2).."</hl>"
 		else
 			r = ""
 		end
+
 		for k,v in pairs(vTbl)do
-			if !v:ESIsImmuneTo(p) or v == p then 
-				v:Freeze(true)
-				net.Start("exclFP")
-				net.WriteEntity(p)
-				net.WriteString(v:Nick())
-				net.WriteString(r)
-				net.Broadcast()
-			else
-				ES.SendMessagePlayerTried(p,v:Nick(),"freeze")
-			end
-		end
-	end,10)
-	PLUGIN:AddCommand("unfreeze",function(p,a)
-		if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
-		local vTbl = exclPlayerByName(a[1])
-		if not vTbl then return end
-		local r
-		if a[2] and a[2] ~= "" then
-			r = table.concat(a," ",2)
-		else
-			r = ""
-		end
-		for k,v in pairs(vTbl)do
-			if !v:ESIsImmuneTo(p) or v == p then 
+			if not v:ESIsImmuneTo(p) then
 				v:Freeze(false)
-				net.Start("exclUFP")
-				net.WriteEntity(p)
-				net.WriteString(v:Nick())
-				net.WriteString(r)
-				net.Broadcast()
+				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> froze <hl>"..v:Nick().."</hl>"..r..".")
 			else
-				ES.SendMessagePlayerTried(p,v:Nick(),"unfreeze")
+				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> tried to freeze <hl>"..v:Nick().."</hl>"..r..".")
 			end
 		end
 	end,10)
-	
-	return 
+
+	PLUGIN:AddCommand("unfreeze",function(p,a)
+		if type(a[1]) ~= "string" then
+			p:ESChatPrint("Invalid arguments passed to command <hl>freeze</hl>.")
+			return
+		end
+
+		local vTbl = ES.GetPlayerByName(a[1])
+		if not vTbl then
+		  p:ESChatPrint("No player matching <hl>"..a[1].."</hl> could be found. Try finding the player by SteamID.")
+		  return
+		end
+
+		local r
+		if a[2] and a[2] ~= "" then
+			r = ", reason: <hl>"..table.concat(a," ",2).."</hl>"
+		else
+			r = ""
+		end
+
+		for k,v in pairs(vTbl)do
+			if not v:ESIsImmuneTo(p) then
+				v:Freeze(false)
+				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> unfroze <hl>"..v:Nick().."</hl>"..r..".")
+			else
+				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> tried to unfreeze <hl>"..v:Nick().."</hl>"..r..".")
+			end
+		end
+	end,10)
 end
-net.Receive("exclUFP",function()
-	local p = net.ReadEntity()
-	local v = net.ReadString()
-	local r = net.ReadString()
-	if not IsValid(p) then return end
-	
-	if r and r ~= "" and r ~= " " then
-		chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unfrozen ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
-	else
-		chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has unfrozen ",Color(102,255,51),v,ES.Color.White,".")
-	end
-	chat.PlaySound()
-end)
-net.Receive("exclFP",function()
-	local p = net.ReadEntity()
-	local v = net.ReadString()
-	local r = net.ReadString()
-	if not IsValid(p) then return end
-	
-	if r and r ~= "" and r ~= " " then
-		chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has frozen ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
-	else
-		chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has frozen ",Color(102,255,51),v,ES.Color.White,".")
-	end
-	chat.PlaySound()
-end)

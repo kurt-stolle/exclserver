@@ -49,8 +49,8 @@ if SERVER then
 	local function teleport(p,arg)
 		if not p or not IsValid(p) or not arg or not arg[2] then return end
 		
-		local a = exclPlayerByName(arg[1])
-		local b = exclPlayerByName(arg[2])
+		local a = ES.GetPlayerByName(arg[1])
+		local b = ES.GetPlayerByName(arg[2])
 
 		if !a or !b then return end
 		

@@ -10,8 +10,11 @@ if SERVER then
 
 	PLUGIN:AddCommand("respawn",function(p,a)
 		if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
-		local vTbl = exclPlayerByName(a[1])
-		if not vTbl then return end
+		local vTbl = ES.GetPlayerByName(a[1])
+		if not vTbl then
+  p:ESChatPrint("No player matching <hl>"..a[1].."</hl> could be found. Try finding the player by SteamID.")
+  return
+end
 		local r = ""
 		if table.concat(a," ",2) and table.concat(a," ",2) ~= "" then
 			r = table.concat(a," ",2)

@@ -50,7 +50,7 @@ function ES._MMGenerateShop(base,name,itemtype,tileVGUIName)
 
 		local lbl_name= pnl_preview:Add("esLabel")
 		lbl_name:SetText("No selection")
-		lbl_name:SetFont("ESDefaultBig")
+		lbl_name:SetFont("ESDefault+")
 		lbl_name:SizeToContents()
 		lbl_name:DockMargin(10,10,10,10)
 		lbl_name:SetColor(ES.Color.White)
@@ -108,7 +108,7 @@ function ES._MMGenerateShop(base,name,itemtype,tileVGUIName)
 		end
 
 		local lbl_page= pnl_nav:Add("esLabel")
-		lbl_page:SetFont("ESDefaultBig")
+		lbl_page:SetFont("ESDefault+")
 		lbl_page:SetColor(ES.Color.White)
 		lbl_page.Think = function(self)
 			lbl_page:SetText("Page "..(tostring(page)).."/"..(tostring(pageMax)))

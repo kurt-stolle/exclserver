@@ -19,7 +19,7 @@ if SERVER then
 
 		if not user or not time or not reason or time < 0 then return end
 
-		local userFound = exclPlayerByName(user)
+		local userFound = ES.GetPlayerByName(user)
 		if userFound and userFound[1] and #userFound == 1 then
 			user = userFound[1]
 			if user:ESIsImmuneTo(p) then
@@ -36,7 +36,7 @@ if SERVER then
 			net.WriteString(reason or "No reason given.")
 			net.Broadcast()
 
-			exclDropUser(user:UserID(), "You were globally banned! \""..reason.."\", Your ban will expire in "..time.." minutes.")
+			ES.DropUser(user:UserID(), "You were globally banned! \""..reason.."\", Your ban will expire in "..time.." minutes.")
 		elseif string.upper(string.Left(user,5)) == "STEAM" then
 			ES.AddBan(user,p:SteamID(),time,true,reason)
 
@@ -46,7 +46,7 @@ if SERVER then
 			net.WriteInt(tonumber(a[2]),32)
 			net.WriteString(reason or "No reason given.")
 			net.Broadcast()
-		elseif #exclPlayerByName(user) ~= 1 then
+		elseif #ES.GetPlayerByName(user) ~= 1 then
 			net.Start("ESCmdOnlyOne") net.Send(p)
 		end
 	end,20)

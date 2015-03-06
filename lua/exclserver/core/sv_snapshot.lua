@@ -54,7 +54,7 @@ ES.AddCommand("snapshot",function(p,a)
 	if not IsValid(p) or not a or not a[1] then return end
 	if  (p.exclNextSnap and p.exclNextSnap > CurTime()) then p:ChatPrint("This command is currently on cooldown. Please wait " .. math.Round(p.exclNextSnap - CurTime()) .." more seconds.") return end
 
-	local vic = exclPlayerByName(a[1])
+	local vic = ES.GetPlayerByName(a[1])
 	local quality = a[2] and tonumber(a[2]) or 50
 
 	if quality > 50 then quality = 50 end

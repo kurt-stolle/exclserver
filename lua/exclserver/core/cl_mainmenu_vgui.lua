@@ -17,7 +17,8 @@ ES.CreateFont("ES.MainMenu.MainElementInfoBnns",{
 ES.CreateFont("ES.MainMenu.MainElementInfoBnnsSmall",{
 	font = "Roboto",
 	weight = 400,
-	size = 17
+	size = 17,
+	italic=true
 })
 ES.CreateFont("ES.MainMenu.ChoiseElement",{
 	font = "Roboto",
@@ -333,7 +334,7 @@ vgui.Register("ES.MainMenu.NavigationItem",PNL,"Panel")
 ES.CreateFont("ES.MainMenu.FrameHead",{
 	font = "Roboto",
 	size = 48,
-	weight = 900,
+	weight = 500
 })
 local PNL = {}
 function PNL:Init()
@@ -381,12 +382,9 @@ function PNL:Paint(w,h)
 	surface.SetDrawColor(Color(0,0,0,20))
 	surface.DrawRect(1,1,w,math.floor(69/4)*4 + 4)
 
-	--draw.SimpleText(self.title,"ES.MainMenu.FrameHeadBlur",15,(70/2),ES.Color["#00000044"],0,1)
 	draw.SimpleText(self.title,"ES.MainMenu.FrameHead",15,70/2,ES.Color.White,0,1)
 end
 vgui.Register("ES.MainMenu.Frame",PNL,"Panel")
-
---## FUCKING PLAYER ROWS
 
 local colPlayerRowBg = Color(23,22,20)
 local colPlayerRowBgSelf = Color(23,22,20)

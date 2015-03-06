@@ -29,19 +29,13 @@ timer.Create("ESHandOutBananas",600,0,function()
 	end
 end)
 
--- Send a notification 
+-- Send a notification
 function PLAYER:ESSendNotification(kind,msg)
 	net.Start("ES.SendNotification")
 		net.WriteString(kind)
 		net.WriteString(msg)
 	net.Send(self)
 end
-
--- Make sure banned people stay out
-gameevent.Listen("player_connect")
-hook.Add("player_connect", "ESHandlePlayerConnect", function(data)
-	if ES.CheckBans(data.networkid,data.userid) then return end
-end)
 
 -- Allow admins to pick up players
 hook.Add( "PhysgunPickup", "ESHandlePlayerPickup", function( p, e )
@@ -83,3 +77,32 @@ net.Receive("ES.BuyVIP",function(len,ply)
 		ply:ESSendNotificationPopup("Error","You do not have enough bananas to make this purchase.")
 	end
 end)
+
+-- Get all community servers
+util.AddNetworkString("ES.GetServerList")
+net.Receive("ES.GetServerList",function(len,ply)
+	if not IsValid(ply) or (ply._es_cmdTimeout and ply._es_cmdTimeout > CurTime()) then return end
+
+	ply._es_cmdTimeout=CurTime()+.5;
+
+	ES.DBQuery("SELECT ip FROM `es_servers`;",function(res)
+		local tab={}
+		for k,v in ipairs(res)do
+			if v.ip then
+				table.insert(tab,v.ip)
+			end
+		end
+
+		net.Start("ES.GetServerList")
+		net.WriteTable(tab)
+		net.Send(ply)
+	end)
+end)
+
+-- Chat broadcast
+util.AddNetworkString("ES.ChatBroadcast")
+function ES.ChatBroadcast(...)
+	net.Start("ES.ChatBroadcast")
+	net.WriteTable{...}
+	net.Broadcast()
+end

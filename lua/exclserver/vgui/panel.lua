@@ -3,11 +3,17 @@ local PNL= {
 	Paint = function(self,w,h)
 		draw.RoundedBox(2,0,0,w,h,self.color)
 
-		surface.SetDrawColor(Color(0,0,0,self.color.a))
+		surface.SetDrawColor(Color(0,0,0,self.color.a/255 * 100))
 		surface.DrawRect(0,0,w,1)
 		surface.DrawRect(0,h-1,w,1)
 		surface.DrawRect(0,1,1,h-2)
 		surface.DrawRect(w-1,1,1,h-2)
+
+		surface.SetDrawColor(Color(255,255,255,self.color.a/255 * 5));
+		surface.DrawRect(1,1,w-2,1)
+		surface.DrawRect(1,h-2,w-2,1)
+		surface.DrawRect(1,2,1,h-4)
+		surface.DrawRect(w-2,2,1,h-4)
 
 	end,
 	SetAutoScroll=function(self,b)

@@ -3,7 +3,7 @@ local PLAYER=FindMetaTable("Player")
 function PLAYER:ESSetBananas( a )
 	if not self:ESGetNetworkedVariable("bananas") or type(a) ~= "number" or a < 0 then return end
 	self:ESSetNetworkedVariable("bananas",a)
-	
+
 	if a > 50000 then
 		self:ESAddAchievementProgress("bananas_amount",1)
 	end
@@ -27,5 +27,10 @@ function PLAYER:ESSendNotificationPopup(title,message)
 	net.Start("ES.Notification.Popup")
 	net.WriteString(title)
 	net.WriteString(message)
+	net.Send(self)
+end
+function PLAYER:ESChatPrint(...)
+	net.Start("ES.ChatBroadcast")
+	net.WriteTable{...}
 	net.Send(self)
 end

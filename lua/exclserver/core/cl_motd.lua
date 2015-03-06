@@ -9,14 +9,14 @@ hook.Add("HUDShouldDraw","ES.MOTD.SupressHUD",function()
 end)
 
 local fx = {
-	["$pp_colour_addr"] = 0, 
-	["$pp_colour_addg"] = 0, 
-	["$pp_colour_addb"] = 0, 
-	["$pp_colour_brightness"] = -.1, 
-	["$pp_colour_contrast"] = 1.1, 
-	["$pp_colour_colour"] = 0, 
-	["$pp_colour_mulr"] = 0, 
-	["$pp_colour_mulg"] = 0, 
+	["$pp_colour_addr"] = 0,
+	["$pp_colour_addg"] = 0,
+	["$pp_colour_addb"] = 0,
+	["$pp_colour_brightness"] = -.1,
+	["$pp_colour_contrast"] = 1.1,
+	["$pp_colour_colour"] = 0,
+	["$pp_colour_mulr"] = 0,
+	["$pp_colour_mulg"] = 0,
 	["$pp_colour_mulb"] = 0
 }
 hook.Add("RenderScreenspaceEffects","ES.MOTDBlackWhite",function()
@@ -39,7 +39,7 @@ hook.Add("CalcView","ES.MOTDCalcView",function(ply,pos,angles,fov)
 		local bone=ply:LookupBone("ValveBiped.Bip01_Spine")
 
 		if bone then
-		
+
 			pos,angles=ply:GetBonePosition(bone)
 
 			if pos and angles then
@@ -58,7 +58,7 @@ hook.Add("CalcView","ES.MOTDCalcView",function(ply,pos,angles,fov)
 				view.origin = tr.HitPos + angles:Forward()*10
 				view.angles = angles
 				view.fov = fov
-				
+
 				return view
 
 			end
@@ -84,7 +84,7 @@ local navPaint=function(self,w,h)
 	surface.DrawRect(0,0,w,h)
 end
 local navPaintButton=function(self,w,h)
-	surface.SetDrawColor((self:GetHover() and not self:GetSelected()) and ES.GetColorScheme(3) or Color(255,255,255,1))
+	surface.SetDrawColor((self:GetHover() and not self:GetSelected()) and ES.GetColorScheme(3) or Color(150,150,150,1))
 	surface.DrawRect(0,1,w-1,h-2)
 
 	if self:GetSelected() then
@@ -148,15 +148,15 @@ local navigationOptions={
 local w=560
 local h=600
 function ES.CloseMOTD()
-	if IsValid(motd) then 
-		motd:Remove() 
+	if IsValid(motd) then
+		motd:Remove()
 	end
 end
 function ES.OpenMOTD()
 	ES.CloseMOTD()
 
 	timeOpen=SysTime()
-	
+
 	motd=vgui.Create("EditablePanel")
 	motd:SetSize(ScrW(),ScrH())
 	motd:SetPos(0,0)
@@ -228,11 +228,11 @@ function ES.OpenMOTD()
 				i=i+1
 			end
 
-		
+
 		context:SetSize(frame:GetWide()-navigation:GetWide(),frame:GetTall()-10-30-10)
 		context:SetPos(navigation.x+navigation:GetWide(),0)
 
-				
+
 
 		btn_close:SetSize(context:GetWide()-20,30)
 		btn_close:SetPos(context.x+10,frame:GetTall()-10-30)

@@ -5,7 +5,7 @@ AccessorFunc(PANEL,"_dragging","Dragging",FORCE_BOOL);
 AccessorFunc(PANEL,"_autoScroll","AutoScroll",FORCE_BOOL);
 function PANEL:Init()
 	self:SetWide(8);
-	self:DockMargin(4,4,4,4);
+	self:DockMargin(0,0,0,0);
 	self:Dock(RIGHT);
 
 	self.Elements = {}

@@ -71,6 +71,7 @@ function expression:Execute(base,text)
 	local label = vgui.Create("esLabel")
 	label:SetParent(base)
 	label:SetText(text)
+	label:SetShadow(2)
 	label:SetColor(ES.Color.White)
 	label:SizeToContents(base)
 
@@ -87,6 +88,7 @@ function expression:Execute(base,text)
 	label:SetFont("ESChatFont");
 	label:SetParent(base)
 	label:SetText(text)
+	label:SetShadow(2)
 	label:SetColor(color_url)
 	label:SizeToContents(base)
 
@@ -121,6 +123,7 @@ function expression:Execute(base, color, text)
 	label:SetFont("ESChatFont");
 	label:SetParent(base)
 	label:SetText(text)
+	label:SetShadow(2)
 	label:SetColor(color)
 	label:SizeToContents(base)
 
@@ -164,8 +167,9 @@ function expression:Execute(base, text)
 	local label = vgui.Create("esLabel")
 	label:SetFont("ESChatFont");
 	label:SetParent(base)
+	label:SetShadow(2)
 	label:SetText(text)
-	label:SetColor(ES.GetColorScheme(1));
+	label:SetColor(ES.Color.LightGreen);
 	label:SizeToContents(base)
 
 	return label
@@ -180,6 +184,7 @@ function expression:Execute(base, text)
 	label:SetParent(base)
 	label:SetText(text)
 	label:SetColor(ES.Color.White)
+	label:SetShadow(2)
 	label:SizeToContents(base)
 	label:SetMouseInputEnabled(true)
 	ES.UIAddHoverListener(label);
@@ -210,6 +215,7 @@ function expression:Execute(base, text)
 	label:SetParent(base)
 	label:SetText(text)
 	label:SizeToContents(base)
+	label:SetShadow(2)
 	label:SetColor(base.activeColor);
 
 	return label
@@ -225,6 +231,7 @@ function expression:Execute(base, text)
 	label:SetParent(base)
 	label:SetText(text)
 	label:SizeToContents(base)
+	label:SetShadow(2)
 	label:SetColor(base.activeColor);
 
 	return label
@@ -241,6 +248,7 @@ function expression:Execute(base, text)
 	label:SetParent(base)
 	label:SetText(text)
 	label:SizeToContents(base)
+	label:SetShadow(2)
 	label:SetColor(base.activeColor);
 
 	return label

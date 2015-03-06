@@ -157,7 +157,7 @@ local function createMenu()
 					lbName:SetColor(COLOR_WHITE)
 
 					local lbPlayers = Label(v.players.."/"..v.maxplayers.." players online, playing on "..v.mapname,pnl)
-					lbPlayers:SetFont("ESDefaultSmall")
+					lbPlayers:SetFont("ESDefault-")
 					lbPlayers:SetPos(15,lbName.y + lbName:GetTall()+2)
 					lbPlayers:SizeToContents()
 					lbPlayers:SetColor(Color(230,230,230))

@@ -17,8 +17,8 @@ local matrix,x,y,width,height,rad
 
 ES.CreateFont("ES.TileFont",{
 	font="Roboto",
-	weight=200,
-	size=22
+	weight=400,
+	size=20
 })
 
 local PANEL={}
@@ -69,28 +69,28 @@ function PANEL:Paint(w,h)
 	matrixScale.x = self.scale
 	matrixScale.y = self.scale
 	matrix:Scale( matrixScale )
- 
+
 	-- push matrix
 	pushModelMatrix( matrix )
 
 	if not self:GetVIP() then
 		surface.SetDrawColor(Color(255,255,255,10))
-		surface.DrawRect(2,2,w-4,h-4)	
+		surface.DrawRect(2,2,w-4,h-4)
 	end
 
 	local clr=table.Copy(ES.GetColorScheme(1))
 	clr.a = math.Clamp((self.scale-1)*20,0,1)*255
-	surface.SetDrawColor(clr)		
+	surface.SetDrawColor(clr)
 	surface.DrawRect(1,1,w-2,h-2)
 
 	if not self:GetHover() then
 		surface.SetDrawColor(ES.Color["#1B1B1BFF"])
 		surface.DrawRect(3,3,w-6,h-6)
 	end
-	
+
 
 	if self:GetHover() then
-		surface.SetDrawColor(Color(0,0,0,150))	
+		surface.SetDrawColor(Color(0,0,0,150))
 		surface.DrawRect(1,1,w-2,2)
 		surface.DrawRect(1,h-3,w-2,2)
 		surface.DrawRect(1,3,2,h-6)
@@ -104,12 +104,12 @@ function PANEL:Paint(w,h)
 	draw.DrawText(string.gsub(self:GetText()," ","\n"),"ES.TileFont",8,5,col)
 	if self:GetVIP() then
 		draw.SimpleText("VIP","ES.MainMenu.MainElementHeader",w-8,h-42,Color(255,255,255,20),2)
-	end		
+	end
 end
 function PANEL:PaintOver(w,h)
 	if self:GetCost() > 0 then
 		local text
-		if LocalPlayer():ESHasItem(self:GetText(),self:GetType()) then 
+		if LocalPlayer():ESHasItem(self:GetText(),self:GetType()) then
 			text="Owned"
 		else
 			text=tostring(self:GetCost()).." Bananas"

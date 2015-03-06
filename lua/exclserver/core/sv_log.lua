@@ -28,7 +28,7 @@ function ES.Log(logtype,text)
 	end
 	file.Append(logfile, "\n["..os.date().. "]\t"..(text or ""))
 
-	table.insert(databaseBuffer,"('"..text.."',"..logtype..","..os.time()..","..ES.ServerID..")");
+	table.insert(databaseBuffer,"('"..ES.DBEscape(text).."',"..logtype..","..os.time()..","..ES.ServerID..")");
 
 	if timer.Exists("ES.Logs.WriteBuffer") then return end
 

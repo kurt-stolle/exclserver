@@ -8,7 +8,7 @@ util.AddNetworkString("ESSendPlayerInfo")
 ES.AddCommand("info",function(p,a)
 	if not p:ESHasPower(20) or not a or not a[1] then p:ChatPrint("You are not authorized to use this command") return end
 
-	local targ = exclPlayerByName(a[1])
+	local targ = ES.GetPlayerByName(a[1])
 	if not targ then p:ChatPrint("No target found") end
 	targ = targ[1]
 	if not targ or not IsValid(targ) or not targ.Nick then p:ChatPrint("No target found") return end
