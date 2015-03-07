@@ -9,6 +9,9 @@ function ES.ResourceDir(dir)
 	end
 end
 
-ES.ResourceDir("addons/exclserver/materials/")
-ES.ResourceDir("addons/exclserver/models/")
-ES.ResourceDir("addons/exclserver/sounds/")
+resource.AddWorkshop("403938948")
+
+ES.ResourceDir("addons/exclserver/materials")
+ES.ResourceDir("addons/exclserver/models")
+ES.ResourceDir("addons/exclserver/sounds")
+ES.ResourceDir("addons/exclserver/resource")

@@ -2,11 +2,11 @@
 -- Edit these variables to configurate MySQL.
 -- You can download MySQL server from the official MySQL website.
 
-local DATABASE_HOST 	= "167.114.72.167"						-- (String) IPv4 IP of the mysql server.
-local DATABASE_PORT 	= 3306									-- (Number) mysql server port.
-local DATABASE_SCHEMA 	= "exclserver" 						-- (String) name of the schema that should be used.
-local DATABASE_USERNAME = "exclserver"							-- (String) Username
-local DATABASE_PASSWORD = "#ExclServer2TestDatabases"   		-- (String) Password
+local DATABASE_HOST     = "188.165.214.55";                                     -- (String) IPv4 IP of the mysql server.
+local DATABASE_PORT     = 3306;                                                 -- (Number) mysql server port.
+local DATABASE_SCHEMA   = "exclserver";                                         -- (String) name of the schema that shoul$
+local DATABASE_USERNAME = "exclserver";                                         -- (String) Username
+local DATABASE_PASSWORD = "#x6eQ56m593r83b5mky2YvbeP64E2MyQP";						  		-- (String) Password
 
 -- Do not edit anything under this line, unless you're a competent Lua developer.
 
@@ -145,7 +145,7 @@ function ES.DBQuery(request,fn,fnError)
 
 	if not query then
 		if void then
-			Error("Voided MySQL call - called too early!")
+			ES.DebugPrint("Voided MySQL call - called too early!")
 			return
 		end
 

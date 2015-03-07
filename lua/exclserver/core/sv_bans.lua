@@ -26,11 +26,8 @@ function ES.RemoveBan(steamid)
 	ES.DBQuery("UPDATE es_bans SET unbanned = 1 WHERE steamid = '"..steamid.."'")
 end
 
--- Make sure banned people stay out
 gameevent.Listen("player_connect")
 hook.Add("player_connect", "ESHandlePlayerConnect", function(data)
-	--if ES.CheckBans(data.networkid,data.userid) then return end
-
 	ES.DBQuery("SELECT timeStart,time,reason FROM es_bans WHERE steamid='"..data.networkid.."' AND unbanned = 0 AND ((("..math.Round(os.time()/60).." - timeStart) < time ) OR time = 0 ) AND (serverid = 0 OR serverid = "..ES.ServerID..") LIMIT 1;",function(res)
 		if res and res[1] then
 			local expire = "This ban will never expire"
@@ -68,55 +65,3 @@ timer.Create("ES.CheckBans",300,0,function()
 		end
 	end)
 end)
---[[
-function ES.LoadBans()
-	ES.DBQuery("SELECT steamid,timeStart,time,reason FROM es_bans WHERE unbanned = 0 AND ((("..math.Round(os.time()/60).." - timeStart) < time ) OR time = 0 ) AND (serverid = 0 OR serverid = "..ES.ServerID..")",function(d)
-		ES.DebugPrint("Bans have been loaded.")
-		bansLoaded = true
-
-		if not d or not d[1] then return end
-
-		for k,v in pairs(d) do
-			if not v.steamid or not v.timeStart or not v.time or not v.reason then continue end
-
-			bans[v.steamid] = {
-				reason = v.reason,
-				time = tonumber(v.time),
-				timeStart = tonumber(v.timeStart),
-			}
-		end
-
-		for k,v in pairs(player.GetAll())do
-			if bans[v:SteamID()] then
-				local steamid = v:SteamID()
-				local expire = "This ban will never expire"
-				if bans[steamid].time > 0 then
-					expire = "This ban will expire in "..bans[steamid].time - (math.Round(os.time()/60) - bans[steamid].timeStart).." minutes"
-				end
-				ES.DropUser(v:UserID(),"Banned for reason \""..bans[steamid].reason.."\". "..expire..".")
-			end
-		end
-	end)
-end
-hook.Add("ESDatabaseReady","ES.InitializeBans",function(id)
-	ES.LoadBans()
-	timer.Create("ES.RefreshBans",600,0,function()
-		ES.LoadBans()
-	end)
-end)
-
-function ES.CheckBans(steamid,userid)
-	if !bansLoaded then
-		return false
-	end
-
-	if bans[steamid] and ( ( math.Round(os.time()/60) - bans[steamid].timeStart ) < bans[steamid].time or bans[steamid].time == 0 )then
-		local expire = "This ban will never expire"
-		if bans[steamid].time > 0 then
-			expire = "This ban will expire in "..bans[steamid].time - (math.Round(os.time()/60) - bans[steamid].timeStart).." minutes"
-		end
-		ES.DropUser(userid,"Banned for reason \""..bans[steamid].reason.."\". "..expire..".")
-		return true
-	end
-	return false
-end]]
