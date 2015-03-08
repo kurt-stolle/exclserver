@@ -211,7 +211,7 @@ function chat.AddText(...)
 		parse(v);
 
 		for k,v in ipairs(panels)do
-			base:Inline(v);
+			base:Inline(v,lineHeight);
 		end
 
 		base:UpdateTall();
@@ -228,8 +228,8 @@ end
 
 hook.Add("Initialize","ES.CreateChatBox",function()
 	chatPanel=vgui.Create("esChat");
-	chatPanel:SetSize(500,300);
-	chatPanel:SetPos(10,ScrH()-chatPanel:GetTall()-110);
+	chatPanel:SetSize(500,240);
+	chatPanel:SetPos(10,ScrH()-chatPanel:GetTall()-100);
 	chatPanel:SetVisible(false);
 end);
 

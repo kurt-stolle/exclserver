@@ -25,29 +25,59 @@ local PNL= {
 		self.scrollbar=vgui.Create( "esScrollbar", self );
 	end,
 	PerformLayout = function(self)
+		if self._skipLayout then self._skipLayout=false return end
+
 		if self._inlineElements then
-			local w,h=self:GetWide(),self:GetTall();
+			local w,h=self:GetWide(),self:GetTall()
 
 			local x,y=0,0;
-			for k,v in ipairs(self._inlineElements)do
-				v.x=x;
-				v.y=y+(self:GetTall()/2 - v:GetTall()/2);
+			local doInline;
+			doInline = function(element)
+				element.x=x;
+				element.y=y+(self._lineHeight/2 - element:GetTall()/2);
 
-				x=x+v:GetWide();
+				if x+element:GetWide() > w then
+					if element.ESIsLabel then
+						local txt=element:GetText()
+						local len=string.len(txt)
+						local txt_right=""
+						while (x+element:GetWide()>w) do
+							element:SetText(string.Left(txt,len-(string.len(txt_right)+1)))
+							element:SizeToContents()
+							txt_right=string.Right(txt,string.len(txt_right)+1)
+						end
 
-				if x > w then
-					if v.IsESLabel then
+						local new_label=vgui.Create("esLabel")
+						new_label:CopyAttibutes(element)
+						new_label:SetParent(self)
+						new_label:SetText(txt_right)
+						new_label:SizeToContents()
 
+						x=0
+						y=y+self._lineHeight
+
+						self._skipLayout=true;
+						self:SetTall(self:GetTall()+self._lineHeight)
+
+						doInline(new_label)
 					else
 						x=0;
-						y=y+self:GetTall();
+						y=y+self._lineHeight;
 
-						v.x=x;
-						v.y=y+(self:GetTall()/2 - v:GetTall()/2);
+						element.x=x;
+						element.y=y+(self._lineHeight/2 - self._lineHeight/2);
+
+						self._skipLayout=true;
+						self:SetTall(self:GetTall()+self._lineHeight)
 					end
+				else
+					x=x+element:GetWide();
 				end
+			end
 
 
+			for k,v in ipairs(self._inlineElements)do
+				doInline(v)
 			end
 		end
 
@@ -60,16 +90,19 @@ local PNL= {
 	end,
 	Init = function(self)
 		self.color = ES.GetColorScheme(2)
+		self._lineHeight = 20;
 	end,
 	Think = function(self)
 
 	end,
-	Inline=function(self,panel)
+	Inline=function(self,panel,lineHeight)
 		if not IsValid(panel) then return end
 
 		if not self._inlineElements then
 			self._inlineElements={};
 		end
+
+		self._lineHeight=lineHeight;
 
 		table.insert(self._inlineElements,panel);
 

@@ -50,6 +50,12 @@ function PANEL:SizeToContents()
 	self:SetSize(surface.GetTextSize(self:GetText()));
 
 end
+function PANEL:CopyAttibutes(lbl)
+	self:SetColor(lbl:GetColor())
+	self:SetShadow(lbl:GetShadow())
+	self:SetFont(lbl:GetFont())
+	self:SetLineHeight(lbl._lineHeight)
+end
 function PANEL:Paint()
 	text=self:GetText() or ""
 	lineHeight=self._lineHeight or 0
