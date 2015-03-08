@@ -2,37 +2,37 @@
 
 ES.CreateFont("ESChatFont.Shadow",{
 	font="Roboto",
-	size=19,
-	weight=500,
+	size=18,
+	weight=400,
 	blursize=2
 })
 ES.CreateFont("ESChatFont",{
 	font="Roboto",
-	size=19,
-	weight=500
+	size=18,
+	weight=400
 })
 ES.CreateFont("ESChatFont.Italic.Shadow",{
 	font="Roboto",
-	size=19,
-	weight=500,
+	size=18,
+	weight=400,
 	italic=true,
 	blursize=2
 })
 ES.CreateFont("ESChatFont.Italic",{
 	font="Roboto",
-	size=19,
-	weight=500,
+	size=18,
+	weight=400,
 	italic=true
 })
 ES.CreateFont("ESChatFont.Bold.Shadow",{
 	font="Roboto",
-	size=19,
+	size=18,
 	weight=700,
 	blursize=2
 })
 ES.CreateFont("ESChatFont.Bold",{
 	font="Roboto",
-	size=19,
+	size=18,
 	weight=700
 })
 

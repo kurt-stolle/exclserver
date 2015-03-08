@@ -2,28 +2,8 @@ local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Jokes","Being funny has never been so easy.","Excl")
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
-PLUGIN()
 
 if SERVER then
-	util.AddNetworkString("ES.CMD.Funny")
-
-	PLUGIN:AddCommand("joke",function(p,a)
-		if not p or not p:IsValid() then return 
-		elseif p:ESGetVIPTier() < 1 then
-			p:ChatPrint("You must have bronze VIP to tell funny jokes.")
-			return
-		elseif (p.esNextJoke and p.esNextJoke > CurTime()) then
-			p:ChatPrint("Wait "..math.Round(p.esNextJoke - CurTime()).." seconds before telling another funny joke.")
-			return
-		end
-
-		p.esNextJoke = CurTime() + 30
-
-		net.Start("ES.CMD.Funny") net.Send(p)
-
-		p:ESAddAchievementProgress("funny",1)
-	end)
-elseif CLIENT then
 	local funnyjokes = {"Why did the man put his money in the freezer? He wanted cold hard cash!",
 "What did the porcupine say to the cactus? \"Is that you mommy? \"",
 "What do you get when you cross a snowman with a vampire? Frostbite.",
@@ -187,9 +167,20 @@ elseif CLIENT then
 "What would you call two banana skins? A pair of slippers."
 }
 
-	net.Receive("ES.CMD.Funny",function()
-		timer.Simple(.1,function()
-			LocalPlayer():ConCommand("say ^9"..table.Random(funnyjokes).." :D")
-		end)
+	PLUGIN:AddCommand("joke",function(p,a)
+		if p:ESGetVIPTier() < 1 then
+			p:ChatPrint("You must have bronze VIP to tell funny jokes.")
+			return
+		elseif (p.esNextJoke and p.esNextJoke > CurTime()) then
+			p:ChatPrint("Wait "..math.Round(p.esNextJoke - CurTime()).." seconds before telling another funny joke.")
+			return
+		end
+
+		p.esNextJoke = CurTime() + 30
+
+		p:ConCommand("say "..table.Random(funnyjokes).." :D")
+
+		p:ESAddAchievementProgress("funny",1)
 	end)
 end
+PLUGIN()

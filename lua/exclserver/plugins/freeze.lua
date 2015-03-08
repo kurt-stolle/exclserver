@@ -6,7 +6,6 @@ PLUGIN:SetInfo("Freeze","Freeze ppl lel.","Excl")
 
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
-PLUGIN()
 
 if SERVER then
 	util.AddNetworkString("exclFP")
@@ -70,3 +69,4 @@ if SERVER then
 		end
 	end,10)
 end
+PLUGIN()

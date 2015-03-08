@@ -48,16 +48,16 @@ function ES.SetupRank(name,pretty,power)
 	ES.DebugPrint("Setup rank: "..pretty.." (power "..power..")")
 end
 
-ES.SetupRank("user","User"						,0) -- Do not delete or edit any of these ES.Ranks! 
+ES.SetupRank("user","User"						,0) -- Do not delete or edit any of these ES.Ranks!
 ES.SetupRank("admin","Administrator"			,20) -- Do not add ES.Ranks in the code, use MySQL instead! See the ES.Ranks table.
 ES.SetupRank("superadmin","Super Administrator"	,40) -- Editing any of these ES.Ranks will cause some plugins to stop functioning correctly!
-ES.SetupRank("operator","Server Operator"		,60) -- 
+ES.SetupRank("operator","Server Operator"		,60) --
 ES.SetupRank("owner","Server Owner"				,80) --
 
 -- grabbers
 local PLAYER = FindMetaTable("Player")
 function ES.RankExists(name)
-	return !(not ES.Ranks[name])
+	return not(not ES.Ranks[name])
 end
 function PLAYER:ESIsRank(r)
 	return (tostring(self:ESGetRank()) == string.lower(r))
@@ -66,7 +66,7 @@ function PLAYER:ESIsRankOrHigher(r)
 	return (ES.Ranks[r] and self:ESGetRank() >= ES.Ranks[r])
 end
 function PLAYER:ESIsImmuneTo(p)
-	return ( IsValid(p) and p ~= self and self:ESIsRankOrHigher( tostring(self:ESGetRank()) ) )
+	return ( IsValid(p) and p ~= self and self:ESGetRank() >= p:ESGetRank() )
 end
 function PLAYER:ESGetRank()
 	return ES.Ranks[self:ESGetNetworkedVariable("rank","user")]

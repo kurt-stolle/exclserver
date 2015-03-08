@@ -50,31 +50,23 @@ concommand.Add("excl",function(p,c,a)
 end)
 hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 	if (p.esNextCmd and p.esNextCmd > CurTime()) or not p or not t then return end
-	p.esNextCmd = CurTime()+.5
-	--t = string.lower(t)
-	if t and string.Left(t,4) == "### " and p:ESHasPower(20) then
+	p.esNextCmd = CurTime()+.2
 
-		local t = string.Explode(" ",t or "",false)
-		table.remove(t,1)
-
-		ES.Commands["anonannounce"].func(p,t)
-
-		return false
-	elseif t and string.Left(t,3) == "## " and p:ESHasPower(20) then
+	if t and string.Left(t,2) == "# " and p:ESHasPower(20) then
 
 		local t = string.Explode(" ",t or "",false)
 		table.remove(t,1)
 
 		ES.Commands["announce"].func(p,t)
 		return false
-	elseif t and string.Left(t,2) == "# " then
+	elseif t and string.Left(t,2) == "@ " then
 
 		local t = string.Explode(" ",t or "",false)
 		table.remove(t,1)
 
 		ES.Commands["adminchat"].func(p,t)
 		return false
-	elseif t and (string.Left(t,1) == ":" --[[or string.Left(t,1) == "!" or string.Left(t,1) == "/" or string.Left(t,1) == "@"]]) then -- strict mode: only allow the : prefix for ExclServer commands.
+	elseif t and (string.Left(t,1) == "!" --[[or string.Left(t,1) == "!" or string.Left(t,1) == "/" or string.Left(t,1) == "@"]]) then -- strict mode: only allow the : prefix for ExclServer commands.
 		local t = string.Explode(" ",t or "",false)
 		t[1] = string.gsub(t[1] or "",string.Left(t[1],1) or "","")
 
