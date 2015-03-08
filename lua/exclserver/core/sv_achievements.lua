@@ -53,7 +53,7 @@ hook.Add("ESPlayerReady","ES.LoadPlayerAchievemenets",function(ply)
 		if res and res[1] then
 			ply._es_achievements = {}
 			for k,v in pairs(res[1])do
-				ply._es_achievements[k] = v
+				ply._es_achievements[k] = tonumber(v)
 				net.Start("ESAchSynch")
 				net.WriteTable(ply._es_achievements)
 				net.Send(ply)

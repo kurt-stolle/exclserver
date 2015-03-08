@@ -21,6 +21,7 @@ local function getServerInfo(ip,callback)
                     body=string.gsub( body, "\n", "")
                     body=string.gsub( body, "&nbsp;","");
                     body=string.gsub( body, "\t","")
+                    body=string.gsub( body, "%%","")
 
                     local players=string.match(body,"Current Players:(%d+ / %d+)")
                     local map=string.match(body,"CURRENT MAP(.*)Upload")
@@ -68,6 +69,24 @@ function ES._MMGenerateServerList(base)
           pnl:SetSize(container:GetWide()-8-8,66)
           pnl:SetPos(0,#panels*(pnl:GetTall()+15))
 
+          local lbl_name = pnl:Add("esLabel");
+          lbl_name:SetText(v)
+          lbl_name:SetPos(10,8)
+          lbl_name:SetFont("ESDefaultBold")
+          lbl_name:SizeToContents()
+
+          local lbl_players = pnl:Add("esLabel")
+          lbl_players:SetPos(10,lbl_name.y + lbl_name:GetTall() + 4)
+          lbl_players:SetFont("ESDefault");
+          lbl_players:SetText("0/0 Players")
+          lbl_players:SizeToContents()
+
+          local lbl_map = pnl:Add("esLabel")
+          lbl_map:SetPos(10,lbl_players.y + lbl_players:GetTall() + 4)
+          lbl_map:SetFont("ESDefault");
+          lbl_map:SetText("Playing on unknown map")
+          lbl_map:SizeToContents()
+
           local btn_conn =pnl:Add("esButton")
           btn_conn:SetPos(pnl:GetWide()-102,2)
           btn_conn:SetSize(100,30)
@@ -77,24 +96,6 @@ function ES._MMGenerateServerList(base)
           btn_copy:SetPos(pnl:GetWide()-102,34)
           btn_copy:SetSize(100,30)
           btn_copy:SetText("Copy IP")
-
-          local lbl_name = pnl:Add("esLabel");
-          lbl_name:SetText(v)
-          lbl_name:SetPos(10,8)
-          lbl_name:SetFont("ESDefault+")
-          lbl_name:SizeToContents()
-
-          local lbl_players = pnl:Add("esLabel")
-          lbl_players:SetPos(10,lbl_name.y + lbl_name:GetTall() + 1)
-          lbl_players:SetFont("ESDefaultSmall");
-          lbl_players:SetText("0/0 Players")
-          lbl_players:SizeToContents()
-
-          local lbl_map = pnl:Add("esLabel")
-          lbl_map:SetPos(10,lbl_players.y + lbl_players:GetTall() + 1)
-          lbl_map:SetFont("ESDefaultSmall");
-          lbl_map:SetText("Playing on unknown map")
-          lbl_map:SizeToContents()
 
           getServerInfo(v,function(name,map,players,status)
             if IsValid(pnl) then
