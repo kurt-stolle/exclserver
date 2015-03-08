@@ -43,7 +43,7 @@ timer.Create("ES.CheckBans",300,0,function()
 		if not res or not res[1] then return end
 
 		local bans={};
-		for k,v in ipairs(d) do
+		for k,v in ipairs(res) do
 			if not v.steamid or not v.timeStart or not v.time or not v.reason then continue end
 
 			bans[v.steamid] = {
