@@ -14,7 +14,7 @@ if SERVER then
 	PLUGIN:AddCommand("voicemute",function(p,a)
 		if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
 		local vTbl = ES.GetPlayerByName(a[1])
-		if not vTbl then
+		if not vTbl or not vTbl[1] then
   p:ESChatPrint("No player matching <hl>"..a[1].."</hl> could be found. Try finding the player by SteamID.")
   return
 end
@@ -44,7 +44,7 @@ end
 	PLUGIN:AddCommand("unvoicemute",function(p,a)
 		if not p or not p:IsValid() or not a or not a[1] or a[1] == "" then return end
 		local vTbl = ES.GetPlayerByName(a[1])
-		if not vTbl then
+		if not vTbl or not vTbl[1] then
   p:ESChatPrint("No player matching <hl>"..a[1].."</hl> could be found. Try finding the player by SteamID.")
   return
 end

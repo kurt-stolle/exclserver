@@ -1,8 +1,6 @@
 -- cl_voice.lua
 -- controls the voice chat panels
 
-if hook.Call("ESSupressCustomVoice") then return end
-
 g_VoicePanelList = nil -- from base gamemode
 
 local voiceRows = {}
@@ -71,7 +69,7 @@ hook.Add( "InitPostEntity", "CreateVoiceVGUI",function()
 
 	    			v:SetPos(self:GetWide() - 275 - (row*280),self:GetTall() - countActual*56)
 
-	    			
+
 	    		elseif v and IsValid(v) and (k and not IsValid(k)) then
 	    			hook.Call("PlayerEndVoice",GAMEMODE,k)
 	    		end

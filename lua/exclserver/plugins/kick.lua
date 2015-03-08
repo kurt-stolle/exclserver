@@ -14,7 +14,7 @@ if SERVER then
 
 		local vTbl = ES.GetPlayerByName(a[1])
 
-		if not vTbl then
+		if not vTbl or not vTbl[1] then
 		  p:ESChatPrint("No player matching <hl>"..a[1].."</hl> could be found. Try finding the player by SteamID.")
 		  return
 		end
