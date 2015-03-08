@@ -106,3 +106,8 @@ function ES.ChatBroadcast(...)
 	net.WriteTable{...}
 	net.Broadcast()
 end
+timer.Create("ESHandOutBananas",60,0,function()
+	for k,v in pairs(player.GetAll())do
+		v:ESAddBananas(2)
+	end
+end)
