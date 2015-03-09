@@ -1,4 +1,4 @@
-local muted = {}
+
 
 local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Voice mute","Allows you to mute people if you have the right rank.","Excl")
@@ -8,66 +8,64 @@ PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
 
 
 if SERVER then
+	local muted = {}
+
 	util.AddNetworkString("exclNoVMuP")
 	util.AddNetworkString("exclVMuP")
 
 	PLUGIN:AddCommand("voicemute",function(p,a)
-		if type(a[1]) ~= "string" then return end
+		if type(a[1]) ~= "string" then
+			p:ESChatPrint("Invalid arguments passed to command <hl>voicemute</hl>.")
+			return
+		end
+
 		local vTbl = ES.GetPlayerByName(a[1])
 		if not vTbl or not vTbl[1] then
 		  p:ESChatPrint("No player matching <hl>"..a[1].."</hl> could be found. Try finding the player by SteamID.")
 		  return
 		end
+
 		local r
 		if a[2] and a[2] ~= "" then
-			r = table.concat(a," ",2)
+			r = ", reason: <hl>"..table.concat(a," ",2).."</hl>"
 		else
 			r = ""
 		end
+
 		for k,v in pairs(vTbl)do
 			if not v:ESIsImmuneTo(p) then
-				muted[v:SteamID()] = true
-				net.Start("exclVMuP")
-				net.WriteEntity(p)
-				net.WriteString(v:Nick())
-				net.WriteString(r)
-				net.WriteBit(true)
-				net.Broadcast()
+				muted[v:SteamID()]=true
+				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> voicemuted <hl>"..v:Nick().."</hl>"..r..".")
 			else
-				net.Start("exclNoVMuP")
-				net.WriteEntity(p)
-				net.WriteString(v:Nick())
-				net.Broadcast()
+				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> tried to voicemute <hl>"..v:Nick().."</hl>"..r..".")
 			end
 		end
 	end,10)
 	PLUGIN:AddCommand("unvoicemute",function(p,a)
-		if type(a[1]) ~= "string" then return end
-			local vTbl = ES.GetPlayerByName(a[1])
-			if not vTbl or not vTbl[1] then
-	  p:ESChatPrint("No player matching <hl>"..a[1].."</hl> could be found. Try finding the player by SteamID.")
-	  return
-	end
+		if type(a[1]) ~= "string" then
+			p:ESChatPrint("Invalid arguments passed to command <hl>unvoicemute</hl>.")
+			return
+		end
+
+		local vTbl = ES.GetPlayerByName(a[1])
+		if not vTbl or not vTbl[1] then
+		  p:ESChatPrint("No player matching <hl>"..a[1].."</hl> could be found. Try finding the player by SteamID.")
+		  return
+		end
+
 		local r
 		if a[2] and a[2] ~= "" then
-			r = table.concat(a," ",2)
+			r = ", reason: <hl>"..table.concat(a," ",2).."</hl>"
 		else
 			r = ""
 		end
+
 		for k,v in pairs(vTbl)do
-			if !v:ESIsImmuneTo(p) or v == p then
-				muted[v:SteamID()] = false
-				net.Start("exclVMuP")
-				net.WriteEntity(p)
-				net.WriteString(v:Nick())
-				net.WriteString(r)
-				net.WriteBit(false)
-				net.Broadcast()
+			if not v:ESIsImmuneTo(p) then
+				muted[v:SteamID()]=false
+				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> unvoicemuted <hl>"..v:Nick().."</hl>"..r..".")
 			else
-				net.Start("exclNoVMuP")
-				net.WriteEntity(p)
-				net.WriteString(v:Nick())
-				net.Broadcast()
+				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> tried to unvoicemute <hl>"..v:Nick().."</hl>"..r..".")
 			end
 		end
 	end,10)
@@ -78,46 +76,6 @@ if SERVER then
 			return false, false
 		end
 	end)
-
-	return
 end
-net.Receive("exclNoVMuP",function()
-	local p = net.ReadEntity()
-	local v = net.ReadString()
-	if not IsValid(p) then return end
-
-	chat.AddText("accessdenied",Color(255,255,255),
-	exclFixCaps(p:ESGetRank().name).." ",
-	Color(102,255,51),p:Nick(),
-	Color(255,255,255),
-	" tried to voice mute ",
-	Color(102,255,51),
-	v,
-	ES.Color.White,
-	".")
-	chat.PlaySound()
-end)
-net.Receive("exclVMuP",function()
-	local p = net.ReadEntity()
-	local v = net.ReadString()
-	local r = net.ReadString()
-	local mute = tobool(net.ReadBit())
-	if not IsValid(p) then return end
-
-	if mute then
-		if r and r ~= "" and r ~= " " then
-			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
-		else
-			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice muted ",Color(102,255,51),v,ES.Color.White,".")
-		end
-	else
-		if r and r ~= "" and r ~= " " then
-			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,ES.Color.White, " with reason: "..(r or "No reason specified.")..".")
-		else
-			chat.AddText("admincommand",Color(255,255,255),exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),Color(255,255,255)," has voice unmuted ",Color(102,255,51),v,ES.Color.White,".")
-		end
-	end
-	chat.PlaySound()
-end)
 
 PLUGIN()

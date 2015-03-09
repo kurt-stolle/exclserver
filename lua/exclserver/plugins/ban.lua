@@ -18,7 +18,7 @@ if SERVER then
 		return end
 
 		local userFound = ES.GetPlayerByName(user)
-		if not userFound then
+		if not userFound or not IsValid(userFound[1]) then
 			if ES.IsSteamID(user) then
 				ES.AddBan(user,p:SteamID(),time,true,reason,user,p:Nick())
 				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> banned <hl>"..user.."</hl>, reason: <hl>"..reason.."</hl>.")
