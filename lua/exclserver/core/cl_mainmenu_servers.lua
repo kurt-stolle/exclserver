@@ -41,7 +41,7 @@ function ES._MMGenerateServerList(base)
   net.Start("ES.GetServerList")
   net.SendToServer()
 
-  local frame= base:OpenFrame(500)
+  local frame= base:OpenFrame()
   frame:SetTitle("Servers")
 
   local panels={}
