@@ -15,12 +15,12 @@ hook.Add("ESPlayerReady","ES.NetworkVars.LoadPlayerData",function(ply)
 		ES.DBQuery(string.format("SELECT %s FROM `es_player_fields` WHERE `steamid`='%s' LIMIT 1",select,ply:SteamID()),function(data)
 			ES.DebugPrint("Loaded networked variables saved from "..ply:Nick())
 
-			if not data[1] then 
+			if not data[1] then
 				ES.DBQuery("INSERT INTO `es_player_fields` (steamid) VALUES('"..ply:SteamID().."')")
 				ply:ESSetNetworkedVariable("bananas",100)
 
 				ES.DebugPrint("Created an ExclServer profile for "..ply:Nick())
-				return 
+				return
 			end
 
 			for k,v in pairs(data[1])do
@@ -31,7 +31,7 @@ hook.Add("ESPlayerReady","ES.NetworkVars.LoadPlayerData",function(ply)
 		end)
 	else
 		ES.DebugPrint("Nothing to load.")
-	end	
+	end
 
 	local queue={}
 	for k,v in pairs(player.GetAll())do
@@ -214,4 +214,9 @@ timer.Create("ES.NetworkPlayers",.2,0,function()
 	net.Broadcast()
 
 	queue={}
+end)
+
+hook.Add("Initialize","ES.InitNetworkedVariablesCall",function()
+	hook.Call("ESDefineNetworkedVariables",GAMEMODE)
+	ES.DefineNetworkedVariable = nil
 end)

@@ -10,7 +10,7 @@ net.Receive("ES.NwPlayerVar",function(len)
 			ply._es_networked={}
 		end
 
-		local key,kind 
+		local key,kind
 		for i=1,num_keys do
 			key=net.ReadString()
 			if not ES.NetworkedVariables[key] then
@@ -47,7 +47,7 @@ net.Receive("ES.NwPlayerVar",function(len)
 end)
 
 hook.Add("Initialize","ES.InitNetworkedVariables.Sync",function()
-	hook.Call("ES.DefineNetworkedVariables")
+	hook.Call("ESDefineNetworkedVariables",GAMEMODE)
 	ES.DefineNetworkedVariable = nil
 
 	net.Start("ES.NwPlayerVar")
