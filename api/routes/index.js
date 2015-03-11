@@ -15,9 +15,9 @@ var db = mysql.createConnection({
 });
 
 paypal.configure({
-  'mode': 'sandbox',
-  'client_id': 'AWpnE4yp2HwE5aZBn8oRiFNBd8d7nsUge-D1Xq2W-lA6gnAOoKdhBNLmq8nC9qlVmVT_HLYx7v-B4Max',
-  'client_secret': 'ELjT5lnie0JUNj44HGAg4v18cnA913JDsFAWzY6jTg_9un_csIev0YK5NVMw9yFJRxiY76uHyIV-Znh3'
+  'mode': 'live',
+  'client_id': 'AejZo6UZ8k173xayK0qk1hBuUdY67YmzyTwZ6iM6G0wSIf1LzVgmuH9yIEak6dkWHqFh3oriStak5qyt',
+  'client_secret': 'EPzgf8XX42pY0i9eeAbmqoK2ZaDBRLzVj8vDIx6JsGkerS5Nq-4sehpx6O5yB1oT9Vk_Rd6ZWbf_uQph'
 });
 
 /* SETUP */
