@@ -6,7 +6,6 @@ ES.CreateFont("ESAchievementFontBig",{
 })
 vgui.Register("ESAchievementPopupPanel",{
 	Init=function(self)
-
 		self.TimeCreated=CurTime();
 
 		if self.BaseClass.Init then
@@ -31,10 +30,23 @@ vgui.Register("ESAchievementPopupPanel",{
 },"esPanel")
 
 local ach
-local sounds = {Sound("vo/npc/Barney/ba_ohyeah.wav"),Sound("vo/npc/female01/yeah02.wav"),Sound("vo/npc/male01/yeah02.wav"),
-Sound("combined/k_lab/k_lab_kl_mygoodness02_cc.wav"),Sound("vo/Citadel/eli_goodgod.wav"),Sound("vo/Citadel/eli_mygirl.wav"),Sound("vo/eli_lab/al_goodcatch.wav"),
-Sound("vo/coast/odessa/male01/nlo_cheer01.wav"),Sound("vo/coast/odessa/male01/nlo_cheer02.wav"),Sound("vo/coast/odessa/male01/nlo_cheer03.wav"),Sound("vo/coast/odessa/male01/nlo_cheer04.wav"),
-Sound("vo/coast/odessa/female01/nlo_cheer01.wav"),Sound("vo/coast/odessa/female01/nlo_cheer02.wav"),Sound("vo/coast/odessa/female01/nlo_cheer03.wav")}
+local sounds = {
+	Sound("vo/npc/Barney/ba_ohyeah.wav"),
+	Sound("vo/npc/female01/yeah02.wav"),
+	Sound("vo/npc/male01/yeah02.wav"),
+	Sound("combined/k_lab/k_lab_kl_mygoodness02_cc.wav"),
+	Sound("vo/Citadel/eli_goodgod.wav"),
+	Sound("vo/Citadel/eli_mygirl.wav"),
+	Sound("vo/eli_lab/al_goodcatch.wav"),
+	Sound("vo/coast/odessa/male01/nlo_cheer01.wav"),
+	Sound("vo/coast/odessa/male01/nlo_cheer02.wav"),
+	Sound("vo/coast/odessa/male01/nlo_cheer03.wav"),
+	Sound("vo/coast/odessa/male01/nlo_cheer04.wav"),
+	Sound("vo/coast/odessa/female01/nlo_cheer01.wav"),
+	Sound("vo/coast/odessa/female01/nlo_cheer02.wav"),
+	Sound("vo/coast/odessa/female01/nlo_cheer03.wav")
+}
+
 function ES.CreateAchievementPopup(text,name,icon)
 	if ach and IsValid(ach) then ach:Remove() end
 

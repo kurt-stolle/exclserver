@@ -113,7 +113,7 @@ router.get('/donate/return',function(req,res,next){
       return;
     } else {
       var payer_info=payment.payer.payer_info;
-      db.query("UPDATE `es_donations` SET paid = 1, email = ?, payer_id = ?, name = ? WHERE payment_id = ?;",[payer_info.email,payer_info.payer_id,(payer_info.first_name+" "+payer_info.last_name),payment_id],function(error){
+      db.query("UPDATE `es_donations` SET paid = 1, claimed = 0, email = ?, payer_id = ?, name = ? WHERE payment_id = ?;",[payer_info.email,payer_info.payer_id,(payer_info.first_name+" "+payer_info.last_name),payment_id],function(error){
         if (error) {
             next(new Error("Internal server error"));
             return;
