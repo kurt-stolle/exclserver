@@ -108,6 +108,7 @@ local navigationOptions={
 				local text
 				text=Label(ES.FormatLine("Below is a list of all rules that apply to this server. Not following any of the rules stated below may result in receiving a punishment or penalty.\n","ESDefault",pnl:GetWide()-40),pnl)
 				text:SetPos(20,y)
+				text:SetFont("ESDefault")
 				text:SizeToContents()
 
 				y=y+text:GetTall()
@@ -117,10 +118,17 @@ local navigationOptions={
 
 					text=Label(ES.FormatLine(k..". "..v,"ESDefault",pnl:GetWide()-40),pnl)
 					text:SetPos(20,y)
+					text:SetFont("ESDefault")
 					text:SizeToContents()
 
 					y=y+text:GetTall()
 				end
+
+				local btn_close=pnl:Add("esButton")
+				btn_close:SetSize(pnl:GetWide()-40,30)
+				btn_close:SetPos(20,pnl:GetTall()-20-30)
+				btn_close.Text="Close MOTD"
+				btn_close.DoClick=ES.CloseMOTD
 			end
 	},
 	{
@@ -129,6 +137,7 @@ local navigationOptions={
 			fn=function(pnl)
 				local text=Label(ES.FormatLine("This server is running ExclServer. ExclServer is a all-in-one server system that includes a shop, donation system, motd, administration, group management and an elaborate plugin system.\n\nPlayers can use ExclServer by pressing F5. From this menu the player can choose a number of different actions.\n\nItems can be bought with the Bananas currency. Bananas are earned through playing and achieving in-game goals. Completing achievements, listed in the F6 menu, also award Bananas.\n\nExclServer is made by Casual Bananas Software Development.\nPlease report any bugs to info@casualbananas.com.\n\n\n\nCOPYRIGHT (c) 2011-2015 CASUALBANANAS.COM","ESDefault",pnl:GetWide()-40),pnl)
 				text:SetPos(20,20)
+				text:SetFont("ESDefault")
 				text:SizeToContents()
 			end
 	},
@@ -136,9 +145,54 @@ local navigationOptions={
 			title="Donate",
 			icon=Material("exclserver/motd/donate.png"),
 			fn=function(pnl)
-				local text=Label(ES.FormatLine("This page is currently being worked on. Check back later!","ESDefault",pnl:GetWide()-40),pnl)
-				text:SetPos(20,20)
+				local text=Label(ES.FormatLine("For every $1 you donate, you will get 1000 bananas.\nDonating is the easiest way to earn bananas quickly.\nDon't wait any longer!","ESDefault",pnl:GetWide()-40),pnl)
+				text:DockMargin(20,20,20,20)
+				text:SetFont("ESDefault")
+				text:Dock(TOP)
 				text:SizeToContents()
+
+				local sub=pnl:Add("Panel")
+				sub:SetTall(20)
+				sub:Dock(TOP)
+				sub:DockMargin(20,0,40,0)
+
+					local amount_lbl=Label("DONATION AMOUNT (USD):   ",sub)
+					amount_lbl:SetFont("ESDefaultBold")
+					amount_lbl:Dock(LEFT)
+					amount_lbl:SizeToContents()
+
+					local entry=vgui.Create("esTextEntry",sub)
+					entry:Dock(FILL);
+					entry:SetNumeric(true)
+					entry:SetFont("ESDefaultBold")
+					entry:SetValue(5)
+
+				local btn_donate=vgui.Create("esButton",pnl)
+				btn_donate:SetText("Donate")
+				btn_donate:Dock(TOP)
+				btn_donate:SetTall(30)
+				btn_donate:DockMargin(20,40,20,20)
+				btn_donate.OnMouseReleased=function()
+					gui.OpenURL("https://es2-api.casualbananas.com/donate?amt="..(entry:GetValue() ~= "" and entry:GetValue() or "1").."&sid="..LocalPlayer():SteamID())
+
+					local fill=vgui.Create("esPanel")
+					fill:SetSize(ScrW(),ScrH())
+					fill:MakePopup()
+
+					local lbl=Label("You are currently making a donation of $"..(entry:GetValue() ~= "" and entry:GetValue() or "1").." to Casual Bananas.",fill)
+					lbl:SetFont("ESDefault++")
+					lbl:SizeToContents()
+					lbl:Center();
+					lbl:SetColor(ES.Color.White)
+
+					local btn=fill:Add("esButton")
+					btn:SetText("Done")
+					btn:SetSize(300,30)
+					btn:SetPos(fill:GetWide()/2 - btn:GetWide()/2, lbl.y + lbl:GetTall()+30)
+					btn.DoClick=function()
+						LocalPlayer():ConCommand("retry;")
+					end
+				end
 			end
 	},
 
@@ -184,7 +238,7 @@ function ES.OpenMOTD()
 
 		local context=frame:Add("Panel")
 		local navigation=frame:Add("Panel")
-		local btn_close=frame:Add("esButton")
+
 
 		navigation:SetPos(0,0)
 		navigation:SetSize(74,frame:GetTall())
@@ -229,15 +283,8 @@ function ES.OpenMOTD()
 			end
 
 
-		context:SetSize(frame:GetWide()-navigation:GetWide(),frame:GetTall()-10-30-10)
+		context:SetSize(frame:GetWide()-navigation:GetWide(),frame:GetTall())
 		context:SetPos(navigation.x+navigation:GetWide(),0)
-
-
-
-		btn_close:SetSize(context:GetWide()-20,30)
-		btn_close:SetPos(context.x+10,frame:GetTall()-10-30)
-		btn_close.Text="Close MOTD"
-		btn_close.DoClick=ES.CloseMOTD
 
 		navigationOptions[1]._Panel:OnMouseReleased()
 
