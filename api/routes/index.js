@@ -4,7 +4,7 @@ var router = express.Router();
 var mysql = require('mysql');
 
 /* CONFIGURATION */
-var host='localhost:3000'; // Local IP address or DNS name.
+var host='https://es2-api.casualbananas.com'; // Local IP address or DNS name.
 var community_name="Casual Bananas";
 var db = mysql.createConnection({
   host     : '188.165.214.55',
