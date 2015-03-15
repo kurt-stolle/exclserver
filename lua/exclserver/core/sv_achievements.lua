@@ -5,17 +5,12 @@ util.AddNetworkString("ESAchProgr")
 util.AddNetworkString("ESAchEarned")
 
 hook.Add("ESDatabaseReady","ESAchiesDatatableSetup",function()
-	local str = ""
-	for k,v in pairs(ES.Achievements)do
-		str = str..", "..k.." int(9) unsigned not null"
-	end
-
-	ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_achievements` (`id` int unsigned not null AUTO_INCREMENT, steamid varchar(100)"..str..", PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1"):wait()
+	ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_achievements` (`id` int unsigned not null AUTO_INCREMENT, steamid varchar(100), achname varchar(100), progress int unsigned not null default 0, PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1"):wait()
 end)
 
 local PLAYER = FindMetaTable("Player")
 function PLAYER:ESAddAchievementProgress(id,number)
-	if self:ESHasCompletedAchievement(id) then return end
+	if self:ESHasCompletedAchievement(id) and self._es_achHasInit then return end
 
 	if not self._es_achievements then
 		self._es_achievements = {}
@@ -24,7 +19,14 @@ function PLAYER:ESAddAchievementProgress(id,number)
 		self._es_achievements[id] = self._es_achievements[id] and (self._es_achievements[id] + number) or number
 	end
 
-	ES.DBQuery("INSERT INTO es_achievements SET steamid = '"..self:SteamID().."', "..id.." = "..self._es_achievements[id].." ON DUPLICATE KEY UPDATE  "..id.." = "..id.." + "..number.."")
+	ES.DBQuery("SELECT id FROM es_achievements WHERE steamid = '"..self:SteamID().."' AND achname = '"..id.."' LIMIT 1;",function(res)
+		if res and res[1] and res[1].id then
+			ES.DBQuery("UPDATE es_achievements SET progress = progress + "..number.." WHERE id="..tostring(res[1].id)..";")
+		else
+			ES.DBQuery("INSERT INTO es_achievements SET steamid = '"..self:SteamID().."', achname='"..id.."', progress = "..self._es_achievements[id]..";")
+		end
+	end)
+
 
 	if self._es_achievements[id] >= ES.Achievements[id].progressNeeded then
 		net.Start("ESAchEarned")
@@ -49,16 +51,21 @@ function PLAYER:ESAddAchievementProgress(id,number)
 end
 
 hook.Add("ESPlayerReady","ES.LoadPlayerAchievemenets",function(ply)
-	ES.DBQuery("SELECT * FROM es_achievements WHERE steamid = '"..ply:SteamID().."' LIMIT 1",function(res)
+	ES.DBQuery("SELECT * FROM es_achievements WHERE steamid = '"..ply:SteamID().."';",function(res)
 		if res and res[1] then
+
 			ply._es_achievements = {}
-			for k,v in pairs(res[1])do
-				ply._es_achievements[k] = tonumber(v)
-				net.Start("ESAchSynch")
-				net.WriteTable(ply._es_achievements)
-				net.Send(ply)
+			for k,v in ipairs(res)do
+				ply._es_achievements[v.achname] = tonumber(v.progress)
+
 			end
+
+			net.Start("ESAchSynch")
+			net.WriteTable(ply._es_achievements)
+			net.Send(ply)
 		end
+
+		ply._es_achHasInit=true
 	end)
 end)
 
