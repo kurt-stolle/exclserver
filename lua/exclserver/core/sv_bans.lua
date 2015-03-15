@@ -32,7 +32,7 @@ hook.Add("player_connect", "ESHandlePlayerConnect", function(data)
 		if res and res[1] then
 			local expire = "This ban will never expire"
 			if res[1].time > 0 then
-				expire = "This ban will expire in "..(tonumber(res[1].time) - math.Round(os.time()/60) - tonumber(res[1].timeStart)).." minutes"
+				expire = "This ban will expire in "..(tonumber(res[1].time) - (math.Round(os.time()/60) - tonumber(res[1].timeStart))).." minutes"
 			end
 			ES.DropUser(data.userid,"You are banned! "..expire..". Reason: "..res[1].reason..".")
 		end
@@ -58,7 +58,7 @@ timer.Create("ES.CheckBans",300,0,function()
 				local steamid = v:SteamID()
 				local expire = "This ban will never expire"
 				if bans[steamid].time > 0 then
-					expire = "This ban will expire in "..bans[steamid].time - (math.Round(os.time()/60) - bans[steamid].timeStart).." minutes"
+					expire = "This ban will expire in "..(bans[steamid].time - (math.Round(os.time()/60) - bans[steamid].timeStart)).." minutes"
 				end
 				ES.DropUser(v:UserID(),"You are banned! "..expire..". Reason: "..res[1].reason..".")
 			end

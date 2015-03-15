@@ -33,9 +33,16 @@ if SERVER then
 		end
 		local userFound=userFound[1]
 
+		local timeStr;
+		if time > 0 then
+			timeStr=" for <hl>"..tostring(time).."</hl> minutes"
+		else
+			timeStr=" permanently"
+		end
+
 		ES.AddBan(userFound:SteamID(),p:SteamID(),time,true,reason,userFound:Nick(),p:Nick())
-		ES.DropUser(userFound:UserID(), "You are banned! Your ban will expire in "..time.." minutes. Reason: "..reason)
-		ES.ChatBroadcast("<hl>"..p:Nick().."</hl> banned <hl>"..userFound:Nick().."</hl>, reason: <hl>"..reason.."</hl>.")
+		ES.DropUser(userFound:UserID(), "You have been banned"..timeStr..". Reason: "..reason)
+		ES.ChatBroadcast("<hl>"..p:Nick().."</hl> banned <hl>"..userFound:Nick().."</hl>"..timeStr..", reason: <hl>"..reason.."</hl>.")
 	end,20)
 
 	PLUGIN:AddCommand("unban",function(p,a)
