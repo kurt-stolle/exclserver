@@ -78,17 +78,17 @@ router.get('/donate', function(req, res, next){
       } else {
           db.query("INSERT INTO `es_donations` (steamid,amount,ip,payment_id) VALUES(?,?,?,?);",[sid,amt,req.connection.remoteAddress,payment.id],function(error){
             if (error) {
-                next(new Error("Internal server error"));
+                console.log("PANIC!!!! 1")
                 return;
             }
-            for (i=0; i < payment.links.length; i++){
-              var link=payment.links[i];
-              if(link.rel=="approval_url"){
-                res.redirect(link.href);
-                break;
-              }
-            }
           });
+          for (i=0; i < payment.links.length; i++){
+            var link=payment.links[i];
+            if(link.rel=="approval_url"){
+              res.redirect(link.href);
+              break;
+            }
+          }
       }
   });
 });
@@ -115,11 +115,11 @@ router.get('/donate/return',function(req,res,next){
       var payer_info=payment.payer.payer_info;
       db.query("UPDATE `es_donations` SET paid = 1, claimed = 0, email = ?, payer_id = ?, name = ? WHERE payment_id = ?;",[payer_info.email,payer_info.payer_id,(payer_info.first_name+" "+payer_info.last_name),payment_id],function(error){
         if (error) {
-            next(new Error("Internal server error"));
+            console.log("PANIC!!!! 2")
             return;
         }
-        res.send('Donation successful! You may now close this window.');
       });
+      res.send('Donation successful! You may now close this window.');
     }
   });
 });

@@ -1,14 +1,14 @@
 -- Buttons
-ES.CreateFont( "ES.ToggleButton", { 
-font = "Roboto", 
+ES.CreateFont( "ES.ToggleButton", {
+font = "Roboto",
 size = 16,
-weight=700 } 
+weight=700 }
 )
-ES.CreateFont( "ES.ToggleButton.Shadow", { 
-font = "Roboto", 
+ES.CreateFont( "ES.ToggleButton.Shadow", {
+font = "Roboto",
 size = 16,
 weight=700,
-blursize=2 } 
+blursize=2 }
 )
 
 local BUTTON = {}
@@ -24,7 +24,7 @@ function BUTTON:OnMouseReleased()
 	if self.HideButton then return end
 
 	self.Toggled = not self.Toggled
-	self:DoClick()
+	self:DoClick(self.Toggled)
 end
 function BUTTON:GetChecked()
 	return self.Toggled
@@ -42,12 +42,12 @@ function BUTTON:Paint(w,h)
 	draw.SimpleText(self.Text, "ES.ToggleButton", (h*2) + 8, (h/2), ES.Color.White, 0, TEXT_ALIGN_CENTER)
 
 	if self.HideButton then return end
-	
+
 	-- draw the button thingy
 	if self.Toggled then
 		self.moveX = Lerp(FrameTime()*18,self.moveX,0)
 	else
-		self.moveX = Lerp(FrameTime()*18,self.moveX,h+1)		
+		self.moveX = Lerp(FrameTime()*18,self.moveX,h+1)
 	end
 
 
@@ -56,7 +56,7 @@ function BUTTON:Paint(w,h)
 
 
 	draw.RoundedBox(2,x-1,y-1,(h)*2+2,h + 2, Color(0,0,0,200))
-	
+
 	draw.SimpleText("I","ESDefaultBold",x+(h)/2 + (h-2), y+(h-2)/2,ES.Color.White,1,1)
 	draw.SimpleText("O","ESDefaultBold",x+(h)/2, y+(h-2)/2,ES.Color.White,1,1)
 
