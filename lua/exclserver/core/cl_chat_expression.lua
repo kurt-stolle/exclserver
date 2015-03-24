@@ -82,7 +82,7 @@ end
 local expression = ES.Expression("<url>(.-)</url>", "url")
 expression:SetPrettyExpression("<url> </url>")
 
-local color_url=ES.Color["#03F"]
+local color_url=ES.Color["#09F"]
 function expression:Execute(base,text)
 	local label = vgui.Create("esLabel")
 	label:SetFont("ESChatFont");

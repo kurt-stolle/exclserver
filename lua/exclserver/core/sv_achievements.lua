@@ -10,7 +10,7 @@ end)
 
 local PLAYER = FindMetaTable("Player")
 function PLAYER:ESAddAchievementProgress(id,number)
-	if self:ESHasCompletedAchievement(id) and self._es_achHasInit then return end
+	if ( self:ESHasCompletedAchievement(id) and self._es_achHasInit ) or not ES.Achievements[id] then return end
 
 	if not self._es_achievements then
 		self._es_achievements = {}

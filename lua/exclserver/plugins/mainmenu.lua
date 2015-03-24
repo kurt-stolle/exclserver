@@ -34,6 +34,9 @@ if SERVER then
 	PLUGIN:AddCommand("rules",function(p,a)
 		p:SendLua("ES.OpenMOTD()")
 	end)
+	PLUGIN:AddCommand("donate",function(p,a)
+		p:ConCommand("es_menu_donate")
+	end)
 end
 
 PLUGIN()

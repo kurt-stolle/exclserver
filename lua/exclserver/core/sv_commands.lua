@@ -66,7 +66,7 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 
 		ES.Commands["adminchat"].func(p,t)
 		return false
-	elseif t and (string.Left(t,1) == ":" --[[or string.Left(t,1) == "!" or string.Left(t,1) == "/" or string.Left(t,1) == "@"]]) then -- strict mode: only allow the : prefix for ExclServer commands.
+	elseif t and (string.Left(t,1) == ":" or string.Left(t,1) == "!" or string.Left(t,1) == "/") then -- strict mode: only allow the : prefix for ExclServer commands.
 		local t = string.Explode(" ",t or "",false)
 		t[1] = string.gsub(t[1] or "",string.Left(t[1],1) or "","")
 
