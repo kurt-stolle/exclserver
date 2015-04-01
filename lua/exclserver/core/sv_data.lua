@@ -2,7 +2,7 @@
 -- Edit these variables to configurate MySQL.
 -- You can download MySQL server from the official MySQL website.
 
-local DATABASE_HOST     = "188.165.214.55";                                     -- (String) IPv4 IP of the mysql server.
+local DATABASE_HOST     = "localhost";                                     -- (String) IPv4 IP of the mysql server.
 local DATABASE_PORT     = 3306;                                                 -- (Number) mysql server port.
 local DATABASE_SCHEMA   = "exclserver";                                         -- (String) name of the schema that shoul$
 local DATABASE_USERNAME = "exclserver";                                         -- (String) Username
