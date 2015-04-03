@@ -7,7 +7,7 @@ var mysql = require('mysql');
 var host='https://es2-api.casualbananas.com'; // Local IP address or DNS name.
 var community_name="Casual Bananas";
 var db = mysql.createConnection({
-  host     : '188.165.214.55',
+  host     : '192.95.30.86',
   user     : 'exclserver',
   password : '#x6eQ56m593r83b5mky2YvbeP64E2MyQP',
   database : 'exclserver',
