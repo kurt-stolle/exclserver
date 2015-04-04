@@ -31,6 +31,8 @@
 -- ##                                                                                ##
 -- ####################################################################################
 
+-- Edit me in your gamemodes if a HUD element is in the way!
+ES.NotificationOffset=Vector(0,0,0);
 
 -- Popup notifications
 function ES.NotifyPopup(title,message)
@@ -76,11 +78,8 @@ ES.CreateFont("ES.Notification.Shadow",{
 	blursize = 2,
 })
 
-/*
+-- BANANAS NOTIFICATIONS
 
-BANANAS NOTIFICATIONS
-
-*/
 color_black = ES.Color.Black
 color_white = ES.Color.White
 local icon_bananas = Material("exclserver/bananas.png")
@@ -127,7 +126,7 @@ end
 
 local fpsAvgNum=0
 hook.Add("HUDPaint","ESDrawScreenText",function()
-	x,y = 16,16
+	x,y = (ES.NotificationOffset.x + 16),(ES.NotificationOffset.y + 16)
 	p = LocalPlayer()
 
 	setDrawColor(color_white)
@@ -226,8 +225,8 @@ hook.Add("HUDPaint","ES.Notifications",function()
 	if scale > 0.001 then
 		-- setup matrix
 		rad = -deg2rad( ang )
-		x = 32 - ( sin( rad + halvedPi ) * 64*scale / 2 + sin( rad ) * 64*scale / 2 )
-		y = 64+32 - ( cos( rad + halvedPi ) * 64*scale / 2 + cos( rad ) * 64*scale / 2 )
+		x = ES.NotificationOffset.x + 32 - ( sin( rad + halvedPi ) * 64*scale / 2 + sin( rad ) * 64*scale / 2 )
+		y = ES.NotificationOffset.y + 64+32 - ( cos( rad + halvedPi ) * 64*scale / 2 + cos( rad ) * 64*scale / 2 )
 
 		color_circle.a = scale*255
 
