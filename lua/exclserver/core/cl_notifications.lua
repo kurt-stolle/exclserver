@@ -124,7 +124,6 @@ local function drawText(text)
 	simpleText(text,"ES.Notification"		,x,y+(32/2),color_white,0,1)
 end
 
-local fpsAvgNum=0
 hook.Add("HUDPaint","ESDrawScreenText",function()
 	x,y = (ES.NotificationOffset.x + 16),(ES.NotificationOffset.y + 16)
 	p = LocalPlayer()
