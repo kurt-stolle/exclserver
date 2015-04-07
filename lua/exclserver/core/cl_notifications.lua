@@ -252,7 +252,7 @@ hook.Add("HUDPaint","ES.Notifications",function()
 	if color_text.a >= 1 then
 		-- draw text
 		color_text_dark.a = color_text.a * (220/255)
-		x,y = 64,64+16
+		x,y = ES.NotificationOffset.x + 64,ES.NotificationOffset.y + 64+16
 		drawText(text)
 	end
 end)
