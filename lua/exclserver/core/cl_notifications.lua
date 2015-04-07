@@ -194,8 +194,6 @@ net.Receive("ES.SendNotification",function(len)
 	ES.Notify(net.ReadString(),net.ReadString())
 end)
 
-
-
 hook.Add("HUDPaint","ES.Notifications",function()
 	if queue[1] then
 		scale = Lerp(FrameTime()*8,scale,1)

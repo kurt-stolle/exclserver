@@ -23,6 +23,7 @@ ES.DefineNetworkedVariable("rank","String")
 
 ES.DefineNetworkedVariable("VIP","UInt",4,"tinyint(1) unsigned not null default 0")
 ES.DefineNetworkedVariable("bananas","UInt",32,"int(10) unsigned not null default 100")
+ES.DefineNetworkedVariable("playtime","UInt",32,"int(16) unsigned not null default 0")
 
 ES.DefineNetworkedVariable("active_trail","String",nil,"varchar(22)")
 ES.DefineNetworkedVariable("active_aura","String",nil,"varchar(22)")

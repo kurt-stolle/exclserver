@@ -27,7 +27,7 @@ db.query("CREATE TABLE IF NOT EXISTS `es_donations` (`id` int unsigned not null 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.send('ExclServer API');
+  res.send('ExclServer API running!');
 });
 
 /* GET paypal donation start */
@@ -36,7 +36,7 @@ router.get('/donate', function(req, res, next){
   var sid=String(req.query.sid);
 
   if ( !amt || isNaN(amt) || amt <= 0 || !sid ) {
-    next(new Error("Internal server error"));
+    next(new Error("Internal server error (a)"));
     return;
   }
 
@@ -73,15 +73,16 @@ router.get('/donate', function(req, res, next){
 
   paypal.payment.create(create_payment_json, function (error, payment) {
       if (error) {
-          next(new Error("Internal server error"));
+          next(new Error("Internal server error (b)"));
           return;
       } else {
           db.query("INSERT INTO `es_donations` (steamid,amount,ip,payment_id) VALUES(?,?,?,?);",[sid,amt,req.connection.remoteAddress,payment.id],function(error){
             if (error) {
-                console.log("PANIC!!!! 1")
+                console.log("Something went wrong. 1")
                 return;
             }
           });
+
           for (i=0; i < payment.links.length; i++){
             var link=payment.links[i];
             if(link.rel=="approval_url"){
@@ -103,19 +104,19 @@ router.get('/donate/return',function(req,res,next){
   var payer_id=req.query.PayerID;
   var payment_id=req.query.paymentId;
   if (!payer_id || !payment_id){
-    next(new Error("Internal server error"));
+    next(new Error("Internal server error (a)"));
     return;
   }
 
   paypal.payment.execute(payment_id, { "payer_id": payer_id }, function(error, payment){
     if(error){
-      next(new Error("Internal server error"));
+      next(new Error("Internal server error (c)"));
       return;
     } else {
       var payer_info=payment.payer.payer_info;
       db.query("UPDATE `es_donations` SET paid = 1, claimed = 0, email = ?, payer_id = ?, name = ? WHERE payment_id = ?;",[payer_info.email,payer_info.payer_id,(payer_info.first_name+" "+payer_info.last_name),payment_id],function(error){
         if (error) {
-            console.log("PANIC!!!! 2")
+            console.log("Something went wrong. 2")
             return;
         }
       });

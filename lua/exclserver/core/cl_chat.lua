@@ -43,7 +43,7 @@ local ads={
 	"Put <hl>[CB]</hl> in your steam name to join our community!",
 	"You are playing on a <hl>Casual Bananas</hl> community server.",
 }
-timer.Create("ES.AdvertiseInChat",60*2,0,function()
+timer.Create("ES.AdvertiseInChat",60*5,0,function()
 	local str=table.Random(ads)
 	chat.AddText(ES.Color.White,str)
 end)

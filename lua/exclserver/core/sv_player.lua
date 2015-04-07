@@ -6,6 +6,8 @@ local PLAYER = FindMetaTable("Player")
 util.AddNetworkString("ES.PlayerReady")
 net.Receive("ES.PlayerReady",function(len,ply)
 	hook.Call("ESPlayerReady",GAMEMODE,ply)
+
+	ES.BroadcastNotification("generic",ply:Nick().." has joined the server!")
 end)
 
 
@@ -17,17 +19,6 @@ function PLAYER:ESSynchPlayer()
 	net.WriteTable(self.excl)
 	net.Send(self)
 end
-
--- Occasionally hand out bananas
-timer.Create("ESHandOutBananas",600,0,function()
-	for k,v in pairs(player.GetAll())do
-		timer.Simple(math.random(0,120),function()
-			if IsValid(v) and v.excl and v:ESGetGlobalData("bananas",false) then
-				v:ESGiveBananas(math.random(2,8))
-			end
-		end)
-	end
-end)
 
 -- Send a notification
 function PLAYER:ESSendNotification(kind,msg)
@@ -85,9 +76,9 @@ net.Receive("ES.GetServerList",function(len,ply)
 
 	ply._es_cmdTimeout=CurTime()+.5;
 
-	ES.DBQuery("SELECT ip FROM `es_servers`;",function(res)
+	ES.DBQuery("SELECT ip FROM `es_servers` WHERE ip != '127.0.0.1:27015';",function(res)
 		local tab={}
-		for k,v in ipairs(res)do
+		for k,v in pairs(res)do
 			if v.ip then
 				table.insert(tab,v.ip)
 			end
@@ -106,8 +97,19 @@ function ES.ChatBroadcast(...)
 	net.WriteTable{...}
 	net.Broadcast()
 end
-timer.Create("ESHandOutBananas",60,0,function()
-	for k,v in pairs(player.GetAll())do
-		v:ESAddBananas(2)
+timer.Create("ESHandOutBananas",300,0,function()
+	for k,v in ipairs(player.GetAll())do
+		v:ESAddBananas(10)
+	end
+end)
+timer.Create("ESAddPlaytime",60,0,function()
+	for k,v in ipairs(player.GetAll())do
+		local time=tonumber(v:ESGetNetworkedVariable("playtime",0)+1)
+
+		if (time % 60) == 0 then
+			v:ESChatPrint("You have now played <hl>"..math.Round(time/60).."</hl> hours on this server!")
+		end
+
+		v:ESSetNetworkedVariable("playtime",time);
 	end
 end)

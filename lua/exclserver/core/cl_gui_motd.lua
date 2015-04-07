@@ -199,7 +199,7 @@ local navigationOptions={
 }
 
 
-local w=560
+local w=800
 local h=w*.65
 function ES.CloseMOTD()
 	if IsValid(motd) then
