@@ -99,7 +99,7 @@ function ES.ChatBroadcast(...)
 end
 timer.Create("ESHandOutBananas",300,0,function()
 	for k,v in ipairs(player.GetAll())do
-		v:ESAddBananas(10)
+		v:ESAddBananas(14+math.random(1,3)+v:ESGetVIPTier())
 	end
 end)
 timer.Create("ESAddPlaytime",60,0,function()
@@ -108,6 +108,7 @@ timer.Create("ESAddPlaytime",60,0,function()
 
 		if (time % 60) == 0 then
 			v:ESChatPrint("You have now played <hl>"..math.Round(time/60).."</hl> hours on this server!")
+			v:ESAddBananas(15)
 		end
 
 		v:ESSetNetworkedVariable("playtime",time);
