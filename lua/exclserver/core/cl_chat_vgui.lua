@@ -60,7 +60,7 @@ function PANEL:Init()
 		send:Dock(RIGHT);
 		send:DockMargin(0,0,0,0);
 		send.DoClick=function()
-			RunConsoleCommand("say",string.Trim(entry:GetValue()));
+			RunConsoleCommand(self._team and "say_team" or "say",string.Trim(entry:GetValue()));
 			entry:AddHistory(entry:GetValue())
 			entry:SetText("");
 			entry:SetValue("");

@@ -118,5 +118,52 @@ function ES.UIDrawRippleEffect(tab,w,h)
 	end
 end
 
+-- Blur
+local matBlurScreen = Material( "pp/blurscreen" )
+
+function ES.UIDrawBlur(panel)
+	local x, y = panel:LocalToScreen( 0, 0 )
+
+	DisableClipping( true )
+
+	surface.SetDrawColor( 0,0,0,100 )
+
+	render.ClearStencil()
+	render.SetStencilEnable(true)
+
+	render.SetBlend(0)
+
+	render.SetStencilFailOperation( STENCILOPERATION_KEEP )
+	render.SetStencilZFailOperation( STENCILOPERATION_REPLACE )
+	render.SetStencilPassOperation( STENCILOPERATION_REPLACE )
+	render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_ALWAYS )
+	render.SetStencilReferenceValue( 1 )
+
+
+	surface.DrawRect(0,0,panel:GetWide(),panel:GetTall())
+
+	render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_EQUAL )
+	render.SetStencilPassOperation( STENCILOPERATION_REPLACE )
+
+	render.SetBlend(1)
+
+	surface.SetMaterial( matBlurScreen )
+
+
+	for i=0.33, 1, 0.33 do
+		matBlurScreen:SetFloat( "$blur", 5 * i )
+		matBlurScreen:Recompute()
+		render.UpdateScreenEffectTexture()
+		surface.DrawTexturedRect( x * -1, y * -1, ScrW(), ScrH() )
+	end
+
+	DisableClipping( false )
+
+	render.SetStencilEnable(false)
+
+	surface.SetDrawColor( 0,0,0,240 )
+	surface.DrawRect(0,0,panel:GetWide(),panel:GetTall())
+end
+
 -- Disable ugly progress thingy
 hook.Remove( "SpawniconGenerated", "SpawniconGenerated")

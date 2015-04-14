@@ -36,6 +36,7 @@ db.onConnected = function(database)
 
 	-- Query to check whether the required tables exist.
 	ES.DBQuery("SELECT `table_name` FROM information_schema.tables WHERE `table_schema` = '"..DATABASE_SCHEMA.."';",function(res)
+
 		local notFound = false
 
 		-- Check whether we have at least 11 tab
@@ -141,11 +142,15 @@ local function MySQLError(q,e,sql)
 end
 
 function ES.DBQuery(request,fn,fnError)
+	if ES.debug then
+		ES.DebugPrint("MySQL > "..request)		
+	end
+
 	local query = db:query(request)
 
 	if not query then
 		if void then
-			ES.DebugPrint("Voided MySQL call - called too early!")
+			Error("Voided MySQL call - called too early!")
 			return
 		end
 

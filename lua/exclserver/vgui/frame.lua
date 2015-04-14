@@ -22,6 +22,8 @@ weight=500 }
 AccessorFunc(PANEL,"title","Title",FORCE_STRING)
 local tex = Material("exclserver/gradient.png")
 function PANEL:Init()
+	self:DockPadding(0,30,0,0)
+
 	self.scale=0
 	self.kill=false
 	self.oldRemove=self.Remove
@@ -72,7 +74,7 @@ function PANEL:Paint(w,h)
 		matrixScale.y = self.scale
 		matrix:Scale( matrixScale )
 	else
-		x,y=self:LocalToScreen(w/2,h/2 + h * self.scale)
+		x,y=self:LocalToScreen(w/2,h/2)
 		x,y=(self.scale-1)*-x,(self.scale-1)*-y
 
 		matrix=Matrix()

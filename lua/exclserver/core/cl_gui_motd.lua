@@ -1,295 +1,200 @@
 -- cl_motd.lua
 -- the motd
 
-local motd
+local context
 
+surface.CreateFont("ESMOTDHead",{
+	font="Roboto",
+	size=50,
+	weight=300
+})
 
-hook.Add("HUDShouldDraw","ES.MOTD.SupressHUD",function()
-	if IsValid(motd) then return false end
-end)
-
-local fx = {
-	["$pp_colour_addr"] = 0,
-	["$pp_colour_addg"] = 0,
-	["$pp_colour_addb"] = 0,
-	["$pp_colour_brightness"] = -.1,
-	["$pp_colour_contrast"] = 1.1,
-	["$pp_colour_colour"] = 0,
-	["$pp_colour_mulr"] = 0,
-	["$pp_colour_mulg"] = 0,
-	["$pp_colour_mulb"] = 0
-}
-hook.Add("RenderScreenspaceEffects","ES.MOTDBlackWhite",function()
-	if IsValid(motd) then
-		DrawColorModify(fx)
-	end
-end)
-hook.Add("ShouldDrawLocalPlayer","ES.MOTDDrawLocal",function()
-	if IsValid(motd) then
-		return true
-	end
-end)
-local view = {}
-local rot=0
-hook.Add("CalcView","ES.MOTDCalcView",function(ply,pos,angles,fov)
-	if not view.origin or not view.angles or not IsValid(motd) then
-		view.origin=pos
-		view.angles=angles
-	elseif IsValid(motd) then
-		local bone=ply:LookupBone("ValveBiped.Bip01_Spine")
-
-		if bone then
-
-			pos,angles=ply:GetBonePosition(bone)
-
-			if pos and angles then
-
-				rot=(rot + (FrameTime() * 6)) % 360
-
-				angles=ply:GetAngles()
-				angles:RotateAroundAxis(angles:Up(),rot)
-
-				local tr=util.TraceLine( {
-					start=pos,
-					endpos=pos-(angles:Forward()*70),
-					filter=ply
-				} )
-
-				view.origin = tr.HitPos + angles:Forward()*10
-				view.angles = angles
-				view.fov = fov
-
-				return view
-
-			end
-		end
-	end
-end)
+local gradient=Material("exclserver/gradient.png")
 ES.motdEnabled = true
-ES.ServerRules = {
-	"Do act friendly towards other players.",
-	"Do obey to the administration team's directions.",
-	"Do not spam in any way.",
-	"Do not cheat."
-}
-
-local color_background_faded=Color(0,0,0,150)
-
-local timeOpen=0
-local motdPaint=function(self,w,h)
-	Derma_DrawBackgroundBlur(self,timeOpen)
-end
-local navPaint=function(self,w,h)
-	surface.SetDrawColor(color_background_faded)
-	surface.DrawRect(0,0,w,h)
-end
-local navPaintButton=function(self,w,h)
-	surface.SetDrawColor((self:GetHover() and not self:GetSelected()) and ES.GetColorScheme(3) or Color(150,150,150,1))
-	surface.DrawRect(0,1,w-1,h-2)
-
-	if self:GetSelected() then
-		surface.SetDrawColor(ES.Color["#1E1E1E"])
-		surface.DrawRect(0,0,w,h)
-	end
-
-	surface.SetDrawColor(ES.Color.White)
-	surface.SetMaterial(self.Icon)
-	surface.DrawTexturedRect(w/2-(64/2),0,64,64)
-
-	draw.DrawText(self.title,"ESDefaultBold",w/2,h-22,ES.Color.White,1,1)
-end
-local navigationOptions={
-	{
-			title="Rules",
-			icon=Material("exclserver/motd/rules.png"),
-			fn=function(pnl)
-				local y=20
-
-				local text
-				text=Label(ES.FormatLine("Below is a list of all rules that apply to this server. Not following any of the rules stated below may result in receiving a punishment or penalty.\n","ESDefault",pnl:GetWide()-40),pnl)
-				text:SetPos(20,y)
-				text:SetFont("ESDefault")
-				text:SizeToContents()
-
-				y=y+text:GetTall()
-
-				for k,v in ipairs(ES.ServerRules)do
-
-
-					text=Label(ES.FormatLine(k..". "..v,"ESDefault",pnl:GetWide()-40),pnl)
-					text:SetPos(20,y)
-					text:SetFont("ESDefault")
-					text:SizeToContents()
-
-					y=y+text:GetTall()
-				end
-
-				local btn_close=pnl:Add("esButton")
-				btn_close:SetSize(pnl:GetWide()-40,30)
-				btn_close:SetPos(20,pnl:GetTall()-20-30)
-				btn_close.Text="Close MOTD"
-				btn_close.DoClick=ES.CloseMOTD
-			end
-	},
-	{
-			title="About",
-			icon=Material("exclserver/motd/info.png"),
-			fn=function(pnl)
-				local text=Label(ES.FormatLine("This server is running ExclServer. ExclServer is a all-in-one server system that includes a shop, donation system, motd, administration, group management and an elaborate plugin system.\n\nPlayers can use ExclServer by pressing F5. From this menu the player can choose a number of different actions.\n\nItems can be bought with the Bananas currency. Bananas are earned through playing and achieving in-game goals. Completing achievements, listed in the F6 menu, also award Bananas.\n\nExclServer is made by Casual Bananas Software Development.\nPlease report any bugs to info@casualbananas.com.\n\n\n\nCOPYRIGHT (c) 2011-2015 CASUALBANANAS.COM","ESDefault",pnl:GetWide()-40),pnl)
-				text:SetPos(20,20)
-				text:SetFont("ESDefault")
-				text:SizeToContents()
-			end
-	},
-	{
-			title="Donate",
-			icon=Material("exclserver/motd/donate.png"),
-			fn=function(pnl)
-				local text=Label(ES.FormatLine("For every $1 you donate, you will get 1000 bananas.\nDonating is the easiest way to earn bananas quickly.\nDon't wait any longer!","ESDefault",pnl:GetWide()-40),pnl)
-				text:DockMargin(20,20,20,20)
-				text:SetFont("ESDefault")
-				text:Dock(TOP)
-				text:SizeToContents()
-
-				local sub=pnl:Add("Panel")
-				sub:SetTall(20)
-				sub:Dock(TOP)
-				sub:DockMargin(20,0,40,0)
-
-					local amount_lbl=Label("DONATION AMOUNT (USD):   ",sub)
-					amount_lbl:SetFont("ESDefaultBold")
-					amount_lbl:Dock(LEFT)
-					amount_lbl:SizeToContents()
-
-					local entry=vgui.Create("esTextEntry",sub)
-					entry:Dock(FILL);
-					entry:SetNumeric(true)
-					entry:SetFont("ESDefaultBold")
-					entry:SetValue(5)
-
-				local btn_donate=vgui.Create("esButton",pnl)
-				btn_donate:SetText("Donate")
-				btn_donate:Dock(TOP)
-				btn_donate:SetTall(30)
-				btn_donate:DockMargin(20,40,20,20)
-				btn_donate.OnMouseReleased=function()
-					gui.OpenURL("https://es2-api.casualbananas.com/donate?amt="..(entry:GetValue() ~= "" and entry:GetValue() or "1").."&sid="..LocalPlayer():SteamID())
-
-					local fill=vgui.Create("esPanel")
-					fill:SetSize(ScrW(),ScrH())
-					fill:MakePopup()
-
-					local lbl=Label("You are currently making a donation of $"..(entry:GetValue() ~= "" and entry:GetValue() or "1").." to Casual Bananas.",fill)
-					lbl:SetFont("ESDefault++")
-					lbl:SizeToContents()
-					lbl:Center();
-					lbl:SetColor(ES.Color.White)
-
-					local btn=fill:Add("esButton")
-					btn:SetText("Done")
-					btn:SetSize(300,30)
-					btn:SetPos(fill:GetWide()/2 - btn:GetWide()/2, lbl.y + lbl:GetTall()+30)
-					btn.DoClick=function()
-						LocalPlayer():ConCommand("retry;")
-					end
-				end
-			end
-	},
-
-}
-
-
-local w=800
-local h=w*.65
 function ES.CloseMOTD()
-	if IsValid(motd) then
-		motd:Remove()
+	if IsValid(context) then
+		context:Remove()
 	end
 end
 function ES.OpenMOTD()
 	ES.CloseMOTD()
 
-	timeOpen=SysTime()
+	context=vgui.Create("EditablePanel")
+	context:SetSize(ScrW(),ScrH())
+	context.Paint=function(self,w,h)
+		Derma_DrawBackgroundBlur(self,1,1)
+		surface.SetDrawColor(ES.Color["#000000AA"])
+		surface.DrawRect(0,0,w,h)
+	end
 
-	motd=vgui.Create("EditablePanel")
-	motd:SetSize(ScrW(),ScrH())
-	motd:SetPos(0,0)
-	motd.Paint=motdPaint
+	local mid=vgui.Create("Panel",context)
+	mid:SetSize(800,ScrH())
+	mid:Center()
+	mid:DockPadding(0,80,0,80)
 
-		local master=motd:Add("esFrame")
-		master:SetSize(w,h)
-		--[[master:SetPos(ScrW(),(ScrH()/2)-(h/2))
-		master.title="Welcome"
-		master.xDesired=(ScrW()/2)-(w/2)
-		master:PerformLayout()]]
-		master.title="Welcome"
-		master:Center()
+	local lbl_welcome=vgui.Create("esLabel",mid)
+	lbl_welcome:SetText("Welcome to Casual Bananas!")
+	lbl_welcome:SetFont("ESMOTDHead")
+	lbl_welcome:SizeToContents()
+	lbl_welcome:Dock(TOP);
+	lbl_welcome:DockMargin(10,10,10,10)
 
-		local oldRemove=master.Remove
-		function master:Remove()
-			oldRemove(self)
-			motd:Remove()
-		end
+	local rules=vgui.Create("esFrame",mid)
+	rules:SetTitle("MOTD")
+	rules:Dock(FILL)
+	rules:EnableCloseButton(false)
+	rules:DockMargin(10,10,10,10)
 
-		local frame=master:Add("Panel")
-		frame:SetSize(w-2,h-31)
-		frame:SetPos(1,30)
+		local lbl_rules=vgui.Create("esLabel",rules)
+		lbl_rules:SetFont("ESDefault")
+		lbl_rules:SetText([[The following are our community rules.
+		Please follow them to make everyone's time here as enjoyable as possible.
+
+		1. Do not cheat.
+		2. Do not spam.
+		3. Do not advertise.
+		4. Do not harass other players.
+		5. Do not impersonate an admin.
+
+		Please be advised that gamemode rules will always override community rules.
+		To view our full set of gamemode rules, please refer to our forums.
 
 
-		local context=frame:Add("Panel")
-		local navigation=frame:Add("Panel")
+		This server is running ExclServer 2.
+		You can access the ExclServer menu by pressing F5.
+		From here you can access the shop, player list, and more.
 
 
-		navigation:SetPos(0,0)
-		navigation:SetSize(74,frame:GetTall())
-		navigation.Paint=navPaint
+		We have a TeamSpeak 3 server at ts.casualbananas.com.
 
-			local i=0
-			for k,v in ipairs(navigationOptions)do
-				local btn=navigation:Add("Panel")
-				btn:SetSize(74,74)
-				btn:SetPos(0,i*74)
-				btn.title=v.title
-				btn.Icon=v.icon
-				btn.Paint = navPaintButton
-				btn.OnMouseReleased=function(self)
-					for k,v in pairs(context:GetChildren())do
-						if IsValid(v) then
-							v:Remove()
-						end
-					end
 
-					v.fn(context)
+		To get in touch with the administration team, please refer to our forums.]])
+		lbl_rules:SizeToContents()
+		lbl_rules:Dock(FILL)
+		lbl_rules:DockMargin(15,15,15,15)
 
-					for k,v in ipairs(navigationOptions)do
-						if IsValid(v._Panel) then
-							v._Panel:SetSelected(false)
-						end
-					end
+	local sidebar=vgui.Create("Panel",mid)
+	sidebar:Dock(RIGHT)
+	sidebar:SetWide(256)
+	sidebar:DockMargin(10,0,10,0)
 
-					self:SetSelected(true)
-				end
+		local forums=vgui.Create("esFrame",sidebar)
+		forums:SetTitle("Forums")
+		forums:SetTall(260)
+		forums:Dock(TOP)
+		forums:EnableCloseButton(false)
+		forums:DockMargin(0,10,0,10)
 
-				ES.UIAddHoverListener(btn)
-				AccessorFunc(btn,"selected","Selected",FORCE_BOOL)
+			local hack=vgui.Create("Panel",forums)
+			hack:Dock(FILL)
+			hack:DockMargin(2,1,2,2)
 
-				if k == 1 then
-					btn:SetSelected(true)
-				end
+			local html=vgui.Create("DHTML",hack)
+			html:OpenURL("https://community.casualbananas.com/")
+			html:Dock(FILL)
+			html:DockMargin(0,0,-80,0)
+			html:Call("$('body').css({zoom:'70%'})")
+			html:SetScrollbars(false)
 
-				v._Panel=btn
+			local overlay=html:Add("Panel")
+			overlay:Dock(FILL)
 
-				i=i+1
+			overlay.OnMouseReleased=function()
+				gui.OpenURL("https://community.casualbananas.com/")
+			end
+			overlay.Paint=function(self,w,h)
+				surface.SetDrawColor(ES.Color["#000000AA"])
+				surface.SetMaterial(gradient)
+				surface.DrawTexturedRectRotated(w/2,h/2,w,h+4,180)
 			end
 
+		local bananas=vgui.Create("esFrame",sidebar)
+		bananas:SetTitle("Bananas")
+		bananas:SetTall(30+40)
+		bananas:Dock(TOP)
+		bananas:EnableCloseButton(false)
+		bananas:DockMargin(0,10,0,10)
 
-		context:SetSize(frame:GetWide()-navigation:GetWide(),frame:GetTall())
-		context:SetPos(navigation.x+navigation:GetWide(),0)
+			local counter=vgui.Create("esBananaCounter",bananas)
+			counter:Dock(FILL)
+			counter:DockMargin(15,15,15,15)
 
-		navigationOptions[1]._Panel:OnMouseReleased()
+		local donate=vgui.Create("esFrame",sidebar)
+		donate:SetTitle("Donate")
+		donate:SetTall(167)
+		donate:Dock(TOP)
+		donate:EnableCloseButton(false)
+		donate:DockMargin(0,10,0,10)
 
-	motd:MakePopup()
+			local lbl_donate=vgui.Create("esLabel",donate)
+			lbl_donate:SetText("For every 1 USD you donate, you will\nreceive 1000 bananas. Awesome!")
+			lbl_donate:SetFont("ESDefault")
+			lbl_donate:SetColor(ES.Color.White)
+			lbl_donate:SizeToContents()
+			lbl_donate:Dock(TOP)
+			lbl_donate:DockMargin(15,15,15,0)
+
+			local sub=donate:Add("EditablePanel")
+			sub:SetTall(20)
+			sub:Dock(TOP)
+			sub:DockMargin(15,15,15,15)
+
+				local amount_lbl=Label("Enter donation amount: ",sub)
+				amount_lbl:SetFont("ESDefaultBold")
+				amount_lbl:Dock(LEFT)
+				amount_lbl:SetColor(ES.Color.White)
+				amount_lbl:SizeToContents()
+
+				local entry=vgui.Create("esTextEntry",sub)
+				entry:Dock(LEFT);
+				entry:SetWide(40);
+				entry:SetNumeric(true)
+				entry:SetFont("ESDefaultBold")
+				entry:SetValue(5)
+
+				local usd_lbl=Label(" USD",sub)
+				usd_lbl:SetFont("ESDefaultBold")
+				usd_lbl:Dock(LEFT)
+				usd_lbl:SizeToContents()
+				usd_lbl:SetColor(ES.Color.White)
+
+			local btn_donate=vgui.Create("esButton",donate)
+			btn_donate:SetText("Donate")
+			btn_donate:Dock(BOTTOM)
+			btn_donate:SetTall(30)
+			btn_donate:DockMargin(15,0,15,15)
+			btn_donate.OnMouseReleased=function()
+				gui.OpenURL("https://es2-api.casualbananas.com/donate?amt="..(entry:GetValue() ~= "" and entry:GetValue() or "1").."&sid="..LocalPlayer():SteamID())
+
+				local fill=vgui.Create("esPanel")
+				fill:SetSize(ScrW(),ScrH())
+				fill:MakePopup()
+
+				local lbl=Label("You are currently making a donation of $"..(entry:GetValue() ~= "" and entry:GetValue() or "1").." to Casual Bananas.",fill)
+				lbl:SetFont("ESDefault++")
+				lbl:SizeToContents()
+				lbl:Center();
+				lbl:SetColor(ES.Color.White)
+				local btn=fill:Add("esButton")
+				btn:SetText("Done")
+				btn:SetSize(300,30)
+				btn:SetPos(fill:GetWide()/2 - btn:GetWide()/2, lbl.y + lbl:GetTall()+30)
+				btn.DoClick=function()
+					LocalPlayer():ConCommand("retry;")
+				end
+			end
+
+	local btn_close=vgui.Create("esButton",mid)
+	btn_close:SetText("Enter server")
+	btn_close:SetTall(40)
+	btn_close:DockMargin(10,10,10,10)
+	btn_close:Dock(BOTTOM)
+	btn_close.OnMouseReleased=function()
+		ES.CloseMOTD()
+	end
+
+	context:MakePopup()
 end
 
 -- Open this when the client loads.
-hook.Add("InitPostEntity","ES.OpenMOTD",ES.OpenMOTD)
+hook.Add("InitPostEntity","ES.OpenMOTD",function() timer.Simple(0,function() ES.OpenMOTD() end) end)

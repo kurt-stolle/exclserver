@@ -125,21 +125,28 @@ function chat.AddText(...)
 	chatPanel.becomeInvisible=CurTime()+3;
 
 	local tab={};
+	local activeColor=ES.Color.White
+	MsgC(activeColor,os.date("[%d %b %Y @ %H:%M] "));
 	for k,v in ipairs{...}do
 		if type(v)=="Player" then
 			table.insert(tab,"<av="..v:SteamID().."> ");
 		 	table.insert(tab,team.GetColor(v:Team()));
 		 	table.insert(tab,v:Nick());
+			MsgC(activeColor,v:Nick());
 		elseif type(v)=="string" then
 			if type(tab[#tab])=="string" then
 				tab[#tab]=tab[#tab]..v;
 			else
 				table.insert(tab,v);
 			end
+			MsgC(activeColor,v);
 		elseif type(v)=="table" and v.r and v.g and v.b then
 			table.insert(tab,v);
-		else
+			activeColor=v
+		elseif type(v) ~= "nil" then
 			v=tostring(v);
+
+			MsgC(activeColor,v);
 
 			if type(tab[#tab])=="string" then
 				tab[#tab]=tab[#tab]..v;
@@ -158,14 +165,12 @@ function chat.AddText(...)
 	base.activeColor=ES.Color.White
 
 	local margin=0;
-	MsgC(base.activeColor,os.date("[%d %b %Y @ %H:%M] "));
+
 	for k,v in ipairs(tab)do
 		if type(v) == "table" then
 			base.activeColor=v;
 			continue
 		end
-
-		MsgC(base.activeColor,v);
 
 		local panels={};
 		local startposEarliest,endposEarliest,expressionFound,noMatch;
