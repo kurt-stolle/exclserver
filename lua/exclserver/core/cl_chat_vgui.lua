@@ -1,16 +1,12 @@
-ES.CreateFont("ES.Chat.Title",{
-	font="Roboto",
-	size=20,
-	weight=700
-})
-
 local PANEL={}
 AccessorFunc(PANEL,"_visible","Visible",FORCE_BOOL);
 AccessorFunc(PANEL,"_team","Team",FORCE_BOOL);
 function PANEL:Init()
+	self.BaseClass.Init(self)
+
 	ES.DebugPrint("Created ExclServer chat panel.");
 
-	local top=self:Add("esPanel");
+	--[[local top=self:Add("esPanel");
 	top:SetTall(32);
 	top:SizeToContents();
 	top:SetColor(ES.GetColorScheme(1));
@@ -23,11 +19,13 @@ function PANEL:Init()
 		title:SizeToContents();
 		title:DockMargin((32-title:GetTall())/2,(32-title:GetTall())/2,(32-title:GetTall())/2,(32-title:GetTall())/2)
 		title:SetColor(ES.Color.White)
+]]
+	self:SetTitle("Casual Bananas Chat")
 
 	local scrollpanel=self:Add("esPanel")
 	scrollpanel:SetColor(ES.Color.Invisible)
 	scrollpanel:Dock(FILL)
-	scrollpanel:DockMargin(0,0,0,2)
+	scrollpanel:DockMargin(4,4,4,4)
 	scrollpanel:AddScrollbar()
 	scrollpanel:SetAutoScroll(true)
 
@@ -71,18 +69,26 @@ function PANEL:Init()
 
 
 	self.bottom=bottom;
-	self.top=top;
+	--self.top=top;
 	self.container=container
 	self.scrollpanel=scrollpanel
-	self.title=title
+	--self.title=title
 	self.entry=entry
 
 	self.becomeInvisible=0;
+
+	self.btn_close.OnMouseReleased=function()
+		self:SetVisible(false)
+	end
 end
 function PANEL:Think()
+	self.BaseClass.Think(self)
+
 	if CurTime() > self.becomeInvisible then
 		self:HardSetVisible(false);
 	end
+
+
 end
 PANEL.HardSetVisible = PANEL.SetVisible;
 function PANEL:SetVisible(b)
@@ -91,19 +97,21 @@ function PANEL:SetVisible(b)
 	if b==true then
 		self:MakePopup();
 
-		self.top:SetVisible(true);
+		--self.top:SetVisible(true);
 		self.bottom:SetVisible(true);
 		self.scrollpanel.scrollbar:SetVisible(true);
 		self.entry:RequestFocus();
+		self.btn_close:SetVisible(true)
 
 		self:SetKeyBoardInputEnabled(true);
 		self:SetMouseInputEnabled(true);
 
 		self.becomeInvisible=CurTime()+99999999
 	elseif b==false then
-		self.top:SetVisible(false);
+		--self.top:SetVisible(false);
 		self.bottom:SetVisible(false);
 		self.scrollpanel.scrollbar:SetVisible(false);
+		self.btn_close:SetVisible(false)
 
 		self:SetKeyBoardInputEnabled(false);
 		self:SetMouseInputEnabled(false);
@@ -116,24 +124,12 @@ function PANEL:SetVisible(b)
 end
 function PANEL:Paint(w,h)
 	if self:GetVisible() then
-		surface.SetDrawColor(ES.Color.Black);
-			surface.DrawRect(0,0,w,h);
-		surface.SetDrawColor(ES.Color["#1E1E1EFF"]);
-			surface.DrawRect(1,1,w-2,h-2);
+		self.BaseClass.Paint(self,w,h)
 	end
 end
 function PANEL:PaintOver(w,h)
 	if self:GetVisible() then
-		surface.SetDrawColor(ES.Color["#000000FF"]);
-			surface.DrawLine(0,0,w,0);
-			surface.DrawLine(0,0,0,h-1);
-			surface.DrawLine(0,h-1,w-1,h-1);
-			surface.DrawLine(w-1,0,w-1,h-1);
-		surface.SetDrawColor(ES.Color["#FFFFFF01"]);
-			surface.DrawLine(1,1,w-2,2);
-			surface.DrawLine(1,2,1,h-2);
-			surface.DrawLine(w-2,1,w-2,h-3);
-			surface.DrawLine(1,h-2,w-2,h-2);
+		self.BaseClass.PaintOver(self,w,h)
 	end
 end
-vgui.Register("esChat",PANEL,"EditablePanel")
+vgui.Register("esChat",PANEL,"esFrame")

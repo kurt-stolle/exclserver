@@ -12,7 +12,7 @@ function PNL:Paint(w,h)
 
 	if not self.Selected then
 		draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-2,ES.Color["#1A1A1A"])
-		
+
 		if self:GetHover() then
 			draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-2,ES.GetColorScheme(3))
 		end
@@ -20,7 +20,7 @@ function PNL:Paint(w,h)
 		draw.SimpleText(self.title,"ESDefaultBold.Shadow",6 + 16 + 6,self:GetTall()/2-1,ES.Color.Black,0,1)
 		draw.SimpleText(self.title,"ESDefaultBold",6 + 16 + 6,self:GetTall()/2-1,ES.Color["#DDD"],0,1)
 
-		
+
 
 	elseif self.Selected then
 		draw.RoundedBox(0,1,1,self:GetWide()-2,self:GetTall()-1,ES.GetColorScheme(2))
@@ -30,7 +30,7 @@ function PNL:Paint(w,h)
 
 	surface.SetMaterial(self.Icon)
 	surface.SetDrawColor(ES.Color.White)
-	surface.DrawTexturedRect(6,(h/2) - (16/2),16,16) 
+	surface.DrawTexturedRect(6,(h/2) - (16/2),16,16)
 end
 ES.UIAddHoverListener(PNL)
 vgui.Register( "esTabPanel.Tab", PNL, "Panel" )
@@ -42,7 +42,7 @@ function PNL:Init()
 	self._x_tab = 1
 end
 function PNL:AddTab(title,icon)
-	title=string.upper(title)
+--	title=string.upper(title)
 
 	local p = vgui.Create("Panel",self)
 	p:SetTall(self:GetTall()-24)
@@ -75,7 +75,7 @@ function PNL:AddTab(title,icon)
 	b:SetPos(self._x_tab-1,0)
 
 	self._x_tab=b.x+b:GetWide()
-	
+
 	return p
 end
 function PNL:Paint(w,h)

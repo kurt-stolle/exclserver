@@ -15,14 +15,14 @@ local matrix,x,y,width,height,rad
 local PANEL = {}
 ES.CreateFont( "ESFrameText", {
 font = "Roboto",
-size = 20,
-weight=500 }
+size = 18,
+weight=400 }
 )
 
 AccessorFunc(PANEL,"title","Title",FORCE_STRING)
 local tex = Material("exclserver/gradient.png")
 function PANEL:Init()
-	self:DockPadding(0,30,0,0)
+	self:DockPadding(5,31,5,5)
 
 	self.scale=0
 	self.kill=false
@@ -33,11 +33,15 @@ function PANEL:Init()
 
 	self:SetTitle("FRAME")
 
-	self.btn_close=self:Add("esIconButton")
-	self.btn_close:SetIcon(Material("exclserver/close.png"))
-	self.btn_close:SetSize(16,16)
-	self.btn_close.DoClick=function(_self)
-		_self:GetParent():Remove()
+	if not IsValid(self.btn_close) then
+
+		self.btn_close=self:Add("esIconButton")
+		self.btn_close:SetIcon(Material("exclserver/close.png"))
+		self.btn_close:SetSize(16,16)
+		self.btn_close.DoClick=function(_self)
+			_self:GetParent():Remove()
+		end
+
 	end
 end
 function PANEL:EnableCloseButton(b)
@@ -45,7 +49,7 @@ function PANEL:EnableCloseButton(b)
 	self.OnClose = function() end
 end
 function PANEL:PerformLayout()
-	self.btn_close:SetPos(self:GetWide()-(30/2 + 16/2),(30/2 - 16/2))
+	self.btn_close:SetPos(self:GetWide()-5-32/2-8,1)
 end
 function PANEL:Think()
 	self.scale=Lerp(FrameTime()* (self.kill and 12 or 8),self.scale,self.kill and 0 or 1)
@@ -56,6 +60,7 @@ function PANEL:Think()
 	end
 end
 function PANEL:Paint(w,h)
+
 	if self.scale <= 0.99 then
 		pushFilterMag( TEXFILTER.ANISOTROPIC )
 		pushFilterMin( TEXFILTER.ANISOTROPIC )
@@ -90,23 +95,41 @@ function PANEL:Paint(w,h)
 	-- push matrix
 	pushModelMatrix( matrix )
 
+	ES.UIDrawBlur(self,matrix)
+
 	local a,b,c = ES.GetColorScheme()
 
-	surface.SetDrawColor(ES.Color.Black)
-	surface.DrawRect(0,0,w,h)
-	surface.SetDrawColor(ES.Color["#1E1E1E"])
+	surface.SetDrawColor(Color(a.r,a.g,a.b,120))
 	surface.DrawRect(1,1,w-2,h-2)
+	surface.SetDrawColor(ES.Color["#000000CC"])
+	surface.DrawRect(1,1,w-2,h-2)
+	surface.SetDrawColor(ES.Color.Black)
+	surface.DrawLine(0,0,w,0)
+	surface.DrawLine(0,1,0,h-1)
+	surface.DrawLine(w-1,1,w-1,h-1)
+	surface.DrawLine(0,h-1,w,h-1)
+	--surface.DrawLine(0,30,w,30)
 
-	surface.SetDrawColor(ES.Color["#FFFFFF03"])
-	surface.DrawRect(1,1,w-2,1)
+	--[[	surface.SetDrawColor(ES.Color["#FFFFFF05"])
+	surface.DrawRect(1,31,w-2,1)
 	surface.DrawRect(1,h-2,w-2,1)
-	surface.DrawRect(1,2,1,h-4)
-	surface.DrawRect(w-2,2,1,h-4)
+	surface.DrawRect(1,32,1,h-34)
+	surface.DrawRect(w-2,32,1,h-34)]]
 
 	surface.SetDrawColor(ES.GetColorScheme(1))
 	surface.DrawRect(1,1,w-2,29)
+	surface.DrawRect(1,1,4,h-2)
+	surface.DrawRect(w-5,1,4,h-2)
+	surface.DrawRect(1,h-5,w-2,4)
 
-	draw.SimpleText(self:GetTitle(),"ESFrameText",10,30/2,COLOR_WHITE,0,1)
+	if IsValid(self.btn_close) then
+		surface.SetDrawColor(ES.Color.Red)
+		surface.DrawRect(w-32-5,1,32,18)
+		surface.SetDrawColor(ES.Color["#0000001F"])
+		surface.DrawRect(w-31-5,1,30,16)
+	end
+
+	draw.SimpleText(self:GetTitle(),"ESFrameText",10,30/2,ES.Color.White,0,1)
 end
 function PANEL:PaintOver(w,h)
 	popModelMatrix()

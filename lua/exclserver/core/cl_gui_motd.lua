@@ -3,10 +3,28 @@
 
 local context
 
+local fx = {
+	["$pp_colour_addr"] = 0,
+	["$pp_colour_addg"] = 0,
+	["$pp_colour_addb"] = 0,
+	["$pp_colour_brightness"] = -.2,
+	["$pp_colour_contrast"] = 1,
+	["$pp_colour_colour"] = .5,
+	["$pp_colour_mulr"] = 0,
+	["$pp_colour_mulg"] = 0,
+	["$pp_colour_mulb"] = 0
+}
+hook.Add("RenderScreenspaceEffects","ES.MOTDBlackWhite",function()
+	if IsValid(context) then
+		DrawColorModify(fx)
+	end
+end)
+
+
 surface.CreateFont("ESMOTDHead",{
 	font="Roboto",
 	size=50,
-	weight=300
+	weight=400
 })
 
 local gradient=Material("exclserver/gradient.png")
@@ -23,7 +41,7 @@ function ES.OpenMOTD()
 	context:SetSize(ScrW(),ScrH())
 	context.Paint=function(self,w,h)
 		Derma_DrawBackgroundBlur(self,1,1)
-		surface.SetDrawColor(ES.Color["#000000AA"])
+		surface.SetDrawColor(ES.Color["#0000001F"])
 		surface.DrawRect(0,0,w,h)
 	end
 
@@ -87,7 +105,7 @@ function ES.OpenMOTD()
 
 			local hack=vgui.Create("Panel",forums)
 			hack:Dock(FILL)
-			hack:DockMargin(2,1,2,2)
+			hack:DockMargin(0,0,0,0)
 
 			local html=vgui.Create("DHTML",hack)
 			html:OpenURL("https://community.casualbananas.com/")
@@ -110,7 +128,7 @@ function ES.OpenMOTD()
 
 		local bananas=vgui.Create("esFrame",sidebar)
 		bananas:SetTitle("Bananas")
-		bananas:SetTall(30+40)
+		bananas:SetTall(30+50)
 		bananas:Dock(TOP)
 		bananas:EnableCloseButton(false)
 		bananas:DockMargin(0,10,0,10)
@@ -121,7 +139,7 @@ function ES.OpenMOTD()
 
 		local donate=vgui.Create("esFrame",sidebar)
 		donate:SetTitle("Donate")
-		donate:SetTall(167)
+		donate:SetTall(174)
 		donate:Dock(TOP)
 		donate:EnableCloseButton(false)
 		donate:DockMargin(0,10,0,10)
@@ -190,7 +208,9 @@ function ES.OpenMOTD()
 	btn_close:DockMargin(10,10,10,10)
 	btn_close:Dock(BOTTOM)
 	btn_close.OnMouseReleased=function()
-		ES.CloseMOTD()
+		if IsValid(context) then
+			context:Remove()
+		end
 	end
 
 	context:MakePopup()
