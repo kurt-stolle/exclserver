@@ -22,7 +22,7 @@ weight=400 }
 AccessorFunc(PANEL,"title","Title",FORCE_STRING)
 local tex = Material("exclserver/gradient.png")
 function PANEL:Init()
-	self:DockPadding(5,31,5,5)
+	self:DockPadding(5,30,5,5)
 
 	self.scale=0
 	self.kill=false

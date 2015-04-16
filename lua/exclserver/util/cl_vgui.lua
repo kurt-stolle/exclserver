@@ -124,29 +124,22 @@ local matGradient = Material("exclserver/nothing.png")
 function ES.UIDrawBlur(panel,mtr)
 	local x, y = panel:LocalToScreen( 0, 0 )
 
-	DisableClipping( true )
-
-	surface.SetDrawColor( 0,0,0,200 )
-
-	surface.SetMaterial(matGradient)
-
 	render.ClearStencil()
 	render.SetStencilEnable(true)
-
-	render.SetBlend(0)
 
 	render.SetStencilFailOperation( STENCILOPERATION_KEEP )
 	render.SetStencilZFailOperation( STENCILOPERATION_REPLACE )
 	render.SetStencilPassOperation( STENCILOPERATION_REPLACE )
 	render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_ALWAYS )
+
 	render.SetStencilReferenceValue( 1 )
 
+	surface.SetDrawColor(ES.Color.White)
+	surface.SetMaterial(matGradient)
 	surface.DrawTexturedRect(0,0,panel:GetWide(),panel:GetTall())
 
 	render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_EQUAL )
 	render.SetStencilPassOperation( STENCILOPERATION_REPLACE )
-
-	render.SetBlend(1)
 
 	surface.SetMaterial( matBlurScreen )
 
@@ -154,20 +147,22 @@ function ES.UIDrawBlur(panel,mtr)
 		cam.PopModelMatrix(mtr)
 	end
 
-	for i=.1, 1, 0.2 do
-		matBlurScreen:SetFloat( "$blur", 15 * i )
+	--DisableClipping( true )
+
+	for i=.2, 1, 0.2 do
+		matBlurScreen:SetFloat( "$blur", 10 * i )
 		matBlurScreen:Recompute()
 		render.UpdateScreenEffectTexture()
 		surface.DrawTexturedRect( x * -1, y * -1, ScrW(), ScrH() )
 	end
 
+	--DisableClipping( false )
+
+	render.SetStencilEnable(false)
+
 	if mtr then
 		cam.PushModelMatrix(mtr)
 	end
-
-	DisableClipping( false )
-
-	render.SetStencilEnable(false)
 end
 
 -- Disable ugly progress thingy

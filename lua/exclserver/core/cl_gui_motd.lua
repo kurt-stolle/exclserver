@@ -3,29 +3,17 @@
 
 local context
 
-local fx = {
-	["$pp_colour_addr"] = 0,
-	["$pp_colour_addg"] = 0,
-	["$pp_colour_addb"] = 0,
-	["$pp_colour_brightness"] = -.2,
-	["$pp_colour_contrast"] = 1,
-	["$pp_colour_colour"] = .5,
-	["$pp_colour_mulr"] = 0,
-	["$pp_colour_mulg"] = 0,
-	["$pp_colour_mulb"] = 0
-}
-hook.Add("RenderScreenspaceEffects","ES.MOTDBlackWhite",function()
-	if IsValid(context) then
-		DrawColorModify(fx)
-	end
-end)
-
-
 surface.CreateFont("ESMOTDHead",{
 	font="Roboto",
 	size=50,
 	weight=400
 })
+
+hook.Add("HUDShouldDraw","ES.MOTD.HideHUD",function()
+	if IsValid(context) then
+		return false
+	end
+end)
 
 local gradient=Material("exclserver/gradient.png")
 ES.motdEnabled = true
@@ -40,8 +28,11 @@ function ES.OpenMOTD()
 	context=vgui.Create("EditablePanel")
 	context:SetSize(ScrW(),ScrH())
 	context.Paint=function(self,w,h)
-		Derma_DrawBackgroundBlur(self,1,1)
-		surface.SetDrawColor(ES.Color["#0000001F"])
+		--Derma_DrawBackgroundBlur(self,1,1)
+		surface.SetDrawColor(ES.Color["#000000EF"])
+		surface.SetMaterial(gradient)
+		surface.DrawTexturedRectRotated(w/2,(h/2)+(h/4),w,h/2,180)
+		surface.SetDrawColor(ES.Color["#000000AF"])
 		surface.DrawRect(0,0,w,h)
 	end
 
@@ -105,7 +96,7 @@ function ES.OpenMOTD()
 
 			local hack=vgui.Create("Panel",forums)
 			hack:Dock(FILL)
-			hack:DockMargin(0,0,0,0)
+			hack:DockMargin(1,1,1,1)
 
 			local html=vgui.Create("DHTML",hack)
 			html:OpenURL("https://community.casualbananas.com/")
@@ -119,11 +110,6 @@ function ES.OpenMOTD()
 
 			overlay.OnMouseReleased=function()
 				gui.OpenURL("https://community.casualbananas.com/")
-			end
-			overlay.Paint=function(self,w,h)
-				surface.SetDrawColor(ES.Color["#000000AA"])
-				surface.SetMaterial(gradient)
-				surface.DrawTexturedRectRotated(w/2,h/2,w,h+4,180)
 			end
 
 		local bananas=vgui.Create("esFrame",sidebar)
