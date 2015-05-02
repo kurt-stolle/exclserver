@@ -22,9 +22,12 @@ router.get('/all', function(req, res, next) {
       }
 
       allServers.timeCache = time;
-      allServers.json = rows;
 
-      res.json(rows);
+      if (rows && typeof rows == "object" && rows[1]){
+        allServers.json = rows;
+      }
+
+      res.json(allServers.json);
     })
   } else {
     res.json(allServers.json);
