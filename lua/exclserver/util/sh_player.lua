@@ -57,7 +57,9 @@ function ES.DeRussianify(str)
 	return build
 end
 
-function ES.GetPlayerByName(n)
+function ES.GetPlayerByName(_n)
+	print(_n)
+	local n=_n;
 	if type(n) ~= "string" or n == " " or n == "" then
 		return {}
 	elseif n == "*" then
@@ -74,12 +76,13 @@ function ES.GetPlayerByName(n)
 		nick=string.lower(v:Nick())
 		nick=string.Trim(nick)
 		nick=ES.DeRussianify(nick)
-		if string.find(nick,n,0,false) then
+		print(nick,n)
+		if nick == n or string.find(nick,n,1,false) then
 			found[#found+1]=v
 		end
 	end
 
-	return found[1] and found or {ES.GetPlayerBySteamID(n)}
+	return found[1] and found or {ES.GetPlayerBySteamID(_n)}
 end
 
 function ES.DropUser(userid, reason)

@@ -58,7 +58,41 @@ function PANEL:Init()
 		send:Dock(RIGHT);
 		send:DockMargin(0,0,0,0);
 		send.DoClick=function()
-			RunConsoleCommand(self._team and "say_team" or "say",string.Trim(entry:GetValue()));
+			local str=string.Trim(entry:GetValue())
+			local prefix=string.Left(str,1)
+			if prefix == "!" or prefix == ":" or prefix == "/" then
+				local text=string.Right(str,string.len(str)-1)
+				local quote = text:sub(1,1) ~= '"'
+				local ret = {}
+				for chunk in string.gmatch(text, '[^"]+') do
+					quote = not quote
+					if quote then
+						table.insert(ret,string.Trim(chunk))
+					else
+						for chunk in string.gmatch(chunk, "%a+") do
+							table.insert(ret,string.Trim(chunk))
+						end
+					end
+				end
+
+				local cmd=ret[1]
+				table.remove(ret,1)
+
+				if ES.Commands[cmd] then
+					RunConsoleCommand("excl",cmd,unpack(ret))
+					
+					ES.DebugPrint("Command ran: "..cmd)
+
+					entry:SetText("");
+					entry:SetValue("");
+					self:SetVisible(false);
+
+					return
+				end
+			end
+
+			RunConsoleCommand(self._team and "say_team" or "say",str);
+
 			entry:AddHistory(entry:GetValue())
 			entry:SetText("");
 			entry:SetValue("");

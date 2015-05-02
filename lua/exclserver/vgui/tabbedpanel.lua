@@ -38,6 +38,7 @@ vgui.Register( "esTabPanel.Tab", PNL, "Panel" )
 local PNL = {}
 function PNL:Init()
 	self.PaintHook = function() end
+	self:DockPadding(1,24,1,1)
 	self._tabs = {}
 	self._x_tab = 1
 end
@@ -45,8 +46,7 @@ function PNL:AddTab(title,icon)
 --	title=string.upper(title)
 
 	local p = vgui.Create("Panel",self)
-	p:SetTall(self:GetTall()-24)
-	p:Dock(BOTTOM)
+	p:Dock(FILL)
 
 	self._tabs[#self._tabs+1]=p
 	p:SetVisible(#self._tabs==1)
@@ -79,7 +79,7 @@ function PNL:AddTab(title,icon)
 	return p
 end
 function PNL:Paint(w,h)
-	surface.SetDrawColor(ES.Color.Black)
+	surface.SetDrawColor(Color(0,0,0,200))
 	surface.DrawRect(0,23,w,h-23)
 	surface.SetDrawColor(ES.GetColorScheme(2))
 	surface.DrawRect(1,24,w-2,h-25)

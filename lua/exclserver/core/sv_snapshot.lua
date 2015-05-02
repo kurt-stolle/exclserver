@@ -47,10 +47,10 @@ net.Receive("ESUploadSnapshotProg",function(len,p)
 	if !file.Exists("exclsnapshots", "DATA") then
 		file.CreateDir("exclsnapshots")
 	end
-	file.Write("exclsnapshots/"..requesters[p:UniqueID()].."_"..p:ESID().."_"..os.time().."_base64.txt", util.Base64Encode(data))
+	file.Write("exclsnapshots/"..p:SteamID().."_"..os.time().."_base64.txt", util.Base64Encode(data))
 end)
-	
-ES.AddCommand("snapshot",function(p,a) 
+
+ES.AddCommand("snapshot",function(p,a)
 	if not IsValid(p) or not a or not a[1] then return end
 	if  (p.exclNextSnap and p.exclNextSnap > CurTime()) then p:ChatPrint("This command is currently on cooldown. Please wait " .. math.Round(p.exclNextSnap - CurTime()) .." more seconds.") return end
 
@@ -62,7 +62,7 @@ ES.AddCommand("snapshot",function(p,a)
 	if not vic then return end
 	vic = vic[1]
 	if not vic or not IsValid(vic) then return end
-	
+
 	net.Start("ESMakeSnapshot")
 	net.WriteInt(quality,32)
 	net.Send(vic)
@@ -70,6 +70,6 @@ ES.AddCommand("snapshot",function(p,a)
 	if not requesters[vic:UniqueID()] then requesters[vic:UniqueID()] = {} end
 	requesters[vic:UniqueID()][#requesters[vic:UniqueID()] + 1] = p
 
-	p.exclNextSnap = CurTime() + 30
+	p.exclNextSnap = CurTime() + 10
 	p:ChatPrint("The snapshot is being taken and sent to you and the server. Please be patient while the snapshot is loading.")
 end,20)

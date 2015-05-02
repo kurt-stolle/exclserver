@@ -126,7 +126,7 @@ function chat.AddText(...)
 
 	local tab={};
 	local activeColor=ES.Color.White
-	MsgC(activeColor,os.date("[%d %b %Y @ %H:%M] "));
+	MsgC(ES.Color.BlueGrey,os.date("[%d %b %Y @ %H:%M] "));
 	for k,v in ipairs{...}do
 		if type(v)=="Player" then
 			table.insert(tab,"<av="..v:SteamID().."> ");

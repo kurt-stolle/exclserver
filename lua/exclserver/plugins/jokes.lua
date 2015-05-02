@@ -178,8 +178,7 @@ if SERVER then
 
 		p.esNextJoke = CurTime() + 30
 
-		p:ConCommand("say "..table.Random(funnyjokes).." :D")
-
+		p:ConCommand("say \"<i>"..table.Random(funnyjokes).."</i> :D\";\n")
 		p:ESAddAchievementProgress("funny",1)
 	end)
 end

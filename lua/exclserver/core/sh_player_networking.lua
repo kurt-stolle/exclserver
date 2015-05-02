@@ -19,6 +19,8 @@ end
 -- Some essential NWVars
 ES.DefineNetworkedVariable("typing","Bit")
 
+ES.DefineNetworkedVariable("idle","Bit")
+
 ES.DefineNetworkedVariable("rank","String")
 
 ES.DefineNetworkedVariable("VIP","UInt",4,"tinyint(1) unsigned not null default 0")

@@ -99,7 +99,9 @@ function ES.ChatBroadcast(...)
 end
 timer.Create("ESHandOutBananas",300,0,function()
 	for k,v in ipairs(player.GetAll())do
-		v:ESAddBananas(14+math.random(1,3)+v:ESGetVIPTier())
+		if not v:ESGetNetworkedVariable("idle",false) then
+			v:ESAddBananas(10+v:ESGetVIPTier())
+		end
 	end
 end)
 timer.Create("ESAddPlaytime",60,0,function()
