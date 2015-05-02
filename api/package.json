@@ -6,8 +6,9 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "express": "~4.11.1",
-    "mysql": "^2.5.5",
-    "paypal-rest-sdk": "^1.5.1"
+    "express": "^4.12.3",
+    "mysql": "^2.6.2",
+    "paypal-rest-sdk": "^1.5.2",
+    "request": "^2.55.0"
   }
 }

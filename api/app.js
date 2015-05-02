@@ -1,12 +1,19 @@
+"use strict";
+
 var express = require('express');
-var routes = require('./routes/index');
 
 var app = express();
 
 app.set('view engine', 'html');
 app.set('x-powered-by', false);
 
-app.use('/', routes);
+var index = require('./routes/index.js'),
+  donate = require('./routes/donate.js'),
+  servers = require('./routes/servers.js');
+
+app.use('/servers', servers);
+app.use('/donate', donate);
+app.use('/', index);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
