@@ -77,7 +77,7 @@ db.onConnected = function(database)
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_bans` (`ban_id` int unsigned NOT NULL AUTO_INCREMENT, steamid varchar(100), steamidAdmin varchar(100), name varchar(100), nameAdmin varchar(100), serverid int(8), unbanned tinyint(1), time int(32), timeStart int(32), reason varchar(255), PRIMARY KEY (`ban_id`), UNIQUE KEY `ban_id` (`ban_id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8"):wait()
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_ranks_config` ( `id` int(10) unsigned NOT NULL AUTO_INCREMENT, name varchar(100), prettyname varchar(200), power int(16), PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1"):wait()
 			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_logs` (`id` int unsigned NOT NULL AUTO_INCREMENT, text varchar(255), type tinyint unsigned not null, time int unsigned not null, serverid tinyint unsigned not null, PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8"):wait()
-			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_servers` ( `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT, ip varchar(100), dns varchar(100), name varchar(100), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1"):wait()
+			ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_servers` ( `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT, ip varchar(100), dns varchar(100), name varchar(100), game varchar(100), PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1"):wait()
 
 			ES.DebugPrint("Reloading server to finalise data setup (1/2)...")
 			game.ConsoleCommand("map "..game.GetMap().."\n")
@@ -85,14 +85,14 @@ db.onConnected = function(database)
 
 			ES.DebugPrint("Setting up server ID...")
 
-			ES.DBQuery("SELECT id FROM es_servers WHERE ip = '"..serverIP.."' LIMIT 1",function(r)
+			ES.DBQuery("SELECT id FROM es_servers WHERE ip = '"..serverIP.."' AND game = 'garrysmod' LIMIT 1",function(r)
 				if r and r[1] then
 					ES.DebugPrint("Server ID found: "..r[1].id)
 					ES.ServerID = r[1].id
 					hook.Call("ESDatabaseReady",GM or GAMEMODE,ES.ServerID)
 				else
 					ES.DebugPrint("No server ID found! Registering server...")
-					ES.DBQuery("INSERT INTO es_servers SET ip = '"..serverIP.."'",function()
+					ES.DBQuery("INSERT INTO es_servers SET ip = '"..serverIP.."', game = 'garrysmod';",function()
 						ES.DebugPrint("Reloading server to finalise data setup (2/2)...")
 						game.ConsoleCommand("map "..game.GetMap().."\n")
 					end):wait()
