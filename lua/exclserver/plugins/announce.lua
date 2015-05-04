@@ -6,9 +6,11 @@ PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NOCANDISABLE)
 
 if SERVER then
 	PLUGIN:AddCommand("announce",function(p,a)
-		if IsValid(p) or type(a[1]) ~= "string" then return end
+		if not IsValid(p) or type(a[1]) ~= "string" then return end
 
-		ES.ChatBroadcast("<hl>(ANNOUNCEMENT)</hl> "..(table.concat(a," ",1) or ""))
+		ES.DebugPrint(p:Nick().." ran an annoucenement")
+
+		ES.ChatBroadcast("<hl>ANNOUNCEMENT: </hl> "..(table.concat(a," ",1) or ""))
 
 	end,20)
 end

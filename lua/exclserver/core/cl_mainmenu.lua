@@ -556,7 +556,7 @@ hook.Add("Think","exclMMOpenWithF5",function()
 end)
 
 hook.Add("PlayerBindPress","exclMMSupressJPeg",function(ply, bind, pressed)
-	if string.find(bind,"jpeg",0,false) and input.IsKeyDown(KEY_F5) then
+	if string.find(bind,"save",0,false) and input.IsKeyDown(KEY_F6) then
 		return true
 	end
 end)

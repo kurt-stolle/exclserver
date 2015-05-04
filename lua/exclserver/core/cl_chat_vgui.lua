@@ -6,20 +6,6 @@ function PANEL:Init()
 
 	ES.DebugPrint("Created ExclServer chat panel.");
 
-	--[[local top=self:Add("esPanel");
-	top:SetTall(32);
-	top:SizeToContents();
-	top:SetColor(ES.GetColorScheme(1));
-	top:Dock(TOP);
-
-		local title=top:Add("esLabel");
-		title:SetFont("ES.Chat.Title");
-		title:SetText(string.upper(string.Trim(GetHostName( ))));
-		title:Dock(LEFT);
-		title:SizeToContents();
-		title:DockMargin((32-title:GetTall())/2,(32-title:GetTall())/2,(32-title:GetTall())/2,(32-title:GetTall())/2)
-		title:SetColor(ES.Color.White)
-]]
 	self:SetTitle("Casual Bananas Chat")
 
 	local scrollpanel=self:Add("esPanel")
@@ -61,26 +47,15 @@ function PANEL:Init()
 			local str=string.Trim(entry:GetValue())
 			local prefix=string.Left(str,1)
 			if prefix == "!" or prefix == ":" or prefix == "/" then
-				local text=string.Right(str,string.len(str)-1)
-				local quote = text:sub(1,1) ~= '"'
-				local ret = {}
-				for chunk in string.gmatch(text, '[^"]+') do
-					quote = not quote
-					if quote then
-						table.insert(ret,string.Trim(chunk))
-					else
-						for chunk in string.gmatch(chunk, "%a+") do
-							table.insert(ret,string.Trim(chunk))
-						end
-					end
-				end
+
+				local ret=ES.ExplodeQuotes(string.Right(str,string.len(str)-1));
 
 				local cmd=ret[1]
 				table.remove(ret,1)
 
 				if ES.Commands[cmd] then
 					RunConsoleCommand("excl",cmd,unpack(ret))
-					
+
 					ES.DebugPrint("Command ran: "..cmd)
 
 					entry:SetText("");

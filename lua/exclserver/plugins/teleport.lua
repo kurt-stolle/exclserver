@@ -60,33 +60,18 @@ if SERVER then
 		if !a or !b or !IsValid(a) or !IsValid(b) then return end
 
 		local pos = findLocation( a,b,p:GetMoveType() == MOVETYPE_NOCLIP or p:GetMoveType() == MOVETYPE_OBSERVER or tobool(a[3]) )
-		if not pos then p:ChatPrint("Not enough space to teleport, put \"1\" as third argument to force teleport (this will probably resuly in getting stuck).") return end
+		if not pos and tobool(arg[3]) == false then
+			p:ChatPrint("Not enough space to teleport, put <hl>1</hl> as third argument to force teleport.")
+			return
+		elseif not pos then
+			pos = b:GetPos()
+		end
 
 		a:SetPos(pos)
 
-		net.Start("exclTP")
-		net.WriteEntity(p)
-		net.WriteEntity(a)
-		net.WriteEntity(b)
-		net.Broadcast()
+		ES.ChatBroadcast("<hl>"..p:Nick().."</hl> has teleported <hl>"..a:Nick().."</hl> to <hl>"..(b==p and "themself" or b:Nick()).."</hl>.")
 	end
 	PLUGIN:AddCommand("tp",teleport,10)
 	PLUGIN:AddCommand("teleport",teleport,10)
 
 end
-net.Receive("exclTP",function()
-	local p = net.ReadEntity()
-	local a = net.ReadEntity()
-	local b = net.ReadEntity()
-
-	if not IsValid(p) or not IsValid(a) or not IsValid(b) then return end
-
-	if p == a then
-		chat.AddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported to ",Color(102,255,51),b:Nick(),COLOR_WHITE,".")
-	elseif p == b then
-		chat.AddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),ES.Color.White," to his/her location.")
-	else
-		chat.AddText("admincommand",COLOR_WHITE,exclFixCaps(p:ESGetRank().name).." ",Color(102,255,51),p:Nick(),COLOR_WHITE," has teleported ",Color(102,255,51),a:Nick(),ES.Color.White," to ",Color(102,255,51),b:Nick(),COLOR_WHITE,".")
-	end
-	chat.PlaySound()
-end)

@@ -8,7 +8,7 @@ if ES.debug then
 	_G["Error"]=_G["ErrorNoHalt"];
 end
 
-ES.version = "4.7.0"
+ES.version = "6.x.x"
 
 -- Debug methods
 local color_debug_text=Color(255,255,255)

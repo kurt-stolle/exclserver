@@ -37,7 +37,7 @@ ES.DefaultModels = {
 
 local PLAYER = FindMetaTable("Player")
 function PLAYER:ESGetActiveModel()
-	local active=LocalPlayer():ESGetNetworkedVariable("active_model",nil)
+	local active=self:ESGetNetworkedVariable("active_model",nil)
 
 	return ES.Models[active] and ES.Models[active]:GetModel() or table.Random(ES.DefaultModels)
 end

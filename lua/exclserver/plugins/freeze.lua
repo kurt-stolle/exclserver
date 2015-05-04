@@ -32,7 +32,7 @@ if SERVER then
 
 		for k,v in pairs(vTbl)do
 			if not v:ESIsImmuneTo(p) then
-				v:Freeze(false)
+				v:Freeze(true)
 				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> froze <hl>"..v:Nick().."</hl>"..r..".")
 			else
 				ES.ChatBroadcast("<hl>"..p:Nick().."</hl> tried to freeze <hl>"..v:Nick().."</hl>"..r..".")

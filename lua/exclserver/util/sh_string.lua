@@ -50,3 +50,52 @@ end
 function ES.IsSteamID(str)
 	return tobool(string.match(string.upper(str or ""),"(STEAM_[0-5]:[01]:%d+)"));
 end
+
+local special = {
+	n = "\n",
+	r = "\r",
+	t = "\t",
+	v = "\v"
+}
+
+function ES.ExplodeQuotes(input)
+	local ret = {}
+	local len = string.len(input)
+
+	local literal = false
+	local quote = false
+	local current = ""
+
+	for i = 0, len do
+
+		local c = input[i]
+
+		if literal then
+			if c == '\"' then
+				quote = not quote
+			else
+				c = special[c] or c
+				current = current .. c
+			end
+			literal = false
+		else
+			if c == '\"' then
+				quote = not quote
+			elseif c == '\\' then
+				literal = true
+			elseif c == ' ' and not quote then
+				table.insert(ret, current)
+				current = ""
+			else
+				current = current .. c
+			end
+		end
+
+	end
+
+	if string.len(current) ~= 0 then
+		table.insert(ret, current)
+	end
+
+	return ret
+end

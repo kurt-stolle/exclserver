@@ -23,7 +23,7 @@ function PLAYER:ESActivateItem(name,itemtype)
 				self:ESReplaceMelee()
 			end
 		end)
-	end 
+	end
 
 	return true
 end
@@ -48,9 +48,9 @@ function PLAYER:ESDeactivateItem(itemtype)
 	return true
 end
 function PLAYER:ESGiveItem(name,itemtype,nosynch)
-	if self:ESHasItem(name,itemtype) then 
+	if self:ESHasItem(name,itemtype) then
 		ES.DebugPrint("Failed to give item '"..name.."' to "..self:Nick().." item already owned.")
-		return false 
+		return false
 	end
 
 	if itemtype == ES.ITEM_TRAIL then
@@ -91,16 +91,16 @@ function PLAYER:ESGiveItem(name,itemtype,nosynch)
 	net.Send(self)
 
 	ES.DebugPrint(self:Nick().." has received item: '"..name.."'")
-	
+
 	return true
 end
 function PLAYER:ESRemoveItem(name,itemtype)
 	if not self.excl or !self:ESHasItem(name,itemtype) then return end
-	
+
 	if itemtype == ES.ITEM_TRAIL and self._es_inventory_trails then
 		for k,v in pairs(self._es_inventory_trails)do
 			if v == name then
-				table.remove(self._es_inventory_trails,k) 
+				table.remove(self._es_inventory_trails,k)
 			end
 		end
 	elseif itemtype == ES.ITEM_MELEE and self._es_inventory_meleeweapons then
@@ -122,7 +122,7 @@ function PLAYER:ESRemoveItem(name,itemtype)
 			end
 		end
 	end
-	
+
 	ES.DBQuery("DELETE FROM `es_player_inventory` WHERE `steamid`='"..self:SteamID().."' AND itemtype ="..itemtype.." AND name='"..name.."'")
 
 	net.Start("ESSynchInvRemove")
@@ -131,7 +131,7 @@ function PLAYER:ESRemoveItem(name,itemtype)
 	net.Send(self)
 end
 function PLAYER:ESHandleActiveItems()
-	if self:GetObserverMode() == OBS_MODE_NONE then			
+	if self:GetObserverMode() == OBS_MODE_NONE then
 		local trail=ES.Trails[self:ESGetNetworkedVariable("active_trail",nil)]
 		if trail and ES.ValidItem(trail,ES.ITEM_TRAIL) then
 			if self._es_entTrail and IsValid(self._es_entTrail) then
@@ -224,41 +224,41 @@ net.Receive("ESBuyItem",function(len,ply)
 	local itemtype=net.ReadUInt(4)
 	local item=net.ReadUInt(8)
 
-	if not item or not itemtype then 
+	if not item or not itemtype then
 		ES.DebugPrint(ply:Nick().. " attempted to buy an invalid item (1)")
 		return
 	end
 
 	local tab=ES.GetItemTable(itemtype)
 
-	if not tab then 
+	if not tab then
 		ES.DebugPrint(ply:Nick().. " attempted to buy an invalid item (2)")
 		return end
-	
+
 	item=tab[item]
 
-	if not item 
-		or item:GetVIP() and ply:ESGetVIPTier() < 1 then 
+	if not item
+		or item:GetVIP() and ply:ESGetVIPTier() < 1 then
 		ES.DebugPrint(ply:Nick().. " attempted to buy an invalid item (3)") return end
 
 	local cost=item:GetCost()
 
-	if ply:ESGetBananas() < cost then 
+	if ply:ESGetBananas() < cost then
 		ES.DebugPrint(ply:Nick().. " attempted to buy an item ("..item:GetName().."), but he does not have enough bananas ("..item:GetCost()..").")
-		ply:ESSendNotificationPopup("Shop","You don't have enough bananas to make this purchase.\n'"..item:GetName().."' costs "..item:GetCost().." bananas.") 
+		ply:ESSendNotificationPopup("Shop","You don't have enough bananas to make this purchase.\n'"..item:GetName().."' costs "..item:GetCost().." bananas.")
 		return
 	end
 
-	if not ply:ESGiveItem(item:GetName(),itemtype) then 
+	if not ply:ESGiveItem(item:GetName(),itemtype) then
 		ply:ESSendNotificationPopup("Shop","You already own this item.")
-		return 
+		return
 	end
 
 	ply:ESTakeBananas(cost)
 
 	ply:ESSendNotificationPopup("Shop","Successfully purchased '"..item:GetName().."'.\nThe item has been added to your inventory.")
 
-		
+
 	ES.DebugPrint(ply:Nick().." bought an item ("..item:GetName()..")")
 end)
 
@@ -272,11 +272,11 @@ net.Receive("ESActivateItem",function(len,ply)
 	local tab=ES.GetItemTable(itemtype)
 
 	if not tab then return end
-	
+
 	item=tab[item]
 
 	if not item or not ply:ESHasItem(item:GetName(),itemtype) then return end
-	
+
 	ply:ESActivateItem(item:GetName(),itemtype)
 end)
 util.AddNetworkString("ESDeactivateItem")
@@ -288,6 +288,6 @@ net.Receive("ESDeactivateItem",function(len,ply)
 	local tab = ES.GetItemTable(itemtype)
 
 	if not tab then return end
-	
+
 	ply:ESDeactivateItem(itemtype)
-end) 
+end)
