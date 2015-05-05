@@ -35,6 +35,5 @@ hook.Add("Think","excl.activemodel.F6",function()
     return true
 	elseif not input.IsKeyDown(KEY_F6) then
 		was_pressed = false
-    return true
 	end
 end)

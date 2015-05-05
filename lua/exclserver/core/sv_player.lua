@@ -76,7 +76,7 @@ net.Receive("ES.GetServerList",function(len,ply)
 
 	ply._es_cmdTimeout=CurTime()+.5;
 
-	ES.DBQuery("SELECT ip FROM `es_servers` WHERE ip != '127.0.0.1:27015';",function(res)
+	ES.DBQuery("SELECT ip FROM `es_servers` WHERE ip ~= '127.0.0.1:27015';",function(res)
 		local tab={}
 		for k,v in pairs(res)do
 			if v.ip then

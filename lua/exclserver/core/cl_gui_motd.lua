@@ -168,7 +168,7 @@ function ES.OpenMOTD()
 			btn_donate:SetTall(30)
 			btn_donate:DockMargin(15,0,15,15)
 			btn_donate.OnMouseReleased=function()
-				gui.OpenURL("https://es2-api.casualbananas.com/donate?amt="..(entry:GetValue() ~= "" and entry:GetValue() or "1").."&sid="..LocalPlayer():SteamID())
+				gui.OpenURL("https://es2-api.casualbananas.com/api/donate?amt="..(entry:GetValue() ~= "" and entry:GetValue() or "1").."&sid="..LocalPlayer():SteamID())
 
 				local fill=vgui.Create("esPanel")
 				fill:SetSize(ScrW(),ScrH())
