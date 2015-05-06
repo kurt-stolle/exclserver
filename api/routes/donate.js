@@ -44,8 +44,8 @@ router.get('/', function(req, res, next){
           "payment_method": "paypal"
       },
       "redirect_urls": {
-          "return_url": host+"/donate/return",
-          "cancel_url": host+"/donate/cancel"
+          "return_url": host+"/api/donate/return",
+          "cancel_url": host+"/api/donate/cancel"
       },
       "transactions": [{
           "item_list": {
