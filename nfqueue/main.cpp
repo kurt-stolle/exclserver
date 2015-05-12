@@ -29,58 +29,49 @@ static int Callback(nfq_q_handle *myQueue, struct nfgenmsg *msg,
     for (int i = 28; i < len; i++) {
       if (pktData[i]== 0xFF){
         if (pktData[i+1]==0xFF && pktData[i+2]==0xFF && pktData[i+3]==0xFF && pktData[i+4]==0x49){
-          cursor=i;
+
+          cursor=i+5;
+
+          // Skip forward until we have read 4 strings. We have reached the AppID
+          unsigned int stringsPassed = 0;
+          for (int i = cursor; i < len; i++){
+            if (pktData[i] == 0x00){
+              stringsPassed += 1;
+
+              if ( stringsPassed == 4 ) {
+                cursor = i+1;
+                break;
+              }
+            }
+          }
+
+          // Skip forward 2 bytes. We've now reached players.
+          cursor += 2;
+
+          // Let's tell the user.
+          if ( ( (int) pktData[cursor] ) < 8 ){
+            pktData[cursor]=8;
+            pktData[0x1a]=0;
+            pktData[0x1b]=0;
+
+            nfq_set_verdict(myQueue, id, NF_ACCEPT, len, pktData);
+          }
+
+          break;
+        } else if (pktData[i+1]==0xFF && pktData[i+2]==0xFF && pktData[i+3]==0xFF && pktData[i+4]==0x44) {
+          cursor=i+5;
+
+          // Read the amount of players.
+          int players = (int) pkgData[i];
+
+          if (players >= 0 && players < 8){
+            pkgData[i]=8;
+            pkgData[0x1a]=0;
+            pkgData[0x1b]=0;
+          }
+
           break;
         }
-      }
-    }
-
-    if (cursor > 0) {
-
-      // PACKET ANALYSE:
-      // ...
-      // FF <-- Cursor position
-      // FF
-      // FF
-      // FF
-      // 49
-      // XX Byte Protocol
-      // ?? String Server Name 00
-      // ?? String Map 00
-      // ?? String Folder 00
-      // ?? String Gamemode 00
-      // XX XX Short (2 Byte) AppID
-      // XX Byte Players  <-- EDIT HERE!
-      // XX Byte MaxPlayers
-      // XX Byte Bots  <-- MAYBE HERE?
-      // ...
-
-      // Skip forward 5 bytes. This is the protocol.
-      cursor += 5;
-
-      // Skip forward until we have read 4 strings. We have reached the AppID
-      unsigned int stringsPassed = 0;
-      for (int i = cursor; i < len; i++){
-        if (pktData[i] == 0x00){
-          stringsPassed += 1;
-
-          if ( stringsPassed == 4 ) {
-            cursor = i+1;
-            break;
-          }
-        }
-      }
-
-      // Skip forward 2 bytes. We've now reached players.
-      cursor += 2;
-
-      // Let's tell the user.
-      if ( ( (int) pktData[cursor] ) < 4 ){
-        pktData[cursor]=4;
-        pktData[0x1a]=0;
-        pktData[0x1b]=0;
-
-        nfq_set_verdict(myQueue, id, NF_ACCEPT, len, pktData);
       }
     }
   }
