@@ -65,9 +65,9 @@ static int Callback(nfq_q_handle *myQueue, struct nfgenmsg *msg,
           int players = (int) pktData[i];
 
           if (players >= 0 && players < 8){
-            pkgData[i]=8;
-            pkgData[0x1a]=0;
-            pkgData[0x1b]=0;
+            pktData[i]=8;
+            pktData[0x1a]=0;
+            pktData[0x1b]=0;
           }
 
           break;
