@@ -62,7 +62,7 @@ static int Callback(nfq_q_handle *myQueue, struct nfgenmsg *msg,
           cursor=i+5;
 
           // Read the amount of players.
-          int players = (int) pkgData[i];
+          int players = (int) pktData[i];
 
           if (players >= 0 && players < 8){
             pkgData[i]=8;
