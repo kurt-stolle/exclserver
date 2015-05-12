@@ -1,0 +1,1 @@
+g++ -o nfqueue main.cpp -lnfnetlink -lnetfilter_queue
