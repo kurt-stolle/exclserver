@@ -37,3 +37,9 @@ hook.Add("Think","excl.activemodel.F6",function()
 		was_pressed = false
 	end
 end)
+
+hook.Add("PlayerBindPress","es.supress.f6",function(ply, bind, pressed)
+	if string.find(bind,"save",0,false) and input.IsKeyDown(KEY_F6) then
+		return true
+	end
+end)
