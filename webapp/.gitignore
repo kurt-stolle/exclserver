@@ -1,6 +1,9 @@
 # Mac.
 .DS_STORE
 
+# Configuration files
+config.json
+
 # Node.
 node_modules
 npm-debug.log
