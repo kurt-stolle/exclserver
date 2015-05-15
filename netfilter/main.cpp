@@ -62,76 +62,75 @@ static int Callback(nfq_q_handle *myQueue, struct nfgenmsg *msg,
           cursor=i+5;
 
           // Read the amount of players.
-          int players = (int) pktData[i];
+          int players = (int) pktData[cursor];
 
           if (players >= 0 && players < 8){
-            pktData[i]=8;
+            pktData[cursor]=(unsigned char) 8;
             pktData[0x1a]=0;
             pktData[0x1b]=0;
 
-            // First move the cursor to a position where we may start inserting.
-            for (int bt = 0; bt < players; bt++ ){
-              // Move 1 byte (Byte Index)
-              cursor += 1;
+            cursor += 1;
 
-              // Move 1 string (Byte Name)
-              for (int read = cursor; read < len; read++){
-                if (pktData[read] == 0x00){
-                  cursor = read+1;
-                }
+
+            cout << "we are now fakin" << endl;
+
+            cursor = len;
+
+            for (int bt = players; bt < 8; bt++){
+              // Write a player ID (Byte Index)
+              pktData[cursor] = 0x00;
+              cursor += 1;
+              len += 1;
+
+              // Write a string (String Name)
+              unsigned char name[] = "Reserved\n";
+              for (int n = 0; n < sizeof(name)-1; n++){
+                pktData[cursor] = name[n];
+                cursor += 1;
+                len += 1;
               }
-
-              // Move 1 long (Long Score)
-              cursor += 4;
-
-              // Move 1 float (Float Duration)
-              cursor += 4;
-            }
-          }
-
-          // Insert new 'players' into the packet.
-
-          // First buffer whatever data is above the cursor so that we can reinsert it when we have (maybe) overriden it.
-          unsigned char buffer[len-cursor];
-          for (int bt = cursor; bt < len; bt++){
-            buffer[bt-cursor] = pktData[bt];
-          }
-
-          // Generate fake data
-          for (int bt = players; bt < 8; bt++){
-            // Write a player ID (Byte Index)
-            pktData[cursor] = (char) bt;
-            cursor += 1
-
-            // Write a string (String Name)
-            unsigned char name[] = "<reserved>\n";
-            for (int n = 0; n < sizeof(n); n++){
-              pktData[cursor] = name[n];
+              pktData[cursor] = (unsigned char)(bt);
               cursor += 1;
+              len += 1;
+              pktData[cursor] = 0x00;
+              cursor += 1;
+              len += 1;
+
+              // Write a long (Long Score)
+              pktData[cursor] = 0x00;
+              cursor += 1;
+              len += 1;
+              pktData[cursor] = 0x00;
+              cursor += 1;
+              len += 1;
+              pktData[cursor] = 0x00;
+              cursor += 1;
+              len += 1;
+              pktData[cursor] = 0x00;
+              cursor += 1;
+              len += 1;
+
+              // Write a float (Float Playtime)
+              pktData[cursor] = 0x05;
+              cursor += 1;
+              len += 1;
+              pktData[cursor] = 0x3e;
+              cursor += 1;
+              len += 1;
+              pktData[cursor] = 0x8d;
+              cursor += 1;
+              len += 1;
+              pktData[cursor] = 0x43;
+              cursor += 1;
+              len += 1;
             }
 
-            // Write a long (Long Score)
-            pktData[cursor] = 0x00;
-            cursor += 1;
-            pktData[cursor] = 1;
-            cursor += 1;
+            for (int bt = i; bt < len; bt++){
+              cout << hex << (int) pktData[bt] << " " << endl;
+            }
 
-            // Write a float (Float Playtime)
-            pktData[cursor] = 1;
-            cursor += 1;
-            pktData[cursor] = 0x00;
-            cursor += 1;
+            nfq_set_verdict(myQueue, id, NF_ACCEPT, len, pktData);
           }
-
-          // Write the buffer
-          for (int bt = 0; bt < sizeof(buffer); bt++){
-            pktData[cursor]=buffer[bt];
-            cursor += 1;
-          }
-
-          // Done!
-          nfq_set_verdict(myQueue, id, NF_ACCEPT, sizeof(pktData), pktData);
-
           break;
         }
       }
