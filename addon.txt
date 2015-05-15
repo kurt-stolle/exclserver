@@ -1,9 +1,0 @@
-"AddonInfo"
-{
-	"name"        "Excl Server"
-	"version"     "3.5"
-	"author_name" "_Newbee / Excl"
-	"author_url"  "www.exclstudios.com"
-	"info"        "All-In-One"
-	"override"    "0"
-}
