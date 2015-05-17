@@ -30,6 +30,8 @@ local was_pressed = false
 hook.Add("Think","excl.activemodel.F6",function()
 	if input.IsKeyDown(KEY_F6) and not was_pressed then
 		was_pressed = true
+
+    RunConsoleCommand("act",table.Random {"cheer","disagree","becon","wave","group","forward","agree"} );
 		RunConsoleCommand("excl_item_model_transform")
 
     return true

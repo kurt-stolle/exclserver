@@ -124,7 +124,12 @@ function ES._MMGenerateInventoryEffects(base)
 	invAuras:SetSize(invWide,invTall)
 	invAuras.title = "Auras"
 	invAuras:SetPos(10,10)
-	invAuras.rm.typ = "aura"
+	invAuras.rm.DoClick=function()
+		net.Start("ESDeactivateItem")
+		net.WriteUInt(ES.ITEM_AURA,4)
+		net.SendToServer()
+	end
+
 
 	local iconAura = invAuras.PanelCurrent:Add("DImage")
 
@@ -176,7 +181,12 @@ function ES._MMGenerateInventoryEffects(base)
 	invTrails:SetSize(invWide,invTall)
 	invTrails.title = "Trails"
 	invTrails:SetPos(10,invAuras.y + invTall + 10)
-	invTrails.rm.typ = "trail"
+	invTrails.rm.DoClick=function()
+		net.Start("ESDeactivateItem")
+		net.WriteUInt(ES.ITEM_TRAIL,4)
+		net.SendToServer()
+	end
+
 
 	local iconTrail = invTrails.PanelCurrent:Add("DImage")
 
@@ -229,7 +239,11 @@ function ES._MMGenerateInventoryEffects(base)
 	invMelee:SetSize(invWide,invTall)
 	invMelee.title = "Melee"
 	invMelee:SetPos(10,invTrails.y + invTall + 10)
-	invMelee.rm.typ = "melee"
+	invMelee.rm.DoClick=function()
+		net.Start("ESDeactivateItem")
+		net.WriteUInt(ES.ITEM_MELEE,4)
+		net.SendToServer()
+	end
 
 	local iconMelee = invMelee.PanelCurrent:Add("Spawnicon")
 
@@ -312,7 +326,7 @@ function ES._MMGenerateInventoryOutfit(base)
 		tab.OnCursorEntered = function(self) self.Hover = true end tab.OnCursorExited = function(self) self.Hover = false end
 		tab.Paint = function(self,w,h)
 			if slotSelected ~= i then
-				draw.RoundedBox(0,1,1,w-2,h-1,self.Hover and ES.GetColorScheme(3) or Color(150,150,150,1))	
+				draw.RoundedBox(0,1,1,w-2,h-1,self.Hover and ES.GetColorScheme(3) or Color(150,150,150,1))
 			else
 				draw.RoundedBox(0,0,0,w,h,ES.Color["#1E1E1E"])
 			end
@@ -386,6 +400,14 @@ function ES._MMGenerateInventoryOutfit(base)
 					rm:SetSize(16,16)
 					rm:SetPos(100-16-5,5)
 					rm.DoClick = function()
+						net.Start("ES.Player.UpdateOutfit")
+							net.WriteUInt(slot,4)
+							net.WriteUInt(0,8)
+						net.SendToServer()
+
+						mdl.Slots[slot] = {}
+						slots[slot]={}
+
 						openEditor(slot)
 					end
 					spicon.OnMouseReleased = rm.DoClick

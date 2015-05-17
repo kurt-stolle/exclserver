@@ -18,7 +18,7 @@ function PNL:Init()
 
 	self.PanelInventory = vgui.Create("esPanel",self)
 	self.Icons={}
-	function self.PanelInventory:PaintOver(w,h) 
+	function self.PanelInventory:PaintOver(w,h)
 		if self:GetParent().Icons and #self:GetParent().Icons > 0 then return end
 
 		draw.SimpleText("Your purchases will appear here","esMMInventoryAppearthere",w/2,h/2,ES.Color.White,1,1)
@@ -56,7 +56,10 @@ function PNL:Init()
 	self.rm = vgui.Create("esIconButton",self)
 	self.rm:SetIcon(Material("icon16/cancel.png"))
 	self.rm:SetSize(16,16)
-	self.rm.DoClick = function(self)
+	self.rm.DoClick = function(self) end;
+	self.rm.OnMouseReleased = function(self)
+
+			self:DoClick();
 
 			self:SetVisible(false)
 			for k,v in pairs(self:GetParent().PanelCurrent:GetChildren())do

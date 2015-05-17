@@ -5,7 +5,7 @@ local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Vote kick","Create a vote to kick a certain user from the server.","Excl")
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 
-if SERVER then 
+if SERVER then
 	util.AddNetworkString("ESOpenVoteKick")
 	local votes = {}
 	local voteKickPlayer = NULL
@@ -16,17 +16,26 @@ if SERVER then
 	end)
 
 	PLUGIN:AddCommand("votekick",function(p,a)
-		if not p or not p:IsValid() or not a or not a[1] then return end
-		if nextVoteKick > CurTime() then p:ChatPrint("The vote kick system is currently on cooldown, wait "..math.Round(nextVoteKick-CurTime()).." more seconds.") return end
-		if voteKickPlayer and IsValid(voteKickPlayer) then p:ChatPrint("There already is a vote kick in progress.") return end
-		if p:ESGetVIPTier() < 2 then p:ChatPrint("You need at least Silver VIP to start a vote kick.") return end
-		if not a[2] then p:ChatPrint("You must specify a reason.") return end
+		if p:ESGetVIPTier() < 1 then p:ChatPrint("You need at least <hl>Bronze VIP</hl> to start a vote kick.") return end
+
+		if not p or not p:IsValid() or not a or not a[1] then
+			p:ESChatPrint("Invalid arguments passed to command <hl>votekick</hl>.")
+			return
+		end
+
+		if nextVoteKick > CurTime() then p:ESChatPrint("The votekick system is currently on cooldown, wait <hl>"..math.Round(nextVoteKick-CurTime()).."</hl> more seconds.") return end
+
+		if voteKickPlayer and IsValid(voteKickPlayer) then p:ESChatPrint("There already is a vote kick in progress.") return end
+
+		if not a[2] then p:ESChatPrint("You must specify a reason.") return end
 
 		local vic = ES.GetPlayerByName(a[1])
-		if not vic then p:ChatPrint("No target found with the specified name") return end
+
+		if not vic then p:ESChatPrint("Player not found.") return end
+
 		vic = vic[1]
-		if not vic or not IsValid(vic) then p:ChatPrint("No target found with the specified name") return end
-		if vic.nextVoteKick and vic.nextVoteKick > CurTime() then p:ChatPrint("You can currently not kick this user, as he has recently been victim to a vote kick.") return end
+
+		if not vic or not IsValid(vic) then p:ESChatPrint("Player not found.") return end
 
 		local r
 		if a[2] and a[2] ~= "" then
@@ -39,12 +48,12 @@ if SERVER then
 			ES.SendMessagePlayerTried(p,vic:Nick(),"vote kick")
 		end
 
-		p:ESChatPrint("server",Color(102,255,51),p:Nick(),COLOR_WHITE," has started a vote to kick ",Color(102,255,51),vic:Nick(),COLOR_WHITE,".")
+		p:ESChatPrint("<hl>"..p:Nick().."</hl> has started a vote to kick <hl>"..vic:Nick().."</hl>.")
 
 		voteKickPlayer = vic
 		voteKickPlayerID = vic:SteamID()
+
 		nextVoteKick = CurTime() + 300
-		vic.nextVoteKick = CurTime() + 600
 
 		net.Start("ESOpenVoteKick")
 		net.WriteEntity(vic)
@@ -56,13 +65,13 @@ if SERVER then
 		timer.Simple(60,function()
 			local count = (table.Count(votes) or 0)
 			if count > #player.GetAll()/2 then
-				p:ESChatPrint("server",COLOR_WHITE,"The vote kick succeeded, ",Color(102,255,51),p:Nick(),COLOR_WHITE," has been kicked and banned for 30 minutes.")
+				p:ESChatPrint("The vote kick succeeded <hl>"..p:Nick().."</hl> has been kicked and banned for 30 minutes.")
 				if IsValid(voteKickPlayer) then
 					ES.DropUser(voteKickPlayer:UserID(),"Voted off the server.")
 				end
-				ES.AddBan(voteKickPlayerID,"EXCLSERVER",30,false,"Voted off the server",IsValid(voteKickPlayer) and voteKickPlayer:Nick() or voteKickPlayer:SteamID(),"EXCLSERVER")
+				ES.AddBan(voteKickPlayerID,"EXCLSERVER",30,false,"Voted off the server",IsValid(voteKickPlayer) and voteKickPlayer:Nick() or voteKickPlayerID,"EXCLSERVER")
 			else
-				p:ESChatPrint("server",COLOR_WHITE,"The vote kick failed, ",Color(102,255,51),p:Nick(),COLOR_WHITE," will not be kicked off.")
+				p:ESChatPrint("The vote kick failed, <hl>"..(IsValid(vic) and vic:Nick() or voteKickPlayerID).."</hl> will not be kicked.")
 			end
 		end)
 	end,0)
@@ -72,8 +81,8 @@ elseif CLIENT then
 		local user = net.ReadEntity()
 		local reason = net.ReadString()
 
-		if not user or not IsValid(user) or !reason then return end
-			
+		if not user or not IsValid(user) or not reason then return end
+
 		if pnl and IsValid(pnl) then pnl:Remove() end
 
 		local a,b,c = ES.GetColorScheme()
@@ -105,7 +114,7 @@ elseif CLIENT then
 		yes:SetText("Yes (F7)")
 		yes.DoClick = function()
 			RunConsoleCommand("excl_vote_yes")
-			if pnl and IsValid(pnl) then pnl:Remove() end	
+			if pnl and IsValid(pnl) then pnl:Remove() end
 		end
 
 		local no = pnl:Add("esButton")
@@ -113,7 +122,7 @@ elseif CLIENT then
 		no:SetPos(yes.x + yes:GetWide() + 5,yes.y)
 		no:SetText("No (F8)")
 		no.DoClick = function()
-			if pnl and IsValid(pnl) then pnl:Remove() end	
+			if pnl and IsValid(pnl) then pnl:Remove() end
 		end
 
 		timer.Simple(60,function() if pnl and IsValid(pnl) then pnl:Remove() end end)

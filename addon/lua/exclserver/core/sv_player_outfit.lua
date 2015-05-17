@@ -13,6 +13,21 @@ net.Receive("ES.Player.UpdateOutfit",function(len,ply)
 	local color=ES.DBEscape(net.ReadString())
 	local bone=ES.DBEscape(net.ReadString())
 
+	if tonumber(item) == 0 and ply._es_outfit[slot] and ply._es_outfit[slot].item then
+		ply._es_outfit[slot] = {};
+
+		net.Start("ES.Player.UpdateOutfit")
+		net.WriteEntity(ply)
+		net.WriteTable(ply._es_outfit)
+		net.Broadcast()
+
+		ES.DBQuery(string.format("DELETE FROM `es_player_outfit` WHERE slot=%s AND steamid='%s' LIMIT 1;",tostring(slot),ply:SteamID()))
+
+		ES.DebugPrint("Saved outfit of "..ply:Nick())
+
+		return;
+	end
+
 	if not slot or not item or not pos or not ang or not color or not scale or slot > 2+ply:ESGetVIPTier() or not ES.Props[item] or not bone or not table.HasValue(ES.PropBones,bone) or not ES.HexToRGB(color) then return end
 
 	item=ES.Props[item]:GetName()
@@ -38,7 +53,7 @@ end)
 hook.Add("ESPlayerReady","ES.Outfit.LoadOOnSpawn",function(ply)
 	ES.DBQuery("SELECT * FROM `es_player_outfit` WHERE `steamid`='"..ply:SteamID().."' LIMIT 6",function(data)
 		if not data[1] then return end
-		
+
 		ply._es_outfit={}
 		for k,v in ipairs(data)do
 			if not v.item or not v.pos or not v.slot or not v.ang or not v.color or not v.scale or not v.bone or not ES.Props[v.item] then continue end

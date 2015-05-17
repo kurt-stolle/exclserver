@@ -13,6 +13,7 @@ local tab = ES.UIAddHoverListener({
 		ES.UIInitRippleEffect(self)
 		self.alpha=0
 		self.hovercolor=Color(0,0,0)
+		self.DoClick = function() end
 	end,
 	OnMousePressed = function(self)
 		ES.UIMakeRippleEffect(self)
@@ -21,6 +22,7 @@ local tab = ES.UIAddHoverListener({
 		self:DoClick()
 	end,
 	SetDoClick = function(self,fn)
+		ErrorNoHalt("Deprecated SetDoClick called!")
 		self.DoClick = fn
 	end,
 	Paint = function(self,w,h)

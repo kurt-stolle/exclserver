@@ -1,7 +1,5 @@
 util.AddNetworkString("es.item.model.transform")
 
-local acts={"cheer","disagree","becon","wave","group","forward","agree"}
-
 concommand.Add("excl_item_model_transform",function(p)
   if not IsValid(p) or table.HasValue(ES.DefaultModels,p:ESGetActiveModel()) or p:ESGetActiveModel() == p:GetModel() then return end
 
@@ -11,8 +9,6 @@ concommand.Add("excl_item_model_transform",function(p)
   net.Start("es.item.model.transform")
   net.WriteEntity(p)
   net.Broadcast()
-
-  p:ConCommand("act "..table.Random(acts));
 end)
 
 hook.Add("PlayerSpawn","es.item.model.notify",function(p)
