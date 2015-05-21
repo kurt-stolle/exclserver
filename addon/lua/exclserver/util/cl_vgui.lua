@@ -68,9 +68,20 @@ ES.CreateFont( "ESDefault+", {
 	size=20,
 	weight=400
 })
+ES.CreateFont( "ESDefault+.Shadow", {
+	font = "Roboto",
+	size=20,
+	weight=400,
+	blursize=2
+})
 ES.CreateFont( "ESDefault++", {
 	font = "Roboto",
 	size=26,
+	weight=400
+})
+ES.CreateFont( "ESDefault+++", {
+	font = "Roboto",
+	size=32,
 	weight=400
 })
 
