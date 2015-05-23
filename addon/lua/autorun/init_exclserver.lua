@@ -3,22 +3,34 @@ AddCSLuaFile()
 ES = {}
 
 ES.debug = game.SinglePlayer()
-
-if ES.debug then
-	_G["Error"]=_G["ErrorNoHalt"];
-end
-
 ES.version = "6.x.x"
 
 -- Debug methods
 local color_debug_text=Color(255,255,255)
 local color_debug_client=Color(245,184,0)
 local color_debug_server=Color(0,200,255)
-function ES.DebugPrint(s)
-	if not ES.debug or not s then return end
 
-	MsgC(SERVER and color_debug_server or color_debug_client,"[ES] ")
-	MsgC(color_debug_text,tostring(s).."\n")
+function ES.DebugPrint(...)
+	if not ES.debug then return end
+
+	local s="";
+	for k,v in ipairs{...}do
+		local part;
+
+		if type(v) == "table" then
+			part=util.TableToJSON(v)
+		elseif type(v) == "Entity" and v:IsPlayer() and IsValid(v) then
+			part=v:Nick()
+		else
+			part=tostring(v)
+		end
+
+		s=s.." "..part
+	end
+	s=s.."\n";
+
+	MsgC(SERVER and color_debug_server or color_debug_client,"[ES "..ES.version.."]")
+	MsgC(color_debug_text,s)
 end
 ES.DebugPrint("Initializing ExclServer @ version "..ES.version)
 

@@ -325,7 +325,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		tbl.rows[4][8] = false
 		tbl.rows[5][8] = true
 
-		tbl.buttons[2]:SetDoClick(function()
+		tbl.buttons[2].DoClick = (function()
 			if LocalPlayer():ESGetVIPTier() >= 1 then return end
 
 			net.Start("ES.BuyVIP")
@@ -334,7 +334,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 
 			p:GetParent():Remove()
 		end)
-		tbl.buttons[3]:SetDoClick(function()
+		tbl.buttons[3].DoClick = (function()
 			if LocalPlayer():ESGetVIPTier() >= 2 then return end
 
 			net.Start("ES.BuyVIP")
@@ -343,7 +343,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 
 			p:GetParent():Remove()
 		end)
-		tbl.buttons[4]:SetDoClick(function()
+		tbl.buttons[4].DoClick = (function()
 			if LocalPlayer():ESGetVIPTier() >= 3 then return end
 
 			net.Start("ES.BuyVIP")
@@ -352,7 +352,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 
 			p:GetParent():Remove()
 		end)
-		tbl.buttons[5]:SetDoClick(function()
+		tbl.buttons[5].DoClick = (function()
 			if LocalPlayer():ESGetVIPTier() >= 4 then return end
 
 			net.Start("ES.BuyVIP")
