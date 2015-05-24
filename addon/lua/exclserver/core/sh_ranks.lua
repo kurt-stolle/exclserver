@@ -58,7 +58,7 @@ ES.SetupRank("owner","Server Owner"				,80) --
 local PLAYER = FindMetaTable("Player")
 function ES.RankExists(name)
 	for num,rank in ipairs(ES.Ranks)do
-		if rank:GetSimpleName() == key then
+		if rank:GetSimpleName() == name then
 			return true
 		end
 	end
