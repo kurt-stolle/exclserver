@@ -1,8 +1,18 @@
 AddCSLuaFile()
 
+if jit then
+	jit.on();
+end
 ES = {}
 
 ES.debug = game.SinglePlayer()
+if not ES.debug then
+	local hostip = GetConVarString( "hostip" )
+	hostip = tonumber( hostip )
+	hostip = bit.rshift( bit.band( hostip, 0xFF000000 ), 24 ).."."..bit.rshift( bit.band( hostip, 0x00FF0000 ), 16 )
+
+	ES.debug = (hostip == "192.168" or hostip == "10.0") or false;
+end
 ES.version = "6.x.x"
 
 -- Debug methods

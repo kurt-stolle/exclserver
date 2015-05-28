@@ -9,7 +9,7 @@ if SERVER then
 	end,0)
 elseif CLIENT then
 	net.Receive("ES.CMD.Version",function()
-		chat.AddText(ES.Color.White,"\nThis server is running ExclServer version "..ES.version..". Created by Excl.\n");
+		chat.AddText(ES.Color.White,"\nThis server is running <hl>ExclServer</hl> version <i>"..ES.version.."</i>. Created by Excl.\n");
 	end)
 end
 
