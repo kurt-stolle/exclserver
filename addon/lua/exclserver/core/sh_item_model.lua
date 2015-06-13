@@ -42,6 +42,7 @@ function PLAYER:ESGetActiveModel()
 	return ES.Models[active] and ES.Models[active]:GetModel() or table.Random(ES.DefaultModels)
 end
 
+-- The models below require no custom content
 ES.AddModel("Dr. Breen","The city administrator",4000,"models/player/breen.mdl")
 ES.AddModel("Father","...",4000,"models/player/monk.mdl")
 ES.AddModel("GMan","A mysterious figure",4000,"models/player/gman_high.mdl")
@@ -60,3 +61,11 @@ ES.AddModel("Zombie","A headcrabless zombie",20000,"models/player/zombie_classic
 ES.AddModel("Alyx","Gordon's company",4000,"models/player/alyx.mdl")
 ES.AddModel("Eli","A nigger with a metal leg.",4000,"models/player/eli.mdl")
 ES.AddModel("Skeleton","A scary skeleton",25000,"models/player/skeleton.mdl")
+
+-- The models below DO require custom content!
+
+
+-- Resource the custom models
+if SERVER then
+
+end

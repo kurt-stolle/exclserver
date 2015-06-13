@@ -104,7 +104,7 @@ function ES.PushColorScheme(f,s,t)
 		firstColor = Color(20,165,180)
 		secondColor = Color(24,135,150)
 		thirdColor = Color(28,105,120)
-		
+
 		return
 	end
 
