@@ -80,7 +80,7 @@ function PANEL:Paint(w,h)
 		matrix:Scale( matrixScale )
 	else
 		x,y=self:LocalToScreen(w/2,h/2)
-		x,y=(self.scale-1)*-x,(self.scale-1)*-y
+		x,y=(self.scale-1)*-x,(self.scale-1)*-y*-self.scale
 
 		matrix=Matrix()
 		matrix:SetAngles( matrixAngle )
