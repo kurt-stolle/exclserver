@@ -169,7 +169,7 @@ function expression:Execute(base, text)
 	label:SetParent(base)
 	label:SetShadow(2)
 	label:SetText(text)
-	label:SetColor(ES.Color.LightGreen);
+	label:SetColor(ES.Color.Highlight);
 	label:SizeToContents(base)
 
 	return label

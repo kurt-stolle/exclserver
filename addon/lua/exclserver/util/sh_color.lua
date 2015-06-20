@@ -71,6 +71,7 @@ ES.Color.DeepOrange	= ES.Color["#ff5722"]
 ES.Color.Brown 	 	= ES.Color["#795548"]
 ES.Color.Grey 	 	= ES.Color["#9e9e9e"]
 ES.Color.BlueGrey 	= ES.Color["#607d8b"]
+ES.Color.Highlight = ES.Color.LightGreen
 
 -- Allow users to customize
 local firstColor = Color(20,165,180)
