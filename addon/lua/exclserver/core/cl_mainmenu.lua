@@ -71,6 +71,7 @@ ES.CreateFont("ES.MainMenu.HeadingText",{
 })
 
 local function addCheckbox(help,txt,convar,oncheck)
+	local ply = LocalPlayer()
 
 	local togOwn = vgui.Create("esToggleButton",help)
 	togOwn:DockMargin(20,20,20,0)
@@ -79,10 +80,10 @@ local function addCheckbox(help,txt,convar,oncheck)
 	togOwn.Text = txt
 	togOwn.DoClick = function(self)
 		if self:GetChecked() then
-			LocalPlayer():ConCommand(convar.." 1")
+			ply:ConCommand(convar.." 1")
 			oncheck(togOwn)
 		else
-			LocalPlayer():ConCommand(convar.." 0")
+			ply:ConCommand(convar.." 0")
 			oncheck(togOwn)
 		end
 	end
@@ -92,6 +93,8 @@ end
 
 function ES.CreateMainMenu()
 	if IsValid(mm) then mm:Remove() return end
+
+	local ply = LocalPlayer()
 
 	mm = vgui.Create("ESMainMenu")
 	mm:SetPos(0,0)
@@ -272,7 +275,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		lblVIPInfo:DockMargin(15,15,15,15)
 		lblVIPInfo:SetColor(Color(255,255,255,200))
 
-		local curtier = LocalPlayer():ESGetVIPTier()
+		local curtier = ply:ESGetVIPTier()
 		local tbl = vgui.Create("ES.MMVIPTable",p)
 		tbl:Dock(TOP)
 		tbl:DockMargin(15,15,15,15)
@@ -326,7 +329,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		tbl.rows[5][8] = true
 
 		tbl.buttons[2].DoClick = (function()
-			if LocalPlayer():ESGetVIPTier() >= 1 then return end
+			if ply:ESGetVIPTier() >= 1 then return end
 
 			net.Start("ES.BuyVIP")
 				net.WriteUInt(1,4)
@@ -335,7 +338,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			p:GetParent():Remove()
 		end)
 		tbl.buttons[3].DoClick = (function()
-			if LocalPlayer():ESGetVIPTier() >= 2 then return end
+			if ply:ESGetVIPTier() >= 2 then return end
 
 			net.Start("ES.BuyVIP")
 				net.WriteUInt(2,4)
@@ -344,7 +347,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			p:GetParent():Remove()
 		end)
 		tbl.buttons[4].DoClick = (function()
-			if LocalPlayer():ESGetVIPTier() >= 3 then return end
+			if ply:ESGetVIPTier() >= 3 then return end
 
 			net.Start("ES.BuyVIP")
 				net.WriteUInt(3,4)
@@ -353,7 +356,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			p:GetParent():Remove()
 		end)
 		tbl.buttons[5].DoClick = (function()
-			if LocalPlayer():ESGetVIPTier() >= 4 then return end
+			if ply:ESGetVIPTier() >= 4 then return end
 
 			net.Start("ES.BuyVIP")
 				net.WriteUInt(4,4)
@@ -388,7 +391,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			lb2:SizeToContents()
 			lb2:SetColor(COLOR_WHITE)
 
-			local lbl = Label(v.hidden and not LocalPlayer():ESHasCompletedAchievement(k) and "<secret>" or ES.FormatLine(v.descr,"ESDefault",ach:GetWide() - 80 - 4 - 4) or "Unknown",ach)
+			local lbl = Label(v.hidden and not ply:ESHasCompletedAchievement(k) and "<secret>" or ES.FormatLine(v.descr,"ESDefault",ach:GetWide() - 80 - 4 - 4) or "Unknown",ach)
 			lbl:SetFont("ESDefault")
 			lbl:SizeToContents()
 			lbl:SetPos(lb2.x+2,lb2.y + lb2:GetTall()+3)
@@ -401,11 +404,11 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			dr.Paint = function(self,w,h)
 				draw.RoundedBox(2,0,0,w,h,COLOR_BLACK)
 
-				if (LocalPlayer()._es_achievements and LocalPlayer()._es_achievements[v.id] or 0) > 0 then
-					draw.RoundedBox(2,1,1,(w-2)*((LocalPlayer()._es_achievements and LocalPlayer()._es_achievements[v.id] or 0)/ES.Achievements[v.id].progressNeeded),h-2,a)
+				if (ply._es_achievements and ply._es_achievements[v.id] or 0) > 0 then
+					draw.RoundedBox(2,1,1,(w-2)*((ply._es_achievements and ply._es_achievements[v.id] or 0)/ES.Achievements[v.id].progressNeeded),h-2,a)
 				end
-				draw.SimpleText((LocalPlayer()._es_achievements and LocalPlayer()._es_achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold.Shadow",w/2,h/2,COLOR_BLACK,1,1)
-				draw.SimpleText((LocalPlayer()._es_achievements and LocalPlayer()._es_achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1)
+				draw.SimpleText((ply._es_achievements and ply._es_achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold.Shadow",w/2,h/2,COLOR_BLACK,1,1)
+				draw.SimpleText((ply._es_achievements and ply._es_achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1)
 			end
 
 			y = y + ach:GetTall() + 15

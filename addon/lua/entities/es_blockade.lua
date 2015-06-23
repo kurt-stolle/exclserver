@@ -3,7 +3,7 @@ AddCSLuaFile()
 ENT.Type             = "anim"
 ENT.Base             = "base_anim"
 
-function ENT:Initialize()    
+function ENT:Initialize()
   if SERVER then
     self:SetModel( "models/hunter/blocks/cube025x025x025.mdl" )
 
@@ -19,7 +19,7 @@ function ENT:Initialize()
     local phys = self:GetPhysicsObject()
     if phys and phys:IsValid() then
       phys:EnableMotion(false) -- Freezes the object in place.
-    end   
+    end
   end
 end
 
@@ -34,7 +34,7 @@ function ENT:Draw()
 
     cube:SetRenderOrigin(self:LocalToWorld(self:OBBCenter()))
     cube:SetRenderAngles( self:GetAngles() )
-    
+
     local mtr = Matrix()
     mtr:Scale( (self:OBBMaxs() - self:OBBMins())/11.75 )
     cube:EnableMatrix("RenderMultiply", mtr )
@@ -42,7 +42,7 @@ function ENT:Draw()
     cube:SetupBones()
     cube:SetColor(Color(255,255,255))
     cube:DrawModel()
-    
+
     cube:SetRenderOrigin()
     cube:SetRenderAngles()
   end
@@ -69,7 +69,7 @@ end)
 hook.Add("PostDrawTranslucentRenderables","ESPaintBlockades",function()
   if LocalPlayer().editingBlockades and drawingBlockades and blockadeStart then
       local ending = Vector(0,0,0)
-      if not blockadeEnd then 
+      if not blockadeEnd then
         ending = LocalPlayer():EyePos() + LocalPlayer():EyeAngles():Forward() * 30
       else
         ending = blockadeEnd
@@ -77,7 +77,7 @@ hook.Add("PostDrawTranslucentRenderables","ESPaintBlockades",function()
 
       cube:SetRenderOrigin(blockadeStart + (ending - blockadeStart)/2)
       cube:SetRenderAngles( Angle(0,0,0) )
-      
+
       local mtr = Matrix()
       mtr:Scale( (ending - blockadeStart)/11.75 )
       cube:EnableMatrix("RenderMultiply", mtr )
@@ -85,7 +85,7 @@ hook.Add("PostDrawTranslucentRenderables","ESPaintBlockades",function()
       cube:SetupBones()
       cube:SetColor(Color(255,0,0))
       cube:DrawModel()
-      
+
       cube:SetRenderOrigin()
       cube:SetRenderAngles()
     end

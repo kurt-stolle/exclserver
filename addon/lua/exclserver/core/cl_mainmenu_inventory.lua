@@ -21,17 +21,17 @@ function ES._MMGenerateInventoryEffects(base)
 	local mdl = p:Add("ES.PlayerModel")
 	--mdl.useCurrentHat = true
 	mdl:SetSize(500,500)
-	mdl:SetModel(LocalPlayer():ESGetActiveModel())
+	mdl:SetModel(ply:ESGetActiveModel())
 	mdl:SetPos(p:GetWide()-380,p:GetTall()-501)
 	mdl:SetLookAt(Vector(0,0,62))
 	mdl:SetCamPos(Vector(38,18,64))
 	mdl:SetUseOutfit(true)
-	mdl.Slots=LocalPlayer()._es_outfit or {}
+	mdl.Slots=ply._es_outfit or {}
 
 	local nextPress = CurTime()+.5
 	local modelIndex = 0
 
-	local models = LocalPlayer()._es_inventory_models or {}
+	local models = ply._es_inventory_models or {}
 	local function modelbykey(k)
 		if k < 1 then
 			return table.Random(ES.DefaultModels)
@@ -135,7 +135,7 @@ function ES._MMGenerateInventoryEffects(base)
 
 	local y = 0
 	local x = 0
-	for k,v in pairs(LocalPlayer()._es_inventory_auras or {}) do
+	for k,v in pairs(ply._es_inventory_auras or {}) do
 		if not ES.ValidItem(v,ES.ITEM_AURA) then
 			continue
 		end
@@ -192,7 +192,7 @@ function ES._MMGenerateInventoryEffects(base)
 
 		local y = 0
 		local x = 0
-		for k,v in pairs(LocalPlayer()._es_inventory_trails or {})do
+		for k,v in pairs(ply._es_inventory_trails or {})do
 			if not ES.ValidItem(v,ES.ITEM_TRAIL) then continue end
 
 			local item=ES.Trails[v]
@@ -249,7 +249,7 @@ function ES._MMGenerateInventoryEffects(base)
 
 		local y = 0
 		local x = 0
-		for k,v in pairs(LocalPlayer()._es_inventory_meleeweapons or {})do
+		for k,v in pairs(ply._es_inventory_meleeweapons or {})do
 			if not ES.ValidItem(v,ES.ITEM_MELEE) then continue end
 
 			local item=ES.MeleeWeapons[v]
@@ -296,6 +296,8 @@ local boneTranslations={}
 
 local color_background_faded=Color(0,0,0,150)
 function ES._MMGenerateInventoryOutfit(base)
+	local ply=LocalPlayer()
+
 	for k,v in pairs(ES.PropBones)do
 		boneTranslations[string.gsub(string.gsub(string.gsub(v,"ValveBiped.Bip01_",""),"R_","Right "),"L_","Left ")]=v
 	end
@@ -305,9 +307,9 @@ function ES._MMGenerateInventoryOutfit(base)
 
 	local openEditor -- prototype
 
-	local inv=LocalPlayer()._es_inventory_props and table.Copy(LocalPlayer()._es_inventory_props) or {}
+	local inv=ply._es_inventory_props and table.Copy(ply._es_inventory_props) or {}
 
-	local slots=LocalPlayer()._es_outfit and table.Copy(LocalPlayer()._es_outfit) or {}
+	local slots=ply._es_outfit and table.Copy(ply._es_outfit) or {}
 
 	local tab = vgui.Create("Panel",p)
 	tab:SetPos(1,p:GetTall()-64-1)
@@ -319,7 +321,7 @@ function ES._MMGenerateInventoryOutfit(base)
 	end
 
 	local slotSelected = 1
-	for i=1,2+LocalPlayer():ESGetVIPTier() do
+	for i=1,2+ply:ESGetVIPTier() do
 		local tab = vgui.Create("Panel",p)
 		tab:SetPos(-63 + i*64,p:GetTall()-65)
 		tab:SetSize(64,64)
@@ -333,7 +335,7 @@ function ES._MMGenerateInventoryOutfit(base)
 			draw.SimpleText(i,"ES.MainMenu.MainElementInfoBnns",w/2,h/2,(slotSelected == i or self.Hover) and COLOR_WHITE or Color(255,255,255,50),1,1)
 		end
 		tab.OnMouseReleased = function()
-			if i > 2+LocalPlayer():ESGetVIPTier() then
+			if i > 2+ply:ESGetVIPTier() then
 				return
 			end
 			slotSelected = i
@@ -583,7 +585,7 @@ function ES._MMGenerateInventoryOutfit(base)
 				mdl = pnlpreview:Add("ES.PlayerModel") -- prototype above
 				mdl:Dock(FILL)
 				mdl:DockMargin(0,0,0,0)
-				mdl:SetModel(LocalPlayer():ESGetActiveModel())
+				mdl:SetModel(ply:ESGetActiveModel())
 				mdl:SetLookAt(Vector(0,0,0))
 				mdl:SetCamPos(Vector(10,10,10))
 				mdl:SetFocus(boneSelected)

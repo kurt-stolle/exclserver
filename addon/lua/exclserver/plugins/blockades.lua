@@ -11,7 +11,7 @@ if SERVER then
 	util.AddNetworkString("ESBlockConfirm")
 
 	hook.Add("ESDatabaseReady","ES.SpawnBlockades",function()
-		ES.DBQuery("SELECT * FROM es_blockades WHERE mapname = '"..game.GetMap().."'",function(r) 
+		ES.DBQuery("SELECT * FROM es_blockades WHERE mapname = '"..game.GetMap().."'",function(r)
 			ES.DebugPrint("Attempting to spawn blockades")
 
 			if not r or not r[1] then return end
@@ -37,7 +37,7 @@ if SERVER then
 
 		p:SendLua("LocalPlayer().editingBlockades = !LocalPlayer().editingBlockades")
 	end,0)
-	
+
 	PLUGIN:AddCommand("startblockade",function(p,a)
 		if not p or not p:IsValid() then return end
 
@@ -46,7 +46,7 @@ if SERVER then
 
 		p.startedBlockade = true
 		p.blockadeStart = p:EyePos() + p:EyeAngles():Forward() * 10
-		
+
 	end,60)
 
 	PLUGIN:AddCommand("endblockade",function(p,a)

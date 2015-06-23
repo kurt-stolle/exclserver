@@ -124,8 +124,8 @@ net.Receive("ESAchEarned",function()
 		chat.AddText(ply,COLOR_WHITE," has earned the achievement ",Color(102,255,51),ES.Achievements[id] and ES.Achievements[id].name or id or "Unknown",COLOR_WHITE,".")
 	end
 	if ply == LocalPlayer() then
-		if not LocalPlayer()._es_achievements then LocalPlayer()._es_achievements = {} end
-		LocalPlayer()._es_achievements[id] = ES.Achievements[id].progressNeeded
+		if not ply._es_achievements then ply._es_achievements = {} end
+		ply._es_achievements[id] = ES.Achievements[id].progressNeeded
 
 		local pnl = ES.CreateAchievementPopup("Achievement unlocked",ES.Achievements[id].name,ES.Achievements[id].icon)
 		local lbl = Label(ES.FormatLine(ES.Achievements[id].descr,"ESDefault",ach:GetWide() - 80 - 4 - 4),pnl)

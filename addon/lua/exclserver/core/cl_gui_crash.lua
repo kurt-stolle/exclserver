@@ -8,7 +8,7 @@ local spawned = false
 local pending = false
 local spawntime
 
-local apology = [[There appears to be a problem with your connection to the server. 
+local apology = [[There appears to be a problem with your connection to the server.
 This can be caused by two things, your connection to the internet or the server's connection to the internet is experiencing problems.
 ]]
 
@@ -37,11 +37,11 @@ local function createMenu()
 
         local menucrashtime = CurTime()
         local retrytime = menucrashtime + reconnecttime
-       
+
         for k , v  in ipairs(player.GetAll()) do
             v.CrashedPing = v:Ping()
         end
- 		
+
  		if crashPnl and IsValid(crashPnl) then
  			crashPnl:Remove()
  		end
@@ -65,7 +65,7 @@ local function createMenu()
  			surface.DrawRect(0,ScrH()-60,w,60)
 
  			draw.SimpleText("Connection Problem","ESConnectionProblem",10,40,COLOR_WHITE)
- 			
+
  			draw.SimpleText(string.format("You will automatically try a reconnect in %d seconds", retrytime - CurTime()),"ESDefaultBold",15,95,COLOR_WHITE)
 
  			local txt = ES.FormatLine( apology, "ESDefault", wideText )
@@ -85,7 +85,7 @@ local function createMenu()
 		end
 		btnClose.Paint = function(self,w,h)
 			if not self.Mat then return end
-			
+
 			surface.SetMaterial(self.Mat)
 			surface.SetDrawColor(COLOR_WHITE)
 			surface.DrawTexturedRectRotated(h/2,h/2,h,h,180)
@@ -104,7 +104,7 @@ local function createMenu()
 		end
 		btnClose.Paint = function(self,w,h)
 			if not self.Mat then return end
-			
+
 			surface.SetMaterial(self.Mat)
 			surface.SetDrawColor(COLOR_WHITE)
 			surface.DrawTexturedRectRotated(w-h/2,h/2,h,h,0)
@@ -132,9 +132,9 @@ local function createMenu()
 				if !crashPnl or !IsValid(crashPnl) then return end
 
 				cbcservers = util.JSONToTable(rtrn)
-				
+
 				if not cbcservers then return end
-				
+
 				local y = 0
 				for k,v in pairs(cbcservers)do
 					if v.ip == exclGetIP() then continue end
@@ -168,11 +168,11 @@ local function createMenu()
 					con.DoClick = function()
 						LocalPlayer():ConCommand("connect "..v.ip)
 					end
-					con:SetText("Connect")					
+					con:SetText("Connect")
 
 					y = y + pnl:GetTall() + 5
 
-				end	
+				end
 
 				if y > context:GetTall() then
 					local scr = context:Add("esScrollbar")
@@ -183,10 +183,10 @@ local function createMenu()
 			end,
 			function() end
 		)
-		
+
 
 	crashPnl:MakePopup()
-       
+
    hook.Add("Think" , "Crashed" , function()
 		for k , v in ipairs(player.GetAll()) do
 			if v.CrashedPing ~= v:Ping() then
@@ -196,24 +196,24 @@ local function createMenu()
 				lastmovetime = CurTime() + 5
 			end
 		end
-		
+
 		local moving = false
-		
+
 		for k , v in ipairs(ents.GetAll()) do
 			if v:GetVelocity():Length() > 5 then
 				moving = true
 				break
 			end
 		end
-		
+
 		if moving then
 			hook.Remove("Think" , "Crashed")
 			ES.DebugPrint("Connection regained (moving)")
 			crashed = false
 			lastmovetime = CurTime() + 5
 		end
-		
-	
+
+
 		if crashed and (retrytime - CurTime() - 0.5) < 0 and lastmovetime + 5 < CurTime() then
 			if shouldretry then
 				RunConsoleCommand("retry")
@@ -256,11 +256,11 @@ end )
 
 local test = 0
 hook.Add("Think" , "ESCrashReconnect" , function()
-	if not game.SinglePlayer() then	
+	if not game.SinglePlayer() then
 		if not crashed and IsCrashed() and not pending then
 			pending = true
 			RunConsoleCommand("excl_ping")
-		
+
 			test = CurTime() + 3.5
 
 			ES.DebugPrint("Connection lost! Sending ping!")
@@ -272,7 +272,7 @@ hook.Add("Think" , "ESCrashReconnect" , function()
 				crashed = true
 				shouldretry = true
 				pending = false
-				
+
 				createMenu()
 			else
 				ES.DebugPrint("Connection to gameserver regained")

@@ -40,21 +40,25 @@ function ES.NotifyPopup(title,message)
 
 	local frame=vgui.Create("esFrame")
 
+	message=ES.FormatLine(message,"ESDefault",240)
+
 	local label=frame:Add("esLabel")
 	label:SetFont("ESDefault")
 	label:SetColor(ES.Color.White)
-	label:SetPos(10,40)
-
+	label:SetPos(20,50)
 	label:SetText(message)
-
 	label:SizeToContents()
 
+	local but=frame:Add("esButton")
+	but:SetText("OK")
+	but:SetTall(30)
+	but:SetWide(label:GetWide())
+	but:SetPos(20,label:GetTall() + label.y + 20)
+	but.DoClick = function() frame:Remove() end
+
 	frame:SetTitle(title)
-
-	frame:SetSize(label:GetWide()+20,label:GetTall()+50)
-
+	frame:SetSize(label:GetWide()+40,label:GetTall()+90+but:GetTall())
 	frame:Center()
-
 	frame:MakePopup()
 end
 

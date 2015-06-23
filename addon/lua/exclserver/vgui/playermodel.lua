@@ -5,7 +5,7 @@ AccessorFunc(PNL,"zoom","Zoom",FORCE_NUMBER)
 AccessorFunc(PNL,"rotate","Rotation",FORCE_NUMBER)
 AccessorFunc(PNL,"rotate_y","RotationY",FORCE_NUMBER)
 
-function PNL:Init() 
+function PNL:Init()
 	self:SetZoom(40)
 	self:SetRotation(90)
 	self:SetRotationY(0)
@@ -33,7 +33,7 @@ function PNL:Paint()
 
 	if self.dragging and self.startPos then
 		local p = Vector(gui.MousePos())
-		
+
 		local dx = p.x - self.startPos.x
 		local dy = p.y - self.startPos.y
 
@@ -47,28 +47,28 @@ function PNL:Paint()
 			self.dragging = false
 		end
 	end
-		
+
 	local p = LocalPlayer()
 
 	local x, y = self:LocalToScreen( 0, 0 )
-	
+
 	self:LayoutEntity( self.Entity )
-	
+
 	local ang = self.aLookAngle
 	if ( !ang ) then
 		ang = (self.vLookatPos-self.vCamPos):Angle()
 	end
-	
+
 	local w, h = self:GetSize()
 	cam.Start3D( self.vCamPos, ang, self.fFOV, x, y, w, h, 5, 4096 )
 	cam.IgnoreZ( true )
-	
+
 	render.SuppressEngineLighting( true )
 	render.SetLightingOrigin( self.Entity:GetPos() )
 	render.ResetModelLighting( self.colAmbientLight.r/255, self.colAmbientLight.g/255, self.colAmbientLight.b/255 )
 	render.SetColorModulation( self.colColor.r/255, self.colColor.g/255, self.colColor.b/255 )
 	render.SetBlend( self.colColor.a/255 )
-	
+
 
 	for i=0, 6 do
 		local col = self.DirectionalLight[ i ]
@@ -77,7 +77,7 @@ function PNL:Paint()
 		end
 	end
 
-	self.Entity:DrawModel()		
+	self.Entity:DrawModel()
 	local item,pos,ang,scale,bone,color,drawang,drawpos,mtr
 	for k,v in pairs(self.Slots)do
 		item = ES.Props[v.item]
@@ -100,13 +100,13 @@ function PNL:Paint()
 		item:EnableMatrix("RenderMultiply", mtr)
 
 		item:SetColor(color or ES.Color.White)
-				
+
 		drawpos, drawang = self.Entity:GetBonePosition(bone)
-		
+
 		drawpos = drawpos + (drawang:Up() * 			pos.z)
 		drawpos = drawpos +	(drawang:Forward() * 		pos.y)
 		drawpos = drawpos + (drawang:Right() * 			pos.x)
-			
+
 		drawang:RotateAroundAxis( drawang:Forward(), 	ang.p)
 		drawang:RotateAroundAxis( drawang:Up(), 		ang.y)
 		drawang:RotateAroundAxis( drawang:Right(), 		ang.r)
@@ -117,13 +117,13 @@ function PNL:Paint()
 		item:DrawModel()
 		item:SetRenderOrigin()
 		item:SetRenderAngles()
-	end	
+	end
 
 	render.SuppressEngineLighting( false )
 	cam.IgnoreZ( false )
 	cam.End3D()
 
 	self.LastPaint = RealTime()
-	
+
 end
 vgui.Register("ES.PlayerModel",PNL,"DModelPanel")

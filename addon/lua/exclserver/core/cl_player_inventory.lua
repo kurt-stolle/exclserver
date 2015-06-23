@@ -2,40 +2,41 @@ net.Receive("ESSynchInvAdd",function()
 	local name = net.ReadString()
 	local itemtype = net.ReadUInt(4)
 	local tab_inventory
+	local ply=LocalPlayer()
 
 	if itemtype == ES.ITEM_TRAIL then
-		if type(LocalPlayer()._es_inventory_trails) ~= "table" then
-			LocalPlayer()._es_inventory_trails = {}
+		if type(ply._es_inventory_trails) ~= "table" then
+			ply._es_inventory_trails = {}
 		end
 
-		tab_inventory=LocalPlayer()._es_inventory_trails
+		tab_inventory=ply._es_inventory_trails
 	elseif itemtype == ES.ITEM_MODEL then
-		if type(LocalPlayer()._es_inventory_models) ~= "table" then
-			LocalPlayer()._es_inventory_models = {}
+		if type(ply._es_inventory_models) ~= "table" then
+			ply._es_inventory_models = {}
 		end
 
-		tab_inventory=LocalPlayer()._es_inventory_models
+		tab_inventory=ply._es_inventory_models
 	elseif itemtype == ES.ITEM_MELEE then
-		if type(LocalPlayer()._es_inventory_meleeweapons) ~= "table" then
-			LocalPlayer()._es_inventory_meleeweapons = {}
+		if type(ply._es_inventory_meleeweapons) ~= "table" then
+			ply._es_inventory_meleeweapons = {}
 		end
 
-		tab_inventory=LocalPlayer()._es_inventory_meleeweapons
+		tab_inventory=ply._es_inventory_meleeweapons
 	elseif itemtype == ES.ITEM_AURA then
-		if type(LocalPlayer()._es_inventory_auras) ~= "table" then
-			LocalPlayer()._es_inventory_auras = {}
+		if type(ply._es_inventory_auras) ~= "table" then
+			ply._es_inventory_auras = {}
 		end
 
-		tab_inventory=LocalPlayer()._es_inventory_auras
+		tab_inventory=ply._es_inventory_auras
 	elseif itemtype == ES.ITEM_PROP then
-		if type(LocalPlayer()._es_inventory_props) ~= "table" then
-			LocalPlayer()._es_inventory_props = {}
+		if type(ply._es_inventory_props) ~= "table" then
+			ply._es_inventory_props = {}
 		end
 
-		tab_inventory=LocalPlayer()._es_inventory_props
-	end  
+		tab_inventory=ply._es_inventory_props
+	end
 
-	if type(tab_inventory) ~= "table" then 
+	if type(tab_inventory) ~= "table" then
 		ES.DebugPrint("Failed to synchronize item with itemtype ["..tostring(itemtype).."] tables not found.")
 		return
 	end
@@ -50,18 +51,19 @@ net.Receive("ESSynchInvRemove",function()
 	local name = net.ReadString()
 	local itemtype = net.ReadInt(8)
 	local tab
+	local ply=LocalPlayer()
 
 	if itemtype == ES.ITEM_TRAIL then
-		tab=LocalPlayer()._es_inventory_trails
+		tab=ply._es_inventory_trails
 	elseif itemtype == ES.ITEM_MODEL then
-		tab=LocalPlayer()._es_inventory_models
+		tab=ply._es_inventory_models
 	elseif itemtype == ES.ITEM_MELEE then
-		tab=LocalPlayer()._es_inventory_meleeweapons
+		tab=ply._es_inventory_meleeweapons
 	elseif itemtype == ES.ITEM_AURA then
-		tab=LocalPlayer()._es_inventory_auras
+		tab=ply._es_inventory_auras
 	elseif itemtype == ES.ITEM_PROP then
-		tab=LocalPlayer()._es_inventory_props
-	end  
+		tab=ply._es_inventory_props
+	end
 
 	if type(tab) ~= "table" then return end
 
@@ -73,9 +75,10 @@ net.Receive("ESSynchInvRemove",function()
 	end
 end)
 net.Receive("ESSynchInventory",function()
+	local ply=LocalPlayer()
 	local t = net.ReadTable()
 
-	if not t.models or not t.trails or not t.meleeweapons or not t.auras or not t.props then 
+	if not t.models or not t.trails or not t.meleeweapons or not t.auras or not t.props then
 		ES.DebugPrint("Received invalid inventory synchronization. Data may be lost.")
 	end
 
@@ -85,6 +88,6 @@ net.Receive("ESSynchInventory",function()
 			table.insert(temp,v)
 		end
 
-		LocalPlayer()["_es_inventory_"..itemtype] = temp
+		ply["_es_inventory_"..itemtype] = temp
 	end
 end)

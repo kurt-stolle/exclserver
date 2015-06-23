@@ -12,7 +12,7 @@ function ENT:SetupDataTables()
 	self:NetworkVar( "Int", 3, "ID")
 
 end
-function ENT:Initialize()    
+function ENT:Initialize()
   if SERVER then
     self:SetModel( "models/hunter/blocks/cube025x025x025.mdl" )
 
@@ -27,7 +27,7 @@ function ENT:Initialize()
     local phys = self:GetPhysicsObject()
     if phys and phys:IsValid() then
       phys:EnableMotion(false) -- Freezes the object in place.
-    end   
+    end
   end
 end
 
