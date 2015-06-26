@@ -1,6 +1,5 @@
 util.AddNetworkString("ES.NwPlayerVar")
 
-
 hook.Add("ESPlayerReady","ES.NetworkVars.LoadPlayerData",function(ply)
 	local select={}
 	for k,v in pairs(ES.NetworkedVariables)do
@@ -41,42 +40,42 @@ hook.Add("ESPlayerReady","ES.NetworkVars.LoadPlayerData",function(ply)
 	end
 
 	local cnt=table.Count(queue)
-	if cnt < 1 then return end
-
-	net.Start("ES.NwPlayerVar")
-	net.WriteUInt(cnt,8)
-	for k,tab in pairs(queue)do
-		net.WriteEntity(k)
-		net.WriteUInt(#tab,8)
-		for _,v in ipairs(tab)do
-			net.WriteString(v.key)
-			kind=ES.NetworkedVariables[v.key].type
-			if kind == "String" then
-				net.WriteString(v.value)
-				continue
-			elseif kind == "Float" then
-				net.WriteFloat(v.value)
-				continue
-			elseif kind == "Int" then
-				net.WriteInt(v.value,ES.NetworkedVariables[v.key].size)
-				continue
-			elseif kind == "Bit" then
-				net.WriteBit(v.value)
-				continue
-			elseif kind == "UInt" then
-				net.ReadUInt(v.value,ES.NetworkedVariables[v.key].size)
-				continue
-			elseif kind == "Entity" then
-				net.WriteEntity(v.value)
-				continue
-			elseif kind == "Double" then
-				net.WriteDouble(v.value)
-				continue
+	if cnt >= 1 then
+		net.Start("ES.NwPlayerVar")
+		net.WriteUInt(cnt,8)
+		for k,tab in pairs(queue)do
+			net.WriteEntity(k)
+			net.WriteUInt(#tab,8)
+			for _,v in ipairs(tab)do
+				net.WriteString(v.key)
+				kind=ES.NetworkedVariables[v.key].type
+				if kind == "String" then
+					net.WriteString(v.value)
+					continue
+				elseif kind == "Float" then
+					net.WriteFloat(v.value)
+					continue
+				elseif kind == "Int" then
+					net.WriteInt(v.value,ES.NetworkedVariables[v.key].size)
+					continue
+				elseif kind == "Bit" then
+					net.WriteBit(v.value)
+					continue
+				elseif kind == "UInt" then
+					net.ReadUInt(v.value,ES.NetworkedVariables[v.key].size)
+					continue
+				elseif kind == "Entity" then
+					net.WriteEntity(v.value)
+					continue
+				elseif kind == "Double" then
+					net.WriteDouble(v.value)
+					continue
+				end
+				net.WriteData(v.value)
 			end
-			net.WriteData(v.value)
 		end
+		net.Send(ply)
 	end
-	net.Send(ply)
 end)
 
 local queue={}

@@ -14,7 +14,7 @@ function ES.Plugin()
 	local PLUGIN = {}
 	setmetatable(PLUGIN,meta)
 	meta.__index = meta
-	
+
 	PLUGIN:SetVersion("1.0")
 	PLUGIN:SetDescription("No description")
 	PLUGIN:SetAuthor("Unknown")
@@ -25,7 +25,7 @@ function ES.Plugin()
 	PLUGIN.flags = {}
 	PLUGIN.id = -1 -- might be useful sometime, I guess.
 	PLUGIN.disabled = false
-	
+
 	return PLUGIN
 end
 function meta:__call()
@@ -35,8 +35,8 @@ function meta:__call()
 	end
 
 	self.id = util.CRC(sql.SQLStr(string.gsub(string.lower(self.name)," ","-"),true))
-	
-	ES.Plugins[self.id] = self	
+
+	ES.Plugins[self.id] = self
 end
 function meta:Load()
 	self.disabled = false
@@ -67,7 +67,10 @@ function meta:AddHook(n,f)
 	self.hooks[string.lower(n)] = f
 	hook.Add(n,self.name.."-->"..n,function(...)
 		if not self.disabled then
-			f(...)
+			local ret=f(...)
+			if ret ~= nil then
+				return ret;
+			end
 		end
 	end)
 end

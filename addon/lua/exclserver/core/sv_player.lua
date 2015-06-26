@@ -2,9 +2,10 @@
 
 local PLAYER = FindMetaTable("Player")
 
-
-util.AddNetworkString("ES.PlayerReady")
-net.Receive("ES.PlayerReady",function(len,ply)
+concommand.Add("excl_ready",function(ply)
+	if ply._es_isReady then return end
+	ply._es_isReady = true
+	
 	hook.Call("ESPlayerReady",GAMEMODE,ply)
 
 	ES.BroadcastNotification("generic",ply:Nick().." has joined the server!")

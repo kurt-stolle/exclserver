@@ -2,6 +2,8 @@
 -- handles chat commands
 
 ES.Commands= {}
+
+-- Utl
 function ES.AddCommand(n,c,power)
 	ES.Commands[n] = {func = c, power = power}
 end
@@ -15,6 +17,8 @@ function ES.RemoveCommand(n)
 		end
 	end
 end
+
+-- Command handling
 util.AddNetworkString("ES.SyncCommands")
 hook.Add("ESPlayerReady","ES.SendCommandToPlayers",function(p)
 	local dumbTable={}
@@ -27,6 +31,7 @@ hook.Add("ESPlayerReady","ES.SendCommandToPlayers",function(p)
 	net.Send(p)
 end)
 
+-- Running commands
 concommand.Add("excl",function(p,c,a)
 	if p.esNextCmd and p.esNextCmd > CurTime() then return end
 	p.esNextCmd = CurTime()+.5

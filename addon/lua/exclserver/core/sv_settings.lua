@@ -3,20 +3,11 @@
 
 local settings = {}
 local settingsTypeFn = {}
-local illegal=false
+
 function ES.CreateSetting(name,default)
-	if illegal then
-		Error("Settings may only be added during initialization period.")
-		return
-	end
+	settings[name] = default or false
 
-	name = string.gsub(name," ","_")
-
-	settings[name] = def or false
-
-	if type(def) == "string" then
-		settingsTypeFn[name]=tostring
-	elseif type(def) == "number" then
+	if type(def) == "number" then
 		settingsTypeFn[name]=tonumber
 	elseif type(def) == "boolean" then
 		settingsTypeFn[name]=tobool
@@ -25,13 +16,8 @@ function ES.CreateSetting(name,default)
 	end
 end
 function ES.GetSetting(name,def)
-	if not settingsTypeFn[name] then
-		return nil
-	end
-
-	return settingsTypeFn[name](settings[name] or def or false)
+	return settings[name] or def;
 end
-
 function ES.SetSetting(name,value,serverid)
 	serverid=tonumber(serverid) or 0
 
@@ -49,16 +35,16 @@ function ES.SetSetting(name,value,serverid)
 end
 
 hook.Add("ESDatabaseReady","ES.LoadSettings",function()
-	illegal=true
-
 	ES.DBQuery("SELECT name,value,serverid FROM `es_settings` WHERE serverid="..ES.ServerID.." OR serverid=0;",function(res)
 		if res and res[1] then
 			for k,v in ipairs(res)do
-				if tonumber(v.serverid) == 0 then
-					settings[v.name]=v.value
+				if settings[v.name] and tonumber(v.serverid) == 0 then
+					settings[v.name]=settingsTypeFn[v.name](v.value)
 				end
-				if tonumber(v.serverid) ~= 0 then
-					settings[v.name]=v.value
+			end
+			for k,v in ipairs(res)do
+				if settings[v.name] and tonumber(v.serverid) ~= 0 then
+					settings[v.name]=settingsTypeFn[v.name](v.value)
 				end
 			end
 		end

@@ -1,5 +1,6 @@
 ES.NetworkedVariables={}
 
+-- Registration
 function ES.DefineNetworkedVariable(var,kind,size,shouldSave)
 	if (type(size) ~= "number" and type(size) ~= "nil") or (type(shouldSave) ~= "string" and type(shouldSave) ~= "nil") then
 		return ES.DebugPrint("Couldn't register NWVar "..var..", invalid argument #3 or #4.")
@@ -11,6 +12,8 @@ function ES.DefineNetworkedVariable(var,kind,size,shouldSave)
 		save = (shouldSave or nil)
 	})
 end
+
+-- PLAYER class
 local PLAYER=FindMetaTable("Player")
 function PLAYER:ESGetNetworkedVariable(key,default)
 	return (self._es_networked and self._es_networked[key]) or default
@@ -18,9 +21,7 @@ end
 
 -- Some essential NWVars
 ES.DefineNetworkedVariable("typing","Bit")
-
 ES.DefineNetworkedVariable("idle","Bit")
-
 ES.DefineNetworkedVariable("rank","String")
 
 ES.DefineNetworkedVariable("VIP","UInt",4,"tinyint(1) unsigned not null default 0")

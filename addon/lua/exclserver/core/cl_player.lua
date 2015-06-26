@@ -1,6 +1,6 @@
 -- cl_player_hooks
 hook.Add("InitPostEntity","LoadMyStuff",function()
-	net.Start("ES.PlayerReady") net.SendToServer()
+	RunConsoleCommand("excl_ready")
 end)
 
 function ES.TauntCamera()

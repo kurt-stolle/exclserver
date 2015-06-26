@@ -191,8 +191,14 @@ function ES.Notify(kind,msg)
 		return
 	end
 
+	if queue[#queue] and queue[#queue].msg and queue[#queue].msg == msg then
+		queue[#queue].lifetime = 0
+		return
+	end
+
 	table.insert(queue,{kind=kind,msg=msg,lifetime=0})
 end
+notification.AddLegacy = function(msg) ES.Notify("generic",msg) end
 
 net.Receive("ES.SendNotification",function(len)
 	ES.Notify(net.ReadString(),net.ReadString())
