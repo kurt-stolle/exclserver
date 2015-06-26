@@ -105,6 +105,8 @@ if SERVER then
 
 	concommand.Add( "gmod_tool", CC_GMOD_Tool, nil, nil, { FCVAR_SERVER_CAN_EXECUTE } )
 else
-	LocalPlayer():ConCommand("gmod_drawhelp 0")
+	hook.Add("InitPostEntity","ES.ToolRestrictions.DisableHelp",function()
+		LocalPlayer():ConCommand("gmod_drawhelp 0")
+	end)
 end
 PLUGIN()
