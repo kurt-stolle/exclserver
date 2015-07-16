@@ -24,7 +24,8 @@ local tex = Material("exclserver/gradient.png")
 function PANEL:Init()
 	self:DockPadding(5,30,5,5)
 
-	self.scale=0
+	self.exp=0
+	self.scale=1
 	self.kill=false
 	self.oldRemove=self.Remove
 	function self:Remove()
@@ -95,7 +96,26 @@ function PANEL:Paint(w,h)
 	-- push matrix
 	pushModelMatrix( matrix )
 
-	ES.UIDrawBlur(self,matrix)
+	self.exp = Lerp(FrameTime()*5,self.exp,h+w)
+
+	render.ClearStencil()
+	render.SetStencilEnable( true )
+	 
+	render.SetStencilFailOperation( STENCILOPERATION_KEEP )
+	render.SetStencilZFailOperation( STENCILOPERATION_REPLACE )
+	render.SetStencilPassOperation( STENCILOPERATION_REPLACE )
+	render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_ALWAYS )
+	render.SetStencilReferenceValue( 1 )
+	
+	draw.NoTexture()
+	surface.SetDrawColor(ES.Color.Black)
+	surface.DrawPoly{{x=0,y=0},{x=w,y=-w},{x=w,y=self.exp-w},{x=0,y=self.exp}}
+	 
+	render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_EQUAL )
+	render.SetStencilPassOperation( STENCILOPERATION_REPLACE )
+	render.SetStencilReferenceValue( 1 )
+
+	--ES.UIDrawBlur(self,matrix)
 
 	local a,b,c = ES.GetColorScheme()
 
@@ -132,6 +152,8 @@ function PANEL:Paint(w,h)
 	draw.SimpleText(self:GetTitle(),"ESFrameText",10,30/2,ES.Color.White,0,1)
 end
 function PANEL:PaintOver(w,h)
+	render.SetStencilEnable( false )
+
 	popModelMatrix()
 	if self.scale <= 0.99 then
 		popFilterMag( TEXFILTER.ANISOTROPIC )

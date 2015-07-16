@@ -43,7 +43,7 @@ hook.Add("ESPlayerReady","ES.Ranks.LoadOnReady",function(ply)
 	end
 	
 	ES.DebugPrint("Loading rank for "..ply:Nick())
-	ES.DBQuery("SELECT rank,serverid FROM `es_ranks` WHERE steamid = '"..ply:SteamID().."' AND (serverid = 0 OR serverid = "..ES.ServerID..") LIMIT 2",function(s)
+	ES.DBQuery("SELECT rank,serverid FROM `es_ranks` WHERE steamid = '"..ply:SteamID().."' AND (serverid = 0 OR serverid = "..ES.ServerID..") LIMIT 2;",function(s)
 			if s and s[1] and IsValid(ply) then
 				for k,v in pairs(s)do
 					if v and v.rank and v.serverid and ES.Ranks[ v.rank ] then
@@ -55,7 +55,7 @@ hook.Add("ESPlayerReady","ES.Ranks.LoadOnReady",function(ply)
 					end
 				end
 				if ply._es_globalrank or ply._es_localrank then
-					ply:ESSetNetworkedVariable("rank",ply._es_globalrank or ply._es_localrank)
+					ply:ESSetNetworkedVariable("rank",ply._es_localrank or ply._es_globalrank)
 				end
 			end
 	end)
