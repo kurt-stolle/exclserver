@@ -24,7 +24,7 @@ local tab = ES.UIAddHoverListener({
 		end
 	end,
 	Paint = function(self,w,h)
-		draw.RoundedBox(2,0,0,w,h,ES.Color.Black)
+		draw.RoundedBox(2,0,0,w,h,ES.Color["#000000AF"])
 		draw.RoundedBox(2,1,1,w-2,h-2,self:GetDisabled() and ES.Color["#666"] or ES.GetColorScheme(3))
 		draw.RoundedBox(2,2,2,w-4,h-4,self:GetHover() and ES.Color.Invisible or ES.Color["#00000044"])
 		--[[surface.SetDrawColor(ES.Color["#FFFFFF02"])

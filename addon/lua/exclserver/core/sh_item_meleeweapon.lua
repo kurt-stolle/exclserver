@@ -22,30 +22,37 @@ end
 
 ES.MeleeBaseClass = "excl_crowbar"
 
-local PLAYER = FindMetaTable("Player")
-function PLAYER:ESGetMeleeWeapon()
-	if not self.excl or not self.excl.activemelee then return false end
-	return ES.MeleeWeapons[self.excl.activemelee]
-end
-local emeta = FindMetaTable("Weapon")
-function emeta:ESIsMelee()
+local WEAPON = FindMetaTable("Weapon")
+function WEAPON:ESIsMelee()
 	return (self:GetClass() == ES.MeleeBaseClass or string.Left(self:GetClass(),8) == "es_melee")
 end
+
+local PLAYER = FindMetaTable("Player")
 function PLAYER:ESGetMeleeWeaponClass()
-	if not self:ESGetMeleeWeapon() then return ES.MeleeBaseClass end
-	return "es_melee_"..string.gsub(string.lower(self:ESGetMeleeWeapon().name)," ","_")
+	if not ES.MeleeWeapons[self:ESGetNetworkedVariable("active_meleeweapon",nil)] then 
+		return ES.MeleeBaseClass
+	end
+
+	return "es_melee_"..string.gsub(string.lower(ES.MeleeWeapons[self:ESGetNetworkedVariable("active_meleeweapon",nil)]:GetName())," ","_")
+end
+
+local oldGive = PLAYER.Give;
+function PLAYER:Give(class,...)
+	if class==ES.MeleeBaseClass and ES.MeleeWeapons[self:ESGetNetworkedVariable("active_meleeweapon",nil)] then
+		return oldGive(self,self:ESGetMeleeWeaponClass(),...)
+	end
+
+	return oldGive(self,class,...)
 end
 
 function PLAYER:ESReplaceMelee()
 	for k,v in pairs(self:GetWeapons())do
 		if not IsValid(v) or not v:ESIsMelee() then continue end
 
-		if self:ESGetMeleeWeapon() and (v:GetClass() ~= ( "es_melee_"..string.gsub(string.lower(self:ESGetMeleeWeapon().name)," ","_")) or v:GetClass() == ES.MeleeBaseClass) then
+		if ES.MeleeWeapons[self:ESGetNetworkedVariable("active_meleeweapon",nil)] and (v:GetClass() ~= ( "es_melee_"..string.gsub(string.lower(ES.MeleeWeapons[self:ESGetNetworkedVariable("active_meleeweapon",nil)]:GetName())," ","_")) or v:GetClass() == ES.MeleeBaseClass) then
 			v:Remove()
-
-			print("replaced")
-			self:Give( "es_melee_"..string.gsub(string.lower(self:ESGetMeleeWeapon().name)," ","_") )
-		elseif not self:ESGetMeleeWeapon() and v:GetClass() ~= ES.MeleeBaseClass then
+			self:Give( "es_melee_"..string.gsub(string.lower(ES.MeleeWeapons[self:ESGetNetworkedVariable("active_meleeweapon",nil)]:GetName())," ","_") )
+		elseif not ES.MeleeWeapons[self:ESGetNetworkedVariable("active_meleeweapon",nil)] and v:GetClass() ~= ES.MeleeBaseClass then
 			v:Remove()
 
 			self:Give( ES.MeleeBaseClass )
@@ -53,7 +60,7 @@ function PLAYER:ESReplaceMelee()
 	end
 end
 
-hook.Add("PostGamemodeLoaded","ES.Melee.InitializeOverride",function()
+hook.Add("PostGamemodeLoaded","exclserver.melee.override",function()
 	if gmod.GetGamemode().Name == "Trouble in Terrorist Town" then
 		ES.MeleeBaseClass = "weapon_zm_improvised"
 	elseif gmod.GetGamemode().Name == "Jail Break" then

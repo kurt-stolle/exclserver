@@ -100,7 +100,7 @@ if SERVER then
 			end
 		end
 
-		if myBananas > 20 then ply:ESSendNotificationPopup("Error","You may not throw over 20 bananas at a time.") return end
+		if myBananas > 10 then ply:ESSendNotificationPopup("Error","You may not throw over 10 bananas at a time.") return end
 
 		ply:ESTakeBananas(amount)
 

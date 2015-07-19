@@ -125,12 +125,12 @@ ExclServer is created and constructed by Excl.]],"ESDefault+",640-20*2),p)
 				local p = mm:OpenFrame(300)
 				p:SetTitle("Settings")
 
-				addCheckbox(p,"Disable trails","es_trails_disable",function()
+				addCheckbox(p,"Disable trails","excl_trails_disable",function()
 					timer.Simple(.5,function()
 						RunConsoleCommand( "excl_trails_reload")
 					end)
 				end)
-				addCheckbox(p,"Bind ExclServer to F6","es_bind_to_f6",function() end)
+				addCheckbox(p,"Bind ExclServer to F5","excl_bind_to_f5",function() end)
 			end},
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Colors",func = function()
 				local p = mm:OpenFrame(10+256+10+256+10)
@@ -267,11 +267,9 @@ ExclServer is created and constructed by Excl.]],"ESDefault+",640-20*2),p)
 		lblVIPHelp:Dock(TOP)
 		lblVIPHelp:DockMargin(15,15,15,0)
 		lblVIPHelp:SizeToContents()
-		local lblVIPInfo = Label([[VIP is divided into three tiers bronze, silver, gold and carebear. Each tier has its own benefits.
-			The higher your VIP tier, the more benefits you will receive. The current gamemode may also have
-			certain VIP features implemented. Becoming VIP is a way to both support the server you are
-			currently playing on, and get yourself access to	features that are not accessible by non-VIP players.]],p)
-		lblVIPInfo:SetFont("ESDefault")
+		local lblVIPInfo = Label([[Becoming VIP is a way to both support the server you are currently playing on, and get
+			yourself access to features that are not accessible by non-VIP players.]],p)
+		lblVIPInfo:SetFont("ESDefault+")
 		lblVIPInfo:SizeToContents()
 		lblVIPInfo:Dock(TOP)
 		lblVIPInfo:DockMargin(15,15,15,0)
@@ -285,7 +283,7 @@ ExclServer is created and constructed by Excl.]],"ESDefault+",640-20*2),p)
 		local lblVIPInfo = Label([[The table below outlines most of the benefits that upgrading your VIP rank will give.
 Press the button below the column to purchase the VIP tier.
 If you purchase a tier below Carebear, all tiers above said tier will decrease in price.]],p)
-		lblVIPInfo:SetFont("ESDefault")
+		lblVIPInfo:SetFont("ESDefault+")
 		lblVIPInfo:SizeToContents()
 		lblVIPInfo:Dock(TOP)
 		lblVIPInfo:DockMargin(15,15,15,15)
@@ -395,6 +393,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			local ach = context:Add("esPanel")
 			ach:SetPos(0,y)
 			ach:SetSize(context:GetWide()-15-2,110)
+			ach:SetColor(ES.GetColorScheme(3))
 
 			local ic = ach:Add("DImage")
 			ic:SetMaterial(v.icon)
@@ -408,20 +407,20 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			lb2:SetColor(COLOR_WHITE)
 
 			local lbl = Label(v.hidden and not ply:ESHasCompletedAchievement(k) and "<secret>" or ES.FormatLine(v.descr,"ESDefault",ach:GetWide() - 80 - 4 - 4) or "Unknown",ach)
-			lbl:SetFont("ESDefault")
+			lbl:SetFont("ESDefault+")
 			lbl:SizeToContents()
 			lbl:SetPos(lb2.x+2,lb2.y + lb2:GetTall()+3)
 			lbl:SetColor(COLOR_WHITE)
 
 			local dr = vgui.Create("Panel",ach)
-			dr:SetPos(5,ach:GetTall()-25)
-			dr:SetSize(ach:GetWide() - 10,20)
+			dr:Dock(BOTTOM)
+			dr:SetTall(28)
 			local a = ES.GetColorScheme()
 			dr.Paint = function(self,w,h)
-				draw.RoundedBox(2,0,0,w,h,COLOR_BLACK)
+				draw.RoundedBox(2,0,0,w,h,ES.Color["#0000008F"])
 
 				if (ply._es_achievements and ply._es_achievements[v.id] or 0) > 0 then
-					draw.RoundedBox(2,1,1,(w-2)*((ply._es_achievements and ply._es_achievements[v.id] or 0)/ES.Achievements[v.id].progressNeeded),h-2,a)
+					draw.RoundedBox(2,0,0,(w)*((ply._es_achievements and ply._es_achievements[v.id] or 0)/ES.Achievements[v.id].progressNeeded),h,a)
 				end
 				draw.SimpleText((ply._es_achievements and ply._es_achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold.Shadow",w/2,h/2,COLOR_BLACK,1,1)
 				draw.SimpleText((ply._es_achievements and ply._es_achievements[v.id] or 0).." / "..ES.Achievements[v.id].progressNeeded,"ESDefaultBold",w/2,h/2,COLOR_WHITE,1,1)

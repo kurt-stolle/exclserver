@@ -2,12 +2,12 @@
 ES.CreateFont( "ES.ToggleButton", {
 font = "Roboto",
 size = 16,
-weight=700 }
+weight=400 }
 )
 ES.CreateFont( "ES.ToggleButton.Shadow", {
 font = "Roboto",
 size = 16,
-weight=700,
+weight=400,
 blursize=2 }
 )
 
@@ -47,7 +47,7 @@ function BUTTON:Paint(w,h)
 	if self.Toggled then
 		self.moveX = Lerp(FrameTime()*18,self.moveX,0)
 	else
-		self.moveX = Lerp(FrameTime()*18,self.moveX,h+1)
+		self.moveX = Lerp(FrameTime()*18,self.moveX,h+2)
 	end
 
 
@@ -55,12 +55,12 @@ function BUTTON:Paint(w,h)
 
 
 
-	draw.RoundedBox(2,x-1,y-1,(h)*2+2,h + 2, Color(0,0,0,200))
+	draw.RoundedBox(h/2,x-1,y-1,(h)*2+2,h + 2, Color(0,0,0,200))
 
-	draw.SimpleText("I","ESDefaultBold",x+(h)/2 + (h-2), y+(h-2)/2,ES.Color.White,1,1)
-	draw.SimpleText("O","ESDefaultBold",x+(h)/2, y+(h-2)/2,ES.Color.White,1,1)
+	draw.SimpleText("I","ESDefault-",x+(h)/2 + (h-2), y+(h-2)/2,ES.Color.White,1,1)
+	draw.SimpleText("O","ESDefault-",x+(h)/2, y+(h-2)/2,ES.Color.White,1,1)
 
-	draw.RoundedBox(2,x+self.moveX,y,h-2,h-2, Color(213,213,213))
+	draw.RoundedBox((h-4)/2,x+self.moveX+1,y+1,h-4,h-4, Color(213,213,213))
 
 
 end

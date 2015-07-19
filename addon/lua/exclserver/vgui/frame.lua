@@ -60,6 +60,7 @@ function PANEL:Think()
 		self:oldRemove()
 	end
 end
+local clr_ref=Color(255,255,255,1)
 function PANEL:Paint(w,h)
 
 	if self.scale <= 0.99 then
@@ -108,35 +109,28 @@ function PANEL:Paint(w,h)
 	render.SetStencilReferenceValue( 1 )
 	
 	draw.NoTexture()
-	surface.SetDrawColor(ES.Color.Black)
+	surface.SetDrawColor(clr_ref)
 	surface.DrawPoly{{x=0,y=0},{x=w,y=-w},{x=w,y=self.exp-w},{x=0,y=self.exp}}
 	 
 	render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_EQUAL )
 	render.SetStencilPassOperation( STENCILOPERATION_REPLACE )
 	render.SetStencilReferenceValue( 1 )
 
-	--ES.UIDrawBlur(self,matrix)
+	ES.UIDrawBlur(self,matrix)
 
 	local a,b,c = ES.GetColorScheme()
 
-	surface.SetDrawColor(Color(a.r,a.g,a.b,120))
+	surface.SetDrawColor(Color(a.r,a.g,a.b,100))
 	surface.DrawRect(1,1,w-2,h-2)
 	surface.SetDrawColor(ES.Color["#000000CC"])
 	surface.DrawRect(1,1,w-2,h-2)
-	surface.SetDrawColor(ES.Color.Black)
+	surface.SetDrawColor(ES.Color["#000000AF"])
 	surface.DrawLine(0,0,w,0)
 	surface.DrawLine(0,1,0,h-1)
 	surface.DrawLine(w-1,1,w-1,h-1)
 	surface.DrawLine(0,h-1,w,h-1)
-	--surface.DrawLine(0,30,w,30)
 
-	--[[	surface.SetDrawColor(ES.Color["#FFFFFF05"])
-	surface.DrawRect(1,31,w-2,1)
-	surface.DrawRect(1,h-2,w-2,1)
-	surface.DrawRect(1,32,1,h-34)
-	surface.DrawRect(w-2,32,1,h-34)]]
-
-	surface.SetDrawColor(ES.GetColorScheme(1))
+	surface.SetDrawColor(b)
 	surface.DrawRect(1,1,w-2,29)
 	surface.DrawRect(1,1,4,h-2)
 	surface.DrawRect(w-5,1,4,h-2)

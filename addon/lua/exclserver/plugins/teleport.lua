@@ -47,7 +47,7 @@ if SERVER then
 		return tr.HitPos
 	end
 	local function teleport(p,arg)
-		if not p or not IsValid(p) or not arg or not arg[2] then return end
+		if not IsValid(p) or not arg or not arg[2] then return end
 
 		local a = ES.GetPlayerByName(arg[1])
 		local b = ES.GetPlayerByName(arg[2])
@@ -57,7 +57,7 @@ if SERVER then
 		a = a[1]
 		b = b[1]
 
-		if !a or !b or !IsValid(a) or !IsValid(b) then return end
+		if !IsValid(a) or !IsValid(b) then return end
 
 		local pos = findLocation( a,b,p:GetMoveType() == MOVETYPE_NOCLIP or p:GetMoveType() == MOVETYPE_OBSERVER or tobool(a[3]) )
 		if not pos and tobool(arg[3]) == false then
