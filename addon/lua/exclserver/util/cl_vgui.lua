@@ -95,6 +95,12 @@ ES.CreateFont( "ESDefault+++", {
 	size=32,
 	weight=400
 })
+ES.CreateFont( "ESDefault+++.Shadow", {
+	font = "Roboto",
+	size=32,
+	weight=400,
+	blursize=2
+})
 
 function ES.UIAddHoverListener(panel)
 	AccessorFunc(panel,"hover","Hover",FORCE_BOOL)

@@ -10,7 +10,7 @@ if SERVER then
 
 		local ppl = {}
 		for k,v in pairs(player.GetAll())do
-			if v:ESHasPower(20) or v == p then
+			if v:ESHasPower(1) or v == p then
 				v:ESChatPrint(p,ES.Color.White," to admins: "..table.concat(a," ",1))
 			end
 		end

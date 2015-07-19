@@ -91,6 +91,10 @@ local function addCheckbox(help,txt,convar,oncheck)
 	togOwn:SetChecked(GetConVarNumber(convar) == 1)
 end
 
+function ES.CloseMainMenu()
+	if IsValid(mm) then mm:Remove() end
+end
+
 function ES.CreateMainMenu()
 	if IsValid(mm) then mm:Remove() return end
 
@@ -111,9 +115,9 @@ function ES.CreateMainMenu()
 
 Bananas can be spent in the shop menu (accessable from this screen). If you are not familar with ExclServer the best way to get to know it is to simply explore these menus, we would suggest you to click the 'My account' tab and make a forum account or link your existing account. Doing so will give you 500 bananas. Bananas are shared across all our servers (including the forums). This means that bananas earned on one server are automatically transferred to all other servers.
 
-ExclServer is created and constructed by Excl.]],"ESDefault",640-20*2),p)
+ExclServer is created and constructed by Excl.]],"ESDefault+",640-20*2),p)
 				l:SetColor(Color(255,255,255,200))
-				l:SetFont("ESDefault")
+				l:SetFont("ESDefault+")
 				l:SetPos(20,20)
 				l:SizeToContents()
 			end},
@@ -207,6 +211,18 @@ ExclServer is created and constructed by Excl.]],"ESDefault",640-20*2),p)
 				ignore=false
 
 			end},
+		})
+	end)
+	mm:AddButton("System",Material("icon16/shield.png"),function()
+		mm:CloseChoisePanel()
+
+		mm:OpenChoisePanel({
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Commands",func = function()
+				ES._MMGenerateCommands(mm)
+			end},
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Config",func = function()
+				ES._MMGenerateConfiguration(mm)
+			end}
 		})
 	end)
 	mm:AddWhitespace()
@@ -544,6 +560,8 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		web:SetPos(1,0)
 		web:OpenURL("http://casualbananas.com/")
 	end)
+
+	return mm
 end
 
 net.Receive("ESToggleMenu",function() ES.CreateMainMenu() end)

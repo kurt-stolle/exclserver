@@ -38,7 +38,7 @@ end
 
 function PLAYER:ESReplaceMelee()
 	for k,v in pairs(self:GetWeapons())do
-		if !IsValid(v) or !v:ESIsMelee() then continue end
+		if not IsValid(v) or not v:ESIsMelee() then continue end
 
 		if self:ESGetMeleeWeapon() and (v:GetClass() ~= ( "es_melee_"..string.gsub(string.lower(self:ESGetMeleeWeapon().name)," ","_")) or v:GetClass() == ES.MeleeBaseClass) then
 			v:Remove()
@@ -53,22 +53,22 @@ function PLAYER:ESReplaceMelee()
 	end
 end
 
---[[hook.Add("PostGamemodeLoaded","ES.Melee.InitializeOverride",function()
+hook.Add("PostGamemodeLoaded","ES.Melee.InitializeOverride",function()
 	if gmod.GetGamemode().Name == "Trouble in Terrorist Town" then
 		ES.MeleeBaseClass = "weapon_zm_improvised"
-	elseif gmod.GetGamemode().Name == "JailBreak" then
+	elseif gmod.GetGamemode().Name == "Jail Break" then
 		ES.MeleeBaseClass = "jb_knife"
 	end
 
 	for k,v in pairs(ES.MeleeWeapons)do
 		weapons.Register({
-			WorldModel = v.model,
+			WorldModel = v:GetModel(),
 			ViewModel = v.viewmodel,
 			HoldType = v.holdtype,
 			Base = ES.MeleeBaseClass,
-			GetClass = function() return "es_melee_"..string.gsub(string.lower(v.name)," ","_") end,
-		},"es_melee_"..string.gsub(string.lower(v.name)," ","_"))
+			GetClass = function() return "es_melee_"..string.gsub(string.lower(v:GetName())," ","_") end,
+		},"es_melee_"..string.gsub(string.lower(v:GetName())," ","_"))
 	end
-end)]]
+end)
 
 ES.AddMelee("Sword","A katana from ancient times",3000,"models/weapons/w_katana.mdl","models/weapons/v_katana.mdl","melee2")

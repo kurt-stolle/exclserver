@@ -12,6 +12,6 @@ if SERVER then
 
 		ES.ChatBroadcast("<hl>ANNOUNCEMENT: </hl> "..(table.concat(a," ",1) or ""))
 
-	end,20)
+	end,1)
 end
 PLUGIN()
