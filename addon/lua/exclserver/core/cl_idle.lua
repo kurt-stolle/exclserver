@@ -3,7 +3,7 @@
 
 local idle = {ang = nil, pos = nil, mx = 0, my = 0, t = 0, flagged = false}
 timer.Create("ESIdleCheck", 5, 0, function()
- if not ES.AntiIdle then return end
+  if not GAMEMODE.ESAntiIdle then return end
 
          local client = LocalPlayer()
          if not IsValid(client) then return end
