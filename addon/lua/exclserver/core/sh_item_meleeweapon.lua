@@ -57,7 +57,7 @@ hook.Add("PostGamemodeLoaded","ES.Melee.InitializeOverride",function()
 	if gmod.GetGamemode().Name == "Trouble in Terrorist Town" then
 		ES.MeleeBaseClass = "weapon_zm_improvised"
 	elseif gmod.GetGamemode().Name == "Jail Break" then
-		ES.MeleeBaseClass = "jb_knife"
+		ES.MeleeBaseClass = "weapon_jb_knife"
 	end
 
 	for k,v in pairs(ES.MeleeWeapons)do
