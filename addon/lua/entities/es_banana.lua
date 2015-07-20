@@ -40,7 +40,7 @@ function ENT:Initialize()
 end
 
 if SERVER then
-	function ENT:StartTouch( ply )
+	function ENT:Touch( ply )
 		if self._merged or self._pickedUp then return end
 
 		if IsValid(self) and  self._timeCreate+1 < CurTime() and IsValid(ply) and ply.IsPlayer and ply:IsPlayer() and ply.ESSetBananas then
