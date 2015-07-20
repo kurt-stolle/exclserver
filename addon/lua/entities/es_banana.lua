@@ -40,11 +40,14 @@ function ENT:Initialize()
 end
 
 if SERVER then
-	function ENT:Touch( ply )
-		if IsValid(self) and  self._timeCreate+1 < CurTime() and IsValid(ply) and ply.IsPlayer and ply:IsPlayer() and ply.ESSetBananas and not self._merged then
+	function ENT:StartTouch( ply )
+		if self._merged or self._pickedUp then return end
+
+		if IsValid(self) and  self._timeCreate+1 < CurTime() and IsValid(ply) and ply.IsPlayer and ply:IsPlayer() and ply.ESSetBananas then
 			ply:ESAddBananas(self:GetBananaCount())
+			self._pickedUp = true
 			self:Remove()			
-		elseif IsValid(self) and  self._timeCreate+1 < CurTime()  and IsValid(ply) and ply.GetClass and ply:GetClass() == "es_banana" and not self._merged then
+		elseif IsValid(self) and  self._timeCreate+1 < CurTime()  and IsValid(ply) and ply.GetClass and ply:GetClass() == "es_banana" then
 			self:SetBananaCount(ply:GetBananaCount() + self:GetBananaCount())
 			ply:Remove()
 			ply._merged=true
