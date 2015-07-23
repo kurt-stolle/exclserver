@@ -20,7 +20,7 @@ function ENT:Initialize()
     self:SetModel( ONE )
 
 	self:PhysicsInitSphere( size, "rubber" )
-		
+
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
 
@@ -46,7 +46,7 @@ if SERVER then
 		if IsValid(self) and  self._timeCreate+1 < CurTime() and IsValid(ply) and ply.IsPlayer and ply:IsPlayer() and ply.ESSetBananas then
 			ply:ESAddBananas(self:GetBananaCount())
 			self._pickedUp = true
-			self:Remove()			
+			self:Remove()
 		elseif IsValid(self) and  self._timeCreate+1 < CurTime()  and IsValid(ply) and ply.GetClass and ply:GetClass() == "es_banana" then
 			self:SetBananaCount(ply:GetBananaCount() + self:GetBananaCount())
 			ply:Remove()
@@ -56,7 +56,7 @@ if SERVER then
 			if IsValid(phys) then
 				phys:SetVelocityInstantaneous(Vector(0,0,0))
 				phys:SetVelocity(Vector(0,0,0))
-			end			
+			end
 		end
 	end
 
@@ -127,7 +127,7 @@ elseif CLIENT then
 		self:SetRenderAngles(Angle(0,CurTime()*100%360,0))
 		self:DrawModel()
 
-		render.SetLightingMode( 0 )		
+		render.SetLightingMode( 0 )
 	end
 
 	function ENT:Think()
@@ -147,7 +147,7 @@ elseif CLIENT then
 		end
 	end
 
-	hook.Add( "PreDrawHalos", "exclserver.es_banana", function() 
+	hook.Add( "PreDrawHalos", "exclserver.es_banana", function()
 		halo.Add( ents.FindByClass( "es_banana" ), color_glow, 6, 6, 1, true )
 	end )
 
@@ -160,12 +160,12 @@ elseif CLIENT then
 			cam.Start3D2D( self:GetPos() + Vector(0,0,10), ang, .2 )
 				draw.SimpleText(self:GetBananaCount(),"ESDefault+++.Shadow",0,0,ES.Color.Black,1,1)
 				draw.SimpleText(self:GetBananaCount(),"ESDefault+++",0,0,ES.Color.White,1,1)
-			cam.End3D2D()	
+			cam.End3D2D()
 		end
 	end)
 
 
-		
+
 	local was_pressed = false
 	hook.Add("Think","exclserver.es_banana",function()
 		if input.IsKeyDown(KEY_F7) and not was_pressed then
@@ -176,3 +176,9 @@ elseif CLIENT then
 		end
 	end)
 end
+
+hook.Add("CanTool","exclserver.es_banana",function( ply, tr, tool )
+	if IsValid(tr.Entity) and tr.Entity.GetClass and tr.Entity:GetClass() == "es_banana" then
+		return false
+	end
+end)
