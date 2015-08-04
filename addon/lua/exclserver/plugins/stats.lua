@@ -1,8 +1,6 @@
 local PLUGIN=ES.Plugin()
 PLUGIN:SetInfo("Stats","Print your stats to chat.","Excl")
-
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
-
 
 if SERVER then
 	PLUGIN:AddCommand("stats",function(p,a)

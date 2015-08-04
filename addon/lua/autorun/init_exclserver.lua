@@ -3,19 +3,22 @@ AddCSLuaFile()
 if jit then
 	jit.on();
 end
+
 ES = {}
 
+-- Debug mode, only when playing on a local server.
 ES.debug = game.SinglePlayer()
 if not ES.debug then
-	local hostip = GetConVarString( "hostip" )
-	hostip = tonumber( hostip )
+	local hostip =tonumber( GetConVarString( "hostip" ) )
 	hostip = bit.rshift( bit.band( hostip, 0xFF000000 ), 24 ).."."..bit.rshift( bit.band( hostip, 0x00FF0000 ), 16 )
 
 	ES.debug = (hostip == "192.168" or hostip == "10.0") or false;
 end
-ES.version = "6.x.x"
 
--- Debug methods
+-- The rough version string
+ES.version = "7.1.x"
+
+-- Debug print
 local color_debug_text=Color(255,255,255)
 local color_debug_client=Color(245,184,0)
 local color_debug_server=Color(0,200,255)
@@ -41,7 +44,37 @@ function ES.DebugPrint(...)
 
 	MsgC(SERVER and color_debug_server or color_debug_client,"[ES "..ES.version.."]")
 	MsgC(color_debug_text,s)
+
+	return 0
 end
+
+-- Error reporting
+local color_error=Color(240,30,0)
+function ES.Error(error,...)
+	local s="";
+	for k,v in ipairs{...}do
+		local part;
+
+		if type(v) == "table" then
+			part=util.TableToJSON(v)
+		elseif type(v) == "Entity" and v:IsPlayer() and IsValid(v) then
+			part=v:Nick()
+		else
+			part=tostring(v)
+		end
+
+		s=s.." "..part
+	end
+	s=s.."\n";
+
+	MsgC(color_error,"[ES "..ES.version.."] ERROR: ")
+	MsgC(color_debug_text,error.." ("..s..")");
+
+	hook.Call("ESError",GAMEMODE,error,s)
+
+	return -1
+end
+
 ES.DebugPrint("Initializing ExclServer @ version "..ES.version)
 
 local path = "exclserver/"
@@ -51,7 +84,7 @@ function ES.Include(name, folder, runtype)
 		runtype = string.Left(name, 2)
 	end
 
-	if not runtype or ( runtype ~= "sv" and runtype ~= "sh" and runtype ~= "cl" ) then ErrorNoHalt("Could not include file, no prefix!") return false end
+	if not runtype or ( runtype ~= "sv" and runtype ~= "sh" and runtype ~= "cl" ) then ES.Error("INCLUDE_NO_PREFIX","Could not include file, no prefix!") return false end
 
 	path = ""
 

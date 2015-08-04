@@ -2,32 +2,26 @@
 
 local PLAYER = FindMetaTable("Player")
 
-concommand.Add("excl_ready",function(ply)
-	if ply._es_isReady then return end
-	ply._es_isReady = true
-	
-	hook.Call("ESPlayerReady",GAMEMODE,ply)
+local dbReady=false
+local ReadyQueue={}
+hook.Add("ESDatabaseReady","exclserver.player.db.ready",function()
+	dbReady=true
 
-	ES.BroadcastNotification("generic",ply:Nick().." has joined the server!")
+	timer.Simple(0,function()
+		for _,ply in ipairs(ReadyQueue)do
+			if IsValid(ply) then
+				ply:ESReady()
+			end
+		end
+	end)
 end)
-
-
--- Synchronize the player
-util.AddNetworkString("ESSynchPlayer")
-function PLAYER:ESSynchPlayer()
-	if not self.excl then return end
-	net.Start("ESSynchPlayer")
-	net.WriteTable(self.excl)
-	net.Send(self)
-end
-
--- Send a notification
-function PLAYER:ESSendNotification(kind,msg)
-	net.Start("ES.SendNotification")
-		net.WriteString(kind)
-		net.WriteString(msg)
-	net.Send(self)
-end
+hook.Add("PlayerInitialSpawn","exclserver.player.ready",function(ply)
+	if not dbReady then
+		table.insert(ReadyQueue,ply)
+	else
+		ply:ESReady()
+	end
+end)
 
 -- Allow admins to pick up players
 hook.Add( "PhysgunPickup", "ESHandlePlayerPickup", function( p, e )

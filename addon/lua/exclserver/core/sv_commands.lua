@@ -1,9 +1,6 @@
--- sh_chatcommands
--- handles chat commands
 
+-- Functions for adding and removing commands
 ES.Commands= {}
-
--- Utl
 function ES.AddCommand(n,c,power)
 	ES.Commands[n] = {func = c, power = power}
 end
@@ -33,8 +30,8 @@ end)
 
 -- Running commands
 concommand.Add("excl",function(p,c,a)
-	if p.esNextCmd and p.esNextCmd > CurTime() then return end
-	p.esNextCmd = CurTime()+.5
+	if p._es_NextCmd and p._es_NextCmd > CurTime() then return end
+	p._es_NextCmd = CurTime()+.2
 
 	c = a[1]
 
@@ -44,18 +41,17 @@ concommand.Add("excl",function(p,c,a)
 	end
 	if ES.Commands[c] then
 		if ES.Commands[c].power and (ES.Commands[c].power > 0 and not p:ESHasPower(ES.Commands[c].power)) then
-			p:ESChatPrint("You do not have access this command, because your rank is not high enough.")
+			p:ESChatPrint("Access denied.")
 				return
 		end
 		table.remove(a,1)
 		ES.Commands[c].func(p,a)
-
-		ES.DebugPrint(p:Nick().." ran concommand: "..c)
+		ES.Log(ES.LOG_COMMAND,p:Nick()..": "..c.."("..table.concat(a,",",1)..")")
 	end
 end)
 hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
-	if (p.esNextCmd and p.esNextCmd > CurTime()) or not p or not t then return end
-	p.esNextCmd = CurTime()+.2
+	if (p._es_NextCmd and p._es_NextCmd > CurTime()) or not p or not t then return end
+	p._es_NextCmd = CurTime()+.2
 
 	if t and string.Left(t,2) == "# " and p:ESHasPower(20) then
 
@@ -63,6 +59,8 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 		table.remove(t,1)
 
 		ES.Commands["announce"].func(p,t)
+		ES.Log(ES.LOG_COMMAND + ES.LOG_CHAT,p:Nick()..": announce("..table.concat(t,",",1)..")")
+
 		return false
 	elseif t and string.Left(t,2) == "@ " then
 
@@ -70,8 +68,10 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 		table.remove(t,1)
 
 		ES.Commands["adminchat"].func(p,t)
+		ES.Log(ES.LOG_COMMAND + ES.LOG_CHAT,p:Nick()..": adminchat("..table.concat(t,",",1)..")")
+
 		return false
-	elseif t and (string.Left(t,1) == ":"--[[ or string.Left(t,1) == "!" or string.Left(t,1) == "/"]]) then -- strict mode: only allow the : prefix for ExclServer commands.
+	elseif t and (string.Left(t,1) == ":") then -- strict mode: only allow the : prefix for ExclServer commands.
 		local t = string.Explode(" ",t or "",false)
 		t[1] = string.gsub(t[1] or "",string.Left(t[1],1) or "","")
 
@@ -79,13 +79,12 @@ hook.Add("PlayerSay","exclPlayerChatCommandSay",function(p,t)
 			local c = string.lower(t[1])
 			if ES.Commands and ES.Commands[c] then
 				if ES.Commands[c].power and (ES.Commands[c].power > 0 and not p:ESHasPower(ES.Commands[c].power)) then
-					p:ESChatPrint("You do not have access this command, because your rank is not high enough.")
+					p:ESChatPrint("Access denied.")
 					return false
 				end
 				table.remove(t,1)
 				ES.Commands[c].func(p,t)
-
-				ES.DebugPrint(p:Nick().." ran chatcommand: "..c)
+				ES.Log(ES.LOG_COMMAND + ES.LOG_CHAT,p:Nick()..": "..c.."("..table.concat(t,",",1)..")")
 
 				return false
 			end

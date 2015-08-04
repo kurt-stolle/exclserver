@@ -16,9 +16,7 @@ hook.Add("PlayerSpawn","es.item.model.notify",function(p)
     if not IsValid(p) then return end
     if not table.HasValue(ES.DefaultModels,p:ESGetActiveModel()) then
       p:ChatPrint("You have a custom model equipped. Press <hl>F6</hl> to transform.");
-      ES.DebugPrint("Player has a custom model. Let's tell him about it.")
     else
-      ES.DebugPrint("Player does not have a custom model. "..p:ESGetActiveModel())
     end
   end)
 end)

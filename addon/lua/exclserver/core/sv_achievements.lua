@@ -5,7 +5,7 @@ util.AddNetworkString("ESAchProgr")
 util.AddNetworkString("ESAchEarned")
 
 hook.Add("ESDatabaseReady","ESAchiesDatatableSetup",function()
-	ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_achievements` (`id` int unsigned not null AUTO_INCREMENT, steamid varchar(100), achname varchar(100), progress int unsigned not null default 0, PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1"):wait()
+	ES.DBQuery("CREATE TABLE IF NOT EXISTS `es_achievements` (`id` int unsigned not null AUTO_INCREMENT, steamid varchar(100), achname varchar(100), progress int unsigned not null default 0, PRIMARY KEY (`id`), UNIQUE KEY `id` (`id`)) ENGINE=MyISAM DEFAULT CHARSET=latin1")
 end)
 
 local PLAYER = FindMetaTable("Player")

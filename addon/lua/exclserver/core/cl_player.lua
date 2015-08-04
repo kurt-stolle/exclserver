@@ -1,8 +1,5 @@
--- cl_player_hooks
-hook.Add("InitPostEntity","LoadMyStuff",function()
-	RunConsoleCommand("excl_ready")
-end)
 
+-- Taunt Camera, shamelessly stolen from the garrysmod base.
 function ES.TauntCamera()
 
     local CAM = {}

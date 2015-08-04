@@ -1,15 +1,8 @@
 local PLAYER=FindMetaTable("Player")
 
-util.AddNetworkString("ESSynchRankConfig")
-hook.Add("PlayerInitialSpawn","ES.SynchRanks",function(ply)
-	net.Start("ESSynchRankConfig")
-	net.WriteTable(ES.Ranks)
-	net.Send(ply)
-end)
-
 function PLAYER:ESSetRank(r,global)
 	if (r ~= "user" and not ES.Ranks[r]) or not ES.ServerID then return end
-		
+
 	self:ESSetNetworkedVariable("rank",r)
 
 	if r ~= "user" then
@@ -36,12 +29,16 @@ function PLAYER:ESSetRank(r,global)
 		end
 	end
 end
-hook.Add("ESPlayerReady","ES.Ranks.LoadOnReady",function(ply)
-	if not ES.ServerID then 
+hook.Add("ESPlayerReady","exclserver.ranks.load",function(ply)
+	if not ES.ServerID then
 		ES.DebugPrint("Failed to load rank for "..ply:Nick())
 		return
 	end
-	
+
+	net.Start("ESSynchRankConfig")
+	net.WriteTable(ES.Ranks)
+	net.Send(ply)
+
 	ES.DebugPrint("Loading rank for "..ply:Nick())
 	ES.DBQuery("SELECT rank,serverid FROM `es_ranks` WHERE steamid = '"..ply:SteamID().."' AND (serverid = 0 OR serverid = "..ES.ServerID..") LIMIT 2;",function(s)
 			if s and s[1] and IsValid(ply) then

@@ -34,3 +34,30 @@ function PLAYER:ESChatPrint(...)
 	net.WriteTable{...}
 	net.Send(self)
 end
+
+-- Synchronize
+util.AddNetworkString("ESSynchPlayer")
+function PLAYER:ESSynchPlayer()
+	if not self.excl then return end
+	net.Start("ESSynchPlayer")
+	net.WriteTable(self.excl)
+	net.Send(self)
+end
+
+-- Send a notification
+function PLAYER:ESSendNotification(kind,msg)
+	net.Start("ES.SendNotification")
+		net.WriteString(kind)
+		net.WriteString(msg)
+	net.Send(self)
+end
+
+-- Do setup
+function PLAYER:ESReady()
+	if self._es_isReady then return end
+	self._es_isReady = true
+
+	hook.Call("ESPlayerReady",GAMEMODE,self)
+
+	ES.BroadcastNotification("generic",self:Nick().." has joined")
+end

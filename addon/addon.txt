@@ -2,8 +2,8 @@
 {
 	"name"        "Excl Server"
 	"version"     "3.5"
-	"author_name" "_Newbee / Excl"
-	"author_url"  "www.exclstudios.com"
+	"author_name" "Excl"
+	"author_url"  "excl.tv"
 	"info"        "All-In-One"
 	"override"    "0"
 }
