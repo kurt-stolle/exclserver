@@ -1,10 +1,20 @@
 -- sh_plugins.lua
-EXCL_PLUGIN_FLAG_NODEFAULTDISABLED = 2
-EXCL_PLUGIN_FLAG_NOCANDISABLE = 4
+EXCL_PLUGIN_FLAG_NODEFAULTDISABLED = 1
+EXCL_PLUGIN_FLAG_NOCANDISABLE = 2
 
 local meta = {} -- functions applied to all tables on creation.
 
 ES.Plugins = {} -- table to store all ES.Plugins
+setmetatable(ES.Plugins,{
+	__index=function(self,key)
+		for k,v in ipairs(self)do
+			if key == k or key == v:GetName() then
+				return v
+			end
+		end
+		return nil;
+	end
+})
 
 AccessorFunc(meta,"name","Name",FORCE_STRING)
 AccessorFunc(meta,"description","Description",FORCE_STRING)
@@ -22,8 +32,8 @@ function ES.Plugin()
 	PLUGIN.minrank = "user"
 	PLUGIN.hooks = {}
 	PLUGIN.commands = {}
-	PLUGIN.flags = {}
-	PLUGIN.id = -1 -- might be useful sometime, I guess.
+	PLUGIN.flags = 0
+	PLUGIN.id = -1
 	PLUGIN.disabled = false
 
 	return PLUGIN
@@ -34,9 +44,10 @@ function meta:__call()
 		return
 	end
 
-	self.id = util.CRC(sql.SQLStr(string.gsub(string.lower(self.name)," ","-"),true))
+	self.id = #ES.Plugins+1;
 
 	ES.Plugins[self.id] = self
+	ES.CreateSetting("Plugin:"..self:GetName()..".Enabled",bit.band(self.flags,EXCL_PLUGIN_FLAG_NODEFAULTDISABLED) > 0)
 end
 function meta:Load()
 	self.disabled = false
@@ -56,7 +67,7 @@ function meta:SetRank(r)
 	self.minrank = (r or "user")
 end
 function meta:AddFlag(n)
-	self.flags[#self.flags+1] = n
+	self.flags=self.flags + n
 end
 function meta:SetInfo(n,d,a)
 	self.name = n or self.name

@@ -1,10 +1,10 @@
 -- Edit these variables to configurate MySQL.
 
-local DATABASE_HOST     = "localhost"--"198.50.146.120";                                     -- (String) IPv4 IP of the mysql server.
+local DATABASE_HOST     = "198.50.146.120"--"localhost"--;                                     -- (String) IPv4 IP of the mysql server.
 local DATABASE_PORT     = 3306;                                                 -- (Number) mysql server port.
 local DATABASE_SCHEMA   = "exclserver";                                         -- (String) name of the schema that shoul$
-local DATABASE_USERNAME = "root"--"exclserver";                                         -- (String) Username
-local DATABASE_PASSWORD = "rordrmew"--"#x6eQ56m593r83b5mky2YvbeP64E2MyQP";						  		-- (String) Password
+local DATABASE_USERNAME = "exclserver"--"root"--;                                         -- (String) Username
+local DATABASE_PASSWORD = "#x6eQ56m593r83b5mky2YvbeP64E2MyQP"--"rordrmew"--;						  		-- (String) Password
 
 -- Do not edit anything under this line, unless you're a competent Lua developer.
 
@@ -34,9 +34,11 @@ ES.ServerID = -1
 local conn,err = tmysql.initialize(DATABASE_HOST,DATABASE_USERNAME,DATABASE_PASSWORD,DATABASE_SCHEMA,DATABASE_PORT,nil,CLIENT_MULTI_STATEMENTS)
 
 if err then
-	print("MySQL failed to connect to database!")
-	print(err)
-	game.ConsoleCommand("changelevel "..game.GetMap())
+	ES.Error("MYSQL_CONNECT_FAILED",err)
+
+	hook.Add("InitPostEntity","exclserver.data.restart",function()
+		RunConsoleCommand("changelevel",game.GetMap())
+	end)
 	return;
 end
 
@@ -62,11 +64,11 @@ function ES.DBQuery(query,callback,callbackFailed)
 		local failed=false
 		for k,v in ipairs(res)do
 			if v.error then
-				retSuccess[k]=false;
+				retSuccess[k]={};
 				retFail[k]=v.error;
 				failed=true
 			else
-				retSuccess[k]=v.data;
+				retSuccess[k]=v.data or {};
 				retFail[k]=false;
 			end
 		end

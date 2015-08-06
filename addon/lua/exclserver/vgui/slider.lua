@@ -1,5 +1,5 @@
 ES.CreateFont( "ESSlidebutton", { 
-	font = "Roboto", 
+	font = ES.Font, 
 	weight = 700,
 	size = 16,
 	italic = true

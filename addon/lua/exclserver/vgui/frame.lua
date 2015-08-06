@@ -14,7 +14,7 @@ local matrix,x,y,width,height,rad
 
 local PANEL = {}
 ES.CreateFont( "ESFrameText", {
-font = "Roboto",
+font = ES.Font,
 size = 18,
 weight=400 }
 )

@@ -29,6 +29,8 @@ function PLAYER:ESSetRank(r,global)
 		end
 	end
 end
+
+util.AddNetworkString("ESSynchRankConfig")
 hook.Add("ESPlayerReady","exclserver.ranks.load",function(ply)
 	if not ES.ServerID then
 		ES.DebugPrint("Failed to load rank for "..ply:Nick())

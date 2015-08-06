@@ -15,12 +15,12 @@ local margin = 10
 COLOR_BLACK = COLOR_BLACK or Color(0,0,0)
 
 ES.CreateFont("ES.VIPTableFont",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 20,
 	weight = 700
 })
 ES.CreateFont("ES.VIPTableFont.Shadow",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 20,
 	weight = 700,
 	blursize=2

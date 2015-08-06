@@ -34,12 +34,12 @@ end
 if SERVER then return end
 
 ES.CreateFont("ESAdvertFont",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 98,
 	weight = 300,
 })
 ES.CreateFont("ESAdvertFontBlur",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 98,
 	weight = 300,
 	blursize = 2,

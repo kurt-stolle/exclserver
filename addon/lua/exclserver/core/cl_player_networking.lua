@@ -1,24 +1,28 @@
-net.Receive("ES.NwPlayerVar",function(len)
+net.Receive("exclserver.nwvars.send",function(len)
 	local num_players=net.ReadUInt(8)
 	for o=1,num_players do
 		local ply=net.ReadEntity()
 		local num_keys=net.ReadUInt(8)
 
-		if not IsValid(ply) or not ply:IsPlayer() or not num_keys or num_keys < 1 then return end
+		if not IsValid(ply) or not ply:IsPlayer() or not num_keys or num_keys < 1 then return ES.Error("NW_VAR_RECEIVE_NO_PLAYER","Invalid player or keys") end
 
 		if not ply._es_networked then
 			ply._es_networked={}
 		end
 
-		local key,kind
+		local var,key,kind,CRC;
 		for i=1,num_keys do
-			key=net.ReadString()
-			if not ES.NetworkedVariables[key] then
-				ply._es_networked[key]=net.ReadData()
+			CRC=net.ReadUInt(32);
+			var=ES.NetworkedVariables[CRC]
+
+			if not var then
+				ES.Error("NW_VAR_RECEIVE_INVALID","Received invalid NWVar, CRC: "..CRC)
 				continue
 			end
 
-			kind=ES.NetworkedVariables[key].type
+			kind=var.type
+			key=var.name
+
 			if kind == "String" then
 				ply._es_networked[key]=net.ReadString()
 				continue
@@ -26,13 +30,13 @@ net.Receive("ES.NwPlayerVar",function(len)
 				ply._es_networked[key]=net.ReadFloat()
 				continue
 			elseif kind == "Int" then
-				ply._es_networked[key]=net.ReadInt(ES.NetworkedVariables[key].size)
+				ply._es_networked[key]=net.ReadInt(var.size)
 				continue
 			elseif kind == "Bit" then
 				ply._es_networked[key]=net.ReadBit()
 				continue
 			elseif kind == "UInt" then
-				ply._es_networked[key]=net.ReadUInt(ES.NetworkedVariables[key].size)
+				ply._es_networked[key]=net.ReadUInt(var.size)
 				continue
 			elseif kind == "Entity" then
 				ply._es_networked[key]=net.ReadEntity()
@@ -41,15 +45,8 @@ net.Receive("ES.NwPlayerVar",function(len)
 				ply._es_networked[key]=net.ReadDouble()
 				continue
 			end
+
 			ply._es_networked[key]=net.ReadData()
 		end
 	end
-end)
-
-hook.Add("Initialize","ES.InitNetworkedVariables.Sync",function()
-	hook.Call("ESDefineNetworkedVariables",GAMEMODE)
-	ES.DefineNetworkedVariable = nil
-
-	net.Start("ES.NwPlayerVar")
-	net.SendToServer()
 end)

@@ -1,11 +1,11 @@
 -- Buttons
 ES.CreateFont( "ES.ToggleButton", {
-font = "Roboto",
+font = ES.Font,
 size = 16,
 weight=400 }
 )
 ES.CreateFont( "ES.ToggleButton.Shadow", {
-font = "Roboto",
+font = ES.Font,
 size = 16,
 weight=400,
 blursize=2 }

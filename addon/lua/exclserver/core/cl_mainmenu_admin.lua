@@ -11,7 +11,7 @@ function ES._MMGenerateCommands(base)
   	help:SetColor(ES.Color.White)
   	help:DockMargin(10,10,10,0)
   	help:SizeToContents()
-  	help:Dock(TOP)	
+  	help:Dock(TOP)
 
   	local list=frame:Add("Panel")
   	list:DockMargin(10,10,10,0)
@@ -57,7 +57,90 @@ function ES._MMGenerateCommands(base)
 
 	local scroll=list:Add("esScrollbar")
 
-  	function list:PerformLayout()	  	
+  	function list:PerformLayout()
+	  	scrollbuddy:SetWide(list:GetWide()-16)
+
+	  	scroll:Setup()
+	end
+end
+
+function ES._MMGeneratePlugins(base)
+	local frame= base:OpenFrame(800)
+  	frame:SetTitle("Plugins")
+
+  	local help=frame:Add("DLabel")
+  	help:SetText(ES.FormatLine("These are all ExclServer plugins currently installed on the server.","ESDefault+",380))
+  	help:SetFont("ESDefault+")
+  	help:SetColor(ES.Color.White)
+  	help:DockMargin(10,10,10,0)
+  	help:SizeToContents()
+  	help:Dock(TOP)
+
+  	local list=frame:Add("Panel")
+  	list:DockMargin(10,10,10,0)
+  	list:Dock(FILL)
+
+  	local scrollbuddy=list:Add("Panel")
+
+  	for k,v in pairs(ES.Plugins)do
+	  		local row=scrollbuddy:Add("esPanel")
+	  		row:SetColor(ES.GetColorScheme(3))
+	  		row:SetTall(100)
+	  		row:Dock(TOP)
+	  		row:DockMargin(0,0,0,10)
+	  		row:DockPadding(10,0,10,0)
+
+				local header=row:Add("esPanel")
+				header:SetColor(ES.GetColorScheme(2))
+				header:SetTall(22)
+				header:Dock(TOP)
+
+	  		local name=header:Add("DLabel")
+	  		name:SetColor(ES.Color.White)
+	  		name:Dock(LEFT)
+	  		name:SetText(v:GetName())
+	  		name:SetFont("ESDefaultBold")
+	  		name:SizeToContents()
+
+				local author=header:Add("DLabel")
+	  		author:SetColor(ES.Color.White)
+	  		author:Dock(LEFT)
+	  		author:SetText(v:GetAuthor())
+	  		author:SetFont("ESDefaultBold")
+	  		author:SizeToContents()
+
+	  		local status=header:Add("DLabel")
+	  		status:SetColor(ES.Color.White)
+	  		status:Dock(RIGHT)
+				status:SetText("Enabled")
+				status:SetFont("ESDefault")
+				status:SizeToContents()
+
+				local descr=row:Add("DLabel")
+				descr:SetFont("ESDefault-")
+				descr:SetPos(10,32)
+				descr:SetText(v:GetDescription())
+				descr:SizeToContents()
+				descr:SetColor(ES.Color.White)
+
+				if LocalPlayer():ESGetRank():GetPower() >= ES.POWER_OWNER then
+					local toggleEnabled=row:Add("esToggleButton")
+					toggleEnabled:SetText("Enable plugin")
+					toggleEnabled:SetChecked(true)
+					toggleEnabled:SetTall(30)
+					toggleEnabled:Dock(BOTTOM)
+					toggleEnabled:DockMargin(10,10,10,10)
+					toggleEnabled.DoClick = function(self,checked)
+
+					end
+				end
+	end
+
+	scrollbuddy:SetTall(table.Count(ES.Plugins)*(26+10))
+
+	local scroll=list:Add("esScrollbar")
+
+  	function list:PerformLayout()
 	  	scrollbuddy:SetWide(list:GetWide()-16)
 
 	  	scroll:Setup()
@@ -74,5 +157,5 @@ function ES._MMGenerateConfiguration(base)
   	help:SetColor(ES.Color.White)
   	help:DockMargin(10,10,10,0)
   	help:SizeToContents()
-  	help:Dock(TOP)	
+  	help:Dock(TOP)
 end

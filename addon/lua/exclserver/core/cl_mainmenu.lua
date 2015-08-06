@@ -66,7 +66,7 @@ hook.Add("CalcView","ES.MMCalcView",function(ply,pos,angles,fov)
 end)
 
 ES.CreateFont("ES.MainMenu.HeadingText",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 28,
 })
 

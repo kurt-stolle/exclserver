@@ -5,28 +5,28 @@ local colElementMainFoot = Color(213,213,213)
 local colElementChoise = Color(30,30,30)
 
 ES.CreateFont("ES.MainMenu.MainElementHeader",{
-	font = "Roboto",
+	font = ES.Font,
 	weight = 400,
 	size = 48,
 })
 ES.CreateFont("ES.MainMenu.MainElementInfoBnns",{
-	font = "Roboto",
+	font = ES.Font,
 	weight = 400,
 	size = 38
 })
 ES.CreateFont("ES.MainMenu.MainElementInfoBnnsSmall",{
-	font = "Roboto",
+	font = ES.Font,
 	weight = 400,
 	size = 17,
 	italic=true
 })
 ES.CreateFont("ES.MainMenu.ChoiseElement",{
-	font = "Roboto",
+	font = ES.Font,
 	weight = 400,
 	size = 14,
 })
 ES.CreateFont("ES.MainMenu.ChoiseElementSub",{
-	font = "Roboto",
+	font = ES.Font,
 	weight = 400,
 	size = 12,
 })
@@ -271,13 +271,13 @@ vgui.Register("ESMainMenu",PNL,"EditablePanel")
 --### MAIN ELEMENT BUTTON
 
 ES.CreateFont("ES.MainMenu.MainElementButtonShad",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 14,
 	weight = 700,
 	blursize=2,
 })
 ES.CreateFont("ES.MainMenu.MainElementButton",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 14,
 	weight = 700,
 })
@@ -332,7 +332,7 @@ vgui.Register("ES.MainMenu.NavigationItem",PNL,"Panel")
 
 
 ES.CreateFont("ES.MainMenu.FrameHead",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 48,
 	weight = 500
 })

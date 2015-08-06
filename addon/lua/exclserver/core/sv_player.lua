@@ -15,7 +15,7 @@ hook.Add("ESDatabaseReady","exclserver.player.db.ready",function()
 		end
 	end)
 end)
-hook.Add("PlayerInitialSpawn","exclserver.player.ready",function(ply)
+concommand.Add("excl_ready",function(ply)
 	if not dbReady then
 		table.insert(ReadyQueue,ply)
 	else

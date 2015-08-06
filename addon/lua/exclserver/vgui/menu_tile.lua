@@ -16,7 +16,7 @@ local matrix,x,y,width,height,rad
 
 
 ES.CreateFont("ES.TileFont",{
-	font="Roboto",
+	font=ES.Font,
 	weight=400,
 	size=20
 })

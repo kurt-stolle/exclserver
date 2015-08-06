@@ -1,4 +1,11 @@
--- Meta tables for ES.Ranks.
+-- Rank power enums
+ES.POWER_OWNER = 80
+ES.POWER_OPERATOR = 60
+ES.POWER_SUPERADMIN = 40
+ES.POWER_ADMIN = 20
+ES.POWER_USER = 0
+
+-- Rank objects
 local rankMeta = {}
 AccessorFunc(rankMeta,"simpleName","SimpleName",FORCE_STRING)
 AccessorFunc(rankMeta,"prettyName","PrettyName",FORCE_STRING)

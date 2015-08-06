@@ -31,6 +31,8 @@ function ES.HexToRGB(key)
 end
 
 -- Color caching function
+-- This is a huge optimization
+-- FPS gains, less memory, awesome!
 ES.Color = {}
 setmetatable(ES.Color,{
 	__index = function(tbl,key)

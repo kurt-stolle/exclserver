@@ -1,107 +1,52 @@
-function ES.CreateFont(name,tab)
-	if type(name) ~= "string" or type(tab) ~= "table" then return end
 
-	if tab.font=="Roboto" then
-		if tab.weight then
-			if tab.weight > 0 and tab.weight <= 100 then
-				tab.weight=100
-				tab.font="Roboto Thin"
-			elseif tab.weight > 100 and tab.weight <= 300 then
-				tab.weight=300
-				tab.font="Roboto Light"
-			elseif tab.weight > 300 and tab.weight <= 400 then
-				tab.weight=400
-				tab.font="Roboto"
-			elseif tab.weight > 400 and tab.weight <= 500 then
-				tab.weight=500
-				tab.font="Roboto Medium"
-			elseif tab.weight > 500 and tab.weight <= 700 then
-				tab.weight=700
-				tab.font="Roboto Bold"
-			elseif tab.weight > 700 and tab.weight <= 900 then
-				tab.weight=900
-				tab.font="Roboto Black"
-			end
-		else
-			tab.weight=400
-		end
-	end
+-- Font generation
+ES.Font = "Roboto"
 
+function ES.CreateFont(name,font)
+	if type(name) ~= "string" or type(font) ~= "table" then return end
+
+	local tab;
+
+	tab=table.Copy(font)
+	tab.font = ES.Font;
 	surface.CreateFont(name,tab);
+
+	tab=table.Copy(font)
+	tab.font = ES.Font;
+	tab.blursize = 2
+	surface.CreateFont(name..".Shadow",tab)
 end
 
-ES.CreateFont( "ESDefault-.Shadow", {
-	font = "Roboto",
-	size = 12,
-	weight = 500,
-	blursize = 2
-})
 ES.CreateFont( "ESDefault-", {
-	font = "Roboto",
 	size = 12,
 	weight = 500
 })
 ES.CreateFont( "ESDefault", {
-	font = "Roboto",
 	size = 14,
 	weight = 400
 })
-ES.CreateFont( "ESDefault.Shadow", {
-	font = "Roboto",
-	size = 14,
-	weight = 400,
-	blursize = 2
-})
 ES.CreateFont( "ESDefaultBold", {
-	font = "Roboto",
 	size = 14,
 	weight = 700
 })
-ES.CreateFont( "ESDefaultBold.Shadow", {
-	font = "Roboto",
-	size = 14,
-	weight = 700,
-	blursize = 2
-})
 ES.CreateFont( "ESDefault+", {
-	font = "Roboto",
 	size=20,
 	weight=400
 })
-ES.CreateFont( "ESDefault+.Shadow", {
-	font = "Roboto",
-	size=20,
-	weight=400,
-	blursize=2
-})
 ES.CreateFont( "ESDefaultBold+", {
-	font = "Roboto",
 	size=20,
 	weight=600
 })
-ES.CreateFont( "ESDefaultBold+.Shadow", {
-	font = "Roboto",
-	size=20,
-	weight=600,
-	blursize=2
-})
 ES.CreateFont( "ESDefault++", {
-	font = "Roboto",
 	size=26,
 	weight=400
 })
 ES.CreateFont( "ESDefault+++", {
-	font = "Roboto",
 	size=32,
 	weight=400
 })
-ES.CreateFont( "ESDefault+++.Shadow", {
-	font = "Roboto",
-	size=32,
-	weight=400,
-	blursize=2
-})
 
+-- Speeds up development
 function ES.UIAddHoverListener(panel)
 	AccessorFunc(panel,"hover","Hover",FORCE_BOOL)
 	panel.OnCursorEntered = function(self)

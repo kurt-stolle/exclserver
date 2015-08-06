@@ -2,7 +2,7 @@ local color_white = ES.Color.White
 local color_gray = ES.Color["#DDD"]
 
 ES.CreateFont("ES.ButtonFont",{
-	font = "Roboto",
+	font = ES.Font,
 	weight = 700,
 	size = 16,
 })

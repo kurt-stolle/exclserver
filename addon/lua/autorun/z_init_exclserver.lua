@@ -50,6 +50,7 @@ end
 
 -- Error reporting
 local color_error=Color(240,30,0)
+local color_error_text=Color(190,190,190)
 function ES.Error(error,...)
 	local s="";
 	for k,v in ipairs{...}do
@@ -68,7 +69,8 @@ function ES.Error(error,...)
 	s=s.."\n";
 
 	MsgC(color_error,"[ES "..ES.version.."] ERROR: ")
-	MsgC(color_debug_text,error.." ("..s..")");
+	MsgC(color_debug_text,error);
+	MsgC(color_error_text," "..s);
 
 	hook.Call("ESError",GAMEMODE,error,s)
 

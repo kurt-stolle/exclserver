@@ -1,12 +1,12 @@
 
 --#### Inventory
 ES.CreateFont("esMMInventoryTitle",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 37,
 	weight=400
 })
 ES.CreateFont("esMMInventoryAppearthere",{
-	font = "Roboto",
+	font = ES.Font,
 	size = 27,
 	weight=400,
 	italic=true

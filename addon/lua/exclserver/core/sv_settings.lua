@@ -1,5 +1,3 @@
--- sv_settings.lua
--- handles the setting system
 
 local settings = {}
 local settingsTypeFn = {}
@@ -15,11 +13,13 @@ function ES.CreateSetting(name,default)
 		settingsTypeFn[name]=tostring
 	end
 end
-function ES.GetSetting(name,def)
-	return settings[name] or def;
+function ES.GetSetting(name)
+	return settings[name] or ES.Error("SETTING_GET_NOT_FOUND",name);
 end
 function ES.SetSetting(name,value,serverid)
-	serverid=tonumber(serverid) or 0
+	if not serverid then
+		serverid = ES.ServerID
+	end
 
 	if type(settings[name]) == "nil" or (serverid ~= 0 and serverid ~= ES.ServerID) then return end
 
@@ -34,18 +34,12 @@ function ES.SetSetting(name,value,serverid)
 	end)
 end
 
-hook.Add("ESDatabaseReady","ES.LoadSettings",function()
-	ES.DBQuery("SELECT name,value,serverid FROM `es_settings` WHERE serverid="..ES.ServerID.." OR serverid=0;",function(res)
+--Hooks
+hook.Add("ESDatabaseReady","exclserver.settings.load",function()
+	ES.DBQuery("SELECT name,value,serverid FROM `es_settings` WHERE serverid="..ES.ServerID..";",function(res)
 		if res and res[1] then
 			for k,v in ipairs(res)do
-				if settings[v.name] and tonumber(v.serverid) == 0 then
-					settings[v.name]=settingsTypeFn[v.name](v.value)
-				end
-			end
-			for k,v in ipairs(res)do
-				if settings[v.name] and tonumber(v.serverid) ~= 0 then
-					settings[v.name]=settingsTypeFn[v.name](v.value)
-				end
+				settings[v.name]=settingsTypeFn[v.name](v.value)
 			end
 		end
 	end)

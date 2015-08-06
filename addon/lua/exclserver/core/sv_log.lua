@@ -3,7 +3,7 @@ local databaseBuffer={}
 timer.Create("ES.Logs.WriteBuffer",1,0,function()
 	if not databaseBuffer[1] then return end
 
-	ES.DBQuery("INSERT INTO `es_logs` (text,type,time,serverid) VALUES "..table.concat(databaseBuffer,","));
+	ES.DBQuery("INSERT INTO `es_logs` (text,type,time,serverid) VALUES "..table.concat(databaseBuffer,",")..";");
 
 	databaseBuffer={};
 end);

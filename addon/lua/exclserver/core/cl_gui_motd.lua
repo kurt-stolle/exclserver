@@ -4,7 +4,7 @@
 local context
 
 surface.CreateFont("ESMOTDHead",{
-	font="Roboto",
+	font=ES.Font,
 	size=50,
 	weight=400
 })

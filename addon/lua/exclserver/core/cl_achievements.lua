@@ -1,6 +1,6 @@
 -- cl_achievements.luaw
 ES.CreateFont("ESAchievementFontBig",{
-	font = "Roboto",
+	font = ES.Font,
 	weight = 500,
 	size = 28
 })

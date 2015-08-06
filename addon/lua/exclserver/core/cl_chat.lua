@@ -1,37 +1,37 @@
 -- cl_chat.lua
 
 ES.CreateFont("ESChatFont.Shadow",{
-	font="Roboto",
+	font=ES.Font,
 	size=18,
 	weight=400,
 	blursize=2
 })
 ES.CreateFont("ESChatFont",{
-	font="Roboto",
+	font=ES.Font,
 	size=18,
 	weight=400
 })
 ES.CreateFont("ESChatFont.Italic.Shadow",{
-	font="Roboto",
+	font=ES.Font,
 	size=18,
 	weight=400,
 	italic=true,
 	blursize=2
 })
 ES.CreateFont("ESChatFont.Italic",{
-	font="Roboto",
+	font=ES.Font,
 	size=18,
 	weight=400,
 	italic=true
 })
 ES.CreateFont("ESChatFont.Bold.Shadow",{
-	font="Roboto",
+	font=ES.Font,
 	size=18,
 	weight=700,
 	blursize=2
 })
 ES.CreateFont("ESChatFont.Bold",{
-	font="Roboto",
+	font=ES.Font,
 	size=18,
 	weight=700
 })

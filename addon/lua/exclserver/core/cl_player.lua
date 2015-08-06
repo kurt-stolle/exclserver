@@ -1,3 +1,8 @@
+hook.Add("InitPostEntity","exclserver.player.ready",function()
+    timer.Simple(0,function()
+      RunConsoleCommand("excl_ready");
+    end)
+end)
 
 -- Taunt Camera, shamelessly stolen from the garrysmod base.
 function ES.TauntCamera()

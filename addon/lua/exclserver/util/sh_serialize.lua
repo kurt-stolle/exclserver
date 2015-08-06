@@ -1,3 +1,7 @@
+-- This is basically a rewrite of vON.
+-- Most if not all serializations should be fully compatible.
+-- Be aware though that it is not recommended to use both notations interchangably.
+
 -- Prototypes
 local Deserialize, Serialize;
 

@@ -70,13 +70,13 @@ net.Receive("ES.Notification.Popup",function()
 end)
 -- Fonts
 ES.CreateFont("ES.Notification",{
-	font = "Roboto",
+	font = ES.Font,
 	weight = 400,
 	size = 22
 })
 
 ES.CreateFont("ES.Notification.Shadow",{
-	font = "Roboto",
+	font = ES.Font,
 	weight = 400,
 	size = 22,
 	blursize = 2,
