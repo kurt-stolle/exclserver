@@ -47,6 +47,9 @@ function meta:__call()
 	self.id = #ES.Plugins+1;
 
 	ES.Plugins[self.id] = self
+
+	if CLIENT then return end
+
 	ES.CreateSetting("Plugin:"..self:GetName()..".Enabled",bit.band(self.flags,EXCL_PLUGIN_FLAG_NODEFAULTDISABLED) > 0)
 end
 function meta:Load()
@@ -71,7 +74,7 @@ function meta:AddFlag(n)
 end
 function meta:SetInfo(n,d,a)
 	self.name = n or self.name
-	self.descr = d or self.descr
+	self.description = d or self.description
 	self.author = a or self.author
 end
 function meta:AddHook(n,f)
@@ -92,7 +95,6 @@ if SERVER then
 end
 
 hook.Add("Initialize","ExclPluginsLoad",function()
-	ES.DebugPrint("Loading ES.Plugins...")
 	for k,v in pairs(ES.Plugins) do
 		v:Load()
 	end

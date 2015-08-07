@@ -1,10 +1,10 @@
 -- Edit these variables to configurate MySQL.
 
-local DATABASE_HOST     = "198.50.146.120"--"localhost"--;                                     -- (String) IPv4 IP of the mysql server.
+local DATABASE_HOST     = "localhost"--"198.50.146.120"--                                     -- (String) IPv4 IP of the mysql server.
 local DATABASE_PORT     = 3306;                                                 -- (Number) mysql server port.
 local DATABASE_SCHEMA   = "exclserver";                                         -- (String) name of the schema that shoul$
-local DATABASE_USERNAME = "exclserver"--"root"--;                                         -- (String) Username
-local DATABASE_PASSWORD = "#x6eQ56m593r83b5mky2YvbeP64E2MyQP"--"rordrmew"--;						  		-- (String) Password
+local DATABASE_USERNAME = "root"-- "exclserver"--                                    -- (String) Username
+local DATABASE_PASSWORD = "rordrmew"--"#x6eQ56m593r83b5mky2YvbeP64E2MyQP"--						  		-- (String) Password
 
 -- Do not edit anything under this line, unless you're a competent Lua developer.
 

@@ -85,15 +85,15 @@ function ES._MMGeneratePlugins(base)
   	for k,v in pairs(ES.Plugins)do
 	  		local row=scrollbuddy:Add("esPanel")
 	  		row:SetColor(ES.GetColorScheme(3))
-	  		row:SetTall(100)
+	  		row:SetTall(70)
 	  		row:Dock(TOP)
 	  		row:DockMargin(0,0,0,10)
-	  		row:DockPadding(10,0,10,0)
 
 				local header=row:Add("esPanel")
 				header:SetColor(ES.GetColorScheme(2))
-				header:SetTall(22)
+				header:SetTall(32)
 				header:Dock(TOP)
+				header:DockPadding(10,0,10,0)
 
 	  		local name=header:Add("DLabel")
 	  		name:SetColor(ES.Color.White)
@@ -105,8 +105,8 @@ function ES._MMGeneratePlugins(base)
 				local author=header:Add("DLabel")
 	  		author:SetColor(ES.Color.White)
 	  		author:Dock(LEFT)
-	  		author:SetText(v:GetAuthor())
-	  		author:SetFont("ESDefaultBold")
+	  		author:SetText(" created by "..v:GetAuthor())
+	  		author:SetFont("ESDefault")
 	  		author:SizeToContents()
 
 	  		local status=header:Add("DLabel")
@@ -116,27 +116,26 @@ function ES._MMGeneratePlugins(base)
 				status:SetFont("ESDefault")
 				status:SizeToContents()
 
-				local descr=row:Add("DLabel")
-				descr:SetFont("ESDefault-")
-				descr:SetPos(10,32)
-				descr:SetText(v:GetDescription())
-				descr:SizeToContents()
-				descr:SetColor(ES.Color.White)
-
 				if LocalPlayer():ESGetRank():GetPower() >= ES.POWER_OWNER then
 					local toggleEnabled=row:Add("esToggleButton")
-					toggleEnabled:SetText("Enable plugin")
+					toggleEnabled:SetText(v:GetDescription())
 					toggleEnabled:SetChecked(true)
-					toggleEnabled:SetTall(30)
 					toggleEnabled:Dock(BOTTOM)
 					toggleEnabled:DockMargin(10,10,10,10)
 					toggleEnabled.DoClick = function(self,checked)
 
 					end
+				else
+					local descr=row:Add("DLabel")
+					descr:SetFont("ESDefault")
+					descr:SetPos(10,42)
+					descr:SetText(v:GetDescription())
+					descr:SizeToContents()
+					descr:SetColor(ES.Color.White)
 				end
 	end
 
-	scrollbuddy:SetTall(table.Count(ES.Plugins)*(26+10))
+	scrollbuddy:SetTall(table.Count(ES.Plugins)*(80))
 
 	local scroll=list:Add("esScrollbar")
 

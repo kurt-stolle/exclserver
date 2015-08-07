@@ -74,9 +74,8 @@ local function addCheckbox(help,txt,convar,oncheck)
 	local ply = LocalPlayer()
 
 	local togOwn = vgui.Create("esToggleButton",help)
-	togOwn:DockMargin(20,20,20,0)
+	togOwn:DockMargin(10,10,10,0)
 	togOwn:Dock(TOP)
-	togOwn:SetTall(20)
 	togOwn.Text = txt
 	togOwn.DoClick = function(self)
 		if self:GetChecked() then
@@ -222,7 +221,10 @@ ExclServer is created and constructed by Excl.]],"ESDefault+",640-20*2),p)
 			end},
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Config",func = function()
 				ES._MMGenerateConfiguration(mm)
-			end}
+			end},
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Plugins",func = function()
+				ES._MMGeneratePlugins(mm)
+			end},
 		})
 	end)
 	mm:AddWhitespace()

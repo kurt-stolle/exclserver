@@ -2,20 +2,18 @@
 -- takes snapshots
 
 local takesnap = false
-net.Receive("ESMakeSnapshot",function()
-	takesnap = net.ReadInt(32)
+net.Receive("exclserver.snapshot.capture",function()
+	takesnap = net.ReadUInt(16)
 end)
-hook.Add("PostRender","ESMakeSnapshot_PostRender",function()
+hook.Add("PostRender","exclserver.snapshot.capture_PostRender",function()
 	if takesnap then
 		local data = render.Capture{format = "jpeg", quality = takesnap, x = 0, y = 0, w = ScrW(), h = ScrH()}
-		net.Start("ESUploadSnapshot")
+		net.Start("exclserver.snapshot.send.sync")
 		net.WriteInt(math.ceil(data:len()/50000),16)
-		--net.WriteInt(data:len(),32)
-		--net.WriteData(data,data:len())
 		net.SendToServer()
 
 		for i=1,math.ceil(data:len()/50000) do
-			net.Start("ESUploadSnapshotProg")
+			net.Start("exclserver.snapshot.send.part")
 			net.WriteInt(i,8)
 			net.WriteInt(data:sub(50000*(i-1),-1 + 50000*i):len(),32)
 			net.WriteData(data:sub(50000*(i-1),-1 + 50000*i),data:sub(50000*(i-1),-1 + 50000*i):len())
@@ -107,16 +105,16 @@ local function makeFrame(data,ply,p)
 end
 
 local build = {}
-net.Receive("ESShowSnapshot",function()
+net.Receive("exclserver.snapshot.send.sync",function()
 	build[net.ReadEntity():UniqueID()] = {ss = {},frag = net.ReadInt(16),ply = net.ReadString()}
 end)
 
-net.Receive("ESShowSnapshotProg",function()
+net.Receive("exclserver.snapshot.send.part",function()
 	local p = net.ReadEntity()
 	if not build[p:UniqueID()] then return end
 
 	ES.DebugPrint("Received SS fragment")
-	
+
 	build[p:UniqueID()].ss[net.ReadInt(8)] = net.ReadData(net.ReadInt(32))
 
 	local complete= true

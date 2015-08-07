@@ -44,3 +44,28 @@ hook.Add("ESDatabaseReady","exclserver.settings.load",function()
 		end
 	end)
 end)
+
+util.AddNetworkString("exclserver.settings.send")
+hook.Add("ESPlayerReady","exclserver.settings.send",function(ply)
+	net.Start("exclserver.settings.send")
+	net.WriteTable(settings)
+	net.Send(ply)
+end)
+
+--Network
+net.Receive("exclserver.settings.send",function(len,ply)
+	if not IsValid(ply) or ply:ESGetRank():GetPower() < ES.POWER_SUPERADMIN then return ply:ESSendNotificationPopup("Error","You need at least Super Admin rank to set settings") end
+
+	local setti=net.ReadString()
+
+	local fnType=settingsTypeFn[setti]
+	if not fnType then return end
+
+	local var=fnType(net.ReadString())
+
+	if not var then return end
+
+	ES.SetSetting(setti,var)
+
+	ply:ESSendNotificationPopup("Success",setti.." was set to "..var)
+end)

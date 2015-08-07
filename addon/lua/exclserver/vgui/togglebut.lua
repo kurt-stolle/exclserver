@@ -1,15 +1,3 @@
--- Buttons
-ES.CreateFont( "ES.ToggleButton", {
-font = ES.Font,
-size = 16,
-weight=400 }
-)
-ES.CreateFont( "ES.ToggleButton.Shadow", {
-font = ES.Font,
-size = 16,
-weight=400,
-blursize=2 }
-)
 
 local BUTTON = {}
 function BUTTON:Init()
@@ -19,6 +7,7 @@ function BUTTON:Init()
 	self.moveX = 0
 	self.hoverAlpha = 0
 	self.HideButton = false
+	self:SetTall(18)
 end
 function BUTTON:OnMouseReleased()
 	if self.HideButton then return end
@@ -38,8 +27,7 @@ function BUTTON:SetText( str )
 	self.Text = str
 end
 function BUTTON:Paint(w,h)
-	draw.SimpleText(self.Text, "ES.ToggleButton.Shadow", (h*2) + 8, (h/2), ES.Color.Black, 0, TEXT_ALIGN_CENTER)
-	draw.SimpleText(self.Text, "ES.ToggleButton", (h*2) + 8, (h/2), ES.Color.White, 0, TEXT_ALIGN_CENTER)
+	draw.SimpleText(self.Text, "ESDefault", (h*2) + 8, (h/2), ES.Color.White, 0, TEXT_ALIGN_CENTER)
 
 	if self.HideButton then return end
 
