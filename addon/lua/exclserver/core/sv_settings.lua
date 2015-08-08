@@ -34,6 +34,9 @@ function ES.SetSetting(name,value,serverid)
 	end)
 end
 
+--Basic settings
+ES.CreateSetting("API:Url","https://es2-api.casualbananas.com")
+
 --Hooks
 hook.Add("ESDatabaseReady","exclserver.settings.load",function()
 	ES.DBQuery("SELECT name,value,serverid FROM `es_settings` WHERE serverid="..ES.ServerID..";",function(res)

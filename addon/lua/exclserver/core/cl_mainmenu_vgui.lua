@@ -79,7 +79,7 @@ function PNL:OpenFrame(w,h)
 	self.ActiveFrame:SetSize(w,h and h+70 or (self:GetTall()-20))
 	self.ActiveFrame.y = 10
 	self.ActiveFrame.x = self:GetWide()
-	self.ActiveFrame.xDesired = self:GetWide()-w-10
+	self.ActiveFrame.xDesired = self:GetWide() - width_max - 10
 	self.ActiveFrame:PerformLayout()
 	return self.ActiveFrame.context
 end
@@ -121,10 +121,10 @@ function PNL:AddButton(name,icon,func)
 
 	table.insert(self.ElementMainButtons,b)
 
-	self.yCreateMainButtons = self.yCreateMainButtons+32
+	self.yCreateMainButtons = self.yCreateMainButtons+34
 end
-function PNL:AddWhitespace()
-	self.yCreateMainButtons = self.yCreateMainButtons+30
+function PNL:AddWhitespace(txt)
+	self.yCreateMainButtons = self.yCreateMainButtons+34
 end
 function PNL:Think()
 	if self.ElementMainX < -.5 then
@@ -215,16 +215,12 @@ function PNL:Paint(w,h)
 	end
 
 	-- THE MAIN ELEMENT
-	surface.SetDrawColor(colMainElementBg)
-	surface.DrawRect(self.ElementMainX,0,256,h)
 
 	surface.SetDrawColor(ES.GetColorScheme(1))
-	surface.DrawRect(self.ElementMainX,0,256,80)
+	surface.DrawRect(self.ElementMainX,0,256,h)
 
-	surface.SetDrawColor(ES.Color["#000000FF"])
-	surface.DrawRect(self.ElementMainX,79,256,1)
-	surface.SetDrawColor(ES.Color["#FFFFFF03"])
-	surface.DrawRect(self.ElementMainX,80,256,1)
+	surface.SetDrawColor(ES.Color["#1E1E1EFE"])
+	surface.DrawRect(self.ElementMainX,79,256,h)
 
 	surface.SetDrawColor(ES.Color["#000"])
 	surface.DrawRect(self.ElementMainX+256,0,1,h)
@@ -272,14 +268,14 @@ vgui.Register("ESMainMenu",PNL,"EditablePanel")
 
 ES.CreateFont("ES.MainMenu.MainElementButtonShad",{
 	font = ES.Font,
-	size = 14,
-	weight = 700,
+	size = 18,
+	weight = 400,
 	blursize=2,
 })
 ES.CreateFont("ES.MainMenu.MainElementButton",{
 	font = ES.Font,
-	size = 14,
-	weight = 700,
+	size = 18,
+	weight = 400,
 })
 local PNL = {}
 function PNL:Init()
@@ -307,22 +303,24 @@ function PNL:Paint(w,h)
 	if self.Hover then
 		surface.SetDrawColor(ES.GetColorScheme(2))
 	else
-		surface.SetDrawColor(ES.Color["#DDD"])
+		surface.SetDrawColor(ES.Color["#222"])
 	end
 	surface.SetMaterial(self.bg)
-	surface.DrawTexturedRect(0,0,w,h)
+	--surface.DrawTexturedRect(0,0,w,h)
+	draw.NoTexture()
 
-	surface.SetDrawColor(Color(0,0,0,100))
-	surface.DrawRect(0,0,w,1)
+	self._expand = Lerp(FrameTime()*8,self._expand or 16,self.Hover and w*2 or 16)
+	self._rot = Lerp(FrameTime()*4,self._rot or 0, self.Hover and 0 or 45)
 
-	surface.SetDrawColor(ES.Color.White)
-	surface.SetMaterial(self.icon)
+	surface.DrawTexturedRectRotated(10+h/2,h/2,self._expand,self._expand,self._rot)
 
-	surface.DrawTexturedRectRotated(10+h/2,h/2,16,16,0)
+	--surface.SetDrawColor(ES.Color.White)
+	--surface.SetMaterial(self.icon)
+	--surface.DrawTexturedRectRotated(10+h/2,h/2,16,16,0)
 
 	ES.UIDrawRippleEffect(self,w,h)
 
-	local col = ES.Color["#444"]
+	local col = ES.Color["#666"]
 	if self.Hover then
 		col = ES.Color.White
 	end

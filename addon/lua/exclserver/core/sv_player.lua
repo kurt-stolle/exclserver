@@ -71,11 +71,11 @@ net.Receive("ES.GetServerList",function(len,ply)
 
 	ply._es_cmdTimeout=CurTime()+.5;
 
-	ES.DBQuery("SELECT ip,port FROM `es_servers` WHERE NOT ip = '127.0.0.1';",function(res)
+	ES.DBQuery("SELECT id,ip,port,dns,name FROM `es_servers` WHERE NOT ip = '127.0.0.1';",function(res)
 		local tab={}
-		for k,v in pairs(res)do
-			if v.ip then
-				table.insert(tab,v.ip..v.port)
+		for k,v in ipairs(res) do
+			if v.name then
+				table.insert(tab,v)
 			end
 		end
 

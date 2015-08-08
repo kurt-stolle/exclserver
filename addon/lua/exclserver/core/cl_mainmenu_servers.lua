@@ -1,47 +1,10 @@
-local escape='(['..("%^$().[]*+-?"):gsub("(.)", "%%%1")..'])';
-local function getServerInfo(ip,callback)
-        HTTP{
-            url="https://www.gametracker.com/server_info/"..ip.."/",
-            method="get",
-            parameters={},
-            headers={},
-            failed=function(e)
-                    ES.DebugPrint("Failed to receive server info for ip "..ip.." with reason "..e)
-            end,
-            success=function(code,body,headers)
-                pcall(function()ES.DebugPrint("Received server info (code "..code..")");
-                    body=string.gsub(body,escape, "%%%1")
-
-                    local _,startpos,endpos
-                    _,startpos=string.find(body,"SERVER DETAILS");
-                    endpos=string.find(body,"GAME SERVER BANNERS");
-                    body=string.sub( body, startpos, endpos)
-
-                    body=string.gsub( body, "<(.-)>", "")
-                    body=string.gsub( body, "\n", "")
-                    body=string.gsub( body, "&nbsp;","");
-                    body=string.gsub( body, "\t","")
-                    body=string.gsub( body, "%%","")
-
-                    local players=string.match(body,"Current Players:(%d+ / %d+)")
-                    local map=string.match(body,"CURRENT MAP(.*)Upload")
-                    local name=string.match(body,"Name:(.*)Game:")
-                    local status=string.match(body,"Status:(.*)Server Manager:")
-
-                    callback(name or "", map or "", players or "", status or "Offline")
-                  end)
-            end
-        }
-
-end
-
 local servers={};
 
 function ES._MMGenerateServerList(base)
   net.Start("ES.GetServerList")
   net.SendToServer()
 
-  local frame= base:OpenFrame()
+  local frame= base:OpenFrame(440)
   frame:SetTitle("Servers")
 
   local panels={}
@@ -70,7 +33,7 @@ function ES._MMGenerateServerList(base)
           pnl:SetPos(0,#panels*(pnl:GetTall()+15))
 
           local lbl_name = pnl:Add("esLabel");
-          lbl_name:SetText(v)
+          lbl_name:SetText(v.name)
           lbl_name:SetPos(10,8)
           lbl_name:SetFont("ESDefaultBold")
           lbl_name:SizeToContents()
@@ -97,27 +60,25 @@ function ES._MMGenerateServerList(base)
           btn_copy:SetSize(100,30)
           btn_copy:SetText("Copy IP")
 
-          getServerInfo(v,function(name,map,players,status)
-            if IsValid(pnl) then
-              if status ~= "Alive" then
-                lbl_players:SetText("OFFLINE")
-                lbl_players:SizeToContents()
-                lbl_map:SetText("")
-                return
-              end
-
-              lbl_name:SetText(name)
-              lbl_name:SizeToContents()
-
-              lbl_players:SetText(players.." Players")
-              lbl_players:SizeToContents()
-
-              lbl_map:SetText("Playing on "..map)
-              lbl_map:SizeToContents()
-            end
-          end)
-
           table.insert(panels,pnl)
+
+          local api=ES.GetSetting("API:Url")
+
+          if not api then print("API is not LIVE!") continue end
+
+          HTTP {
+            failed=function(err)
+              print("Server information fetch failed.",err)
+            end,
+            success=function(code,res)
+              local servers=util.JSONToTable(res)
+              PrintTable(res)
+            end,
+            method="get",
+            url=api.."/api/servers/status/"..v.id,
+            parameters={},
+            headers={}
+          }
         end
       end
   end)
