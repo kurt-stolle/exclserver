@@ -8,13 +8,14 @@ local fx = {
 	["$pp_colour_addr"] = 0,
 	["$pp_colour_addg"] = 0,
 	["$pp_colour_addb"] = 0,
-	["$pp_colour_brightness"] = -.1,
+	["$pp_colour_brightness"] = 0,
 	["$pp_colour_contrast"] = 1.1,
 	["$pp_colour_colour"] = 0,
 	["$pp_colour_mulr"] = 0,
 	["$pp_colour_mulg"] = 0,
 	["$pp_colour_mulb"] = 0
 }
+local allowLegacyMM=false
 hook.Add("RenderScreenspaceEffects","ES.MMBlackWhite",function()
 	if IsValid(mm) then
 		fx["$pp_colour_colour"]=Lerp(FrameTime()*8,fx["$pp_colour_colour"],.1)
@@ -91,11 +92,15 @@ local function addCheckbox(help,txt,convar,oncheck)
 end
 
 function ES.CloseMainMenu()
-	if IsValid(mm) then mm:Remove() end
+	if IsValid(mm) then mm:Remove() return true end return false
 end
 
 function ES.CreateMainMenu()
-	if IsValid(mm) then mm:Remove() return end
+	if ES.CloseMainMenu() then
+		return ES.DebugPrint("Closed MainMenu")
+	end
+
+	ES.DebugPrint("Opening MainMenu.")
 
 	local ply = LocalPlayer()
 
@@ -105,22 +110,11 @@ function ES.CreateMainMenu()
 	mm:MakePopup()
 
 	--### main items
-	mm:AddButton("General",Material("icon16/car.png"),function()
+	mm:AddButton("Resume Game",Material("icon16/bomb.png"),ES.CloseMainMenu)
+	mm:AddWhitespace("Actions")
+	mm:AddButton("Settings",Material("icon16/car.png"),function()
 		mm:OpenChoisePanel({
-			{icon = Material("exclserver/menuicons/generic.png"), name = "About",func = function()
-				local p = mm:OpenFrame(640)
-				p:SetTitle("About")
-				local l = Label(ES.FormatLine([[ExclServer is an all-in-one server system that handles items, forums, administration and has a plugin framework. The global currency used to buy items is Bananas. You can earn these bananas simply by playing, or you can purchase then on the forum.
-
-Bananas can be spent in the shop menu (accessable from this screen). If you are not familar with ExclServer the best way to get to know it is to simply explore these menus, we would suggest you to click the 'My account' tab and make a forum account or link your existing account. Doing so will give you 500 bananas. Bananas are shared across all our servers (including the forums). This means that bananas earned on one server are automatically transferred to all other servers.
-
-ExclServer is created and constructed by Excl.]],"ESDefault+",640-20*2),p)
-				l:SetColor(Color(255,255,255,200))
-				l:SetFont("ESDefault+")
-				l:SetPos(20,20)
-				l:SizeToContents()
-			end},
-			{icon = Material("exclserver/menuicons/generic.png"), name = "Settings",func = function()
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Options",func = function()
 				local p = mm:OpenFrame(300)
 				p:SetTitle("Settings")
 
@@ -129,7 +123,6 @@ ExclServer is created and constructed by Excl.]],"ESDefault+",640-20*2),p)
 						RunConsoleCommand( "excl_trails_reload")
 					end)
 				end)
-				addCheckbox(p,"Bind ExclServer to F5","excl_bind_to_f5",function() end)
 			end},
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Colors",func = function()
 				local p = mm:OpenFrame(10+256+10+256+10)
@@ -210,9 +203,14 @@ ExclServer is created and constructed by Excl.]],"ESDefault+",640-20*2),p)
 				ignore=false
 
 			end},
+			{icon = Material("exclserver/menuicons/generic.png"), name = "Legacy Menu",func = function()
+				allowLegacyMM=true
+				gui.ActivateGameUI()
+				ES.CloseMainMenu()
+			end}
 		})
 	end)
-	mm:AddButton("System",Material("icon16/shield.png"),function()
+	mm:AddButton("Sever",Material("icon16/shield.png"),function()
 		mm:CloseChoisePanel()
 
 		mm:OpenChoisePanel({
@@ -227,7 +225,7 @@ ExclServer is created and constructed by Excl.]],"ESDefault+",640-20*2),p)
 			end},
 		})
 	end)
-	mm:AddWhitespace()
+	mm:AddWhitespace("Marketplace")
 	mm:AddButton("Shop",Material("icon16/basket.png"),function()
 		mm:OpenChoisePanel({
 			{icon = Material("exclserver/menuicons/generic.png"), name = "Items",func = function()
@@ -381,7 +379,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			p:GetParent():Remove()
 		end)
 	end)
-	mm:AddWhitespace()
+	mm:AddWhitespace("Information")
 	mm:AddButton("Achievements",Material("icon16/rosette.png"),function()
 		mm:CloseChoisePanel()
 		local p = mm:OpenFrame(500)
@@ -434,9 +432,6 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		local scr = context:Add("esScrollbar")
 		scr:SetTall(context:GetTall()-8);
 		scr:Setup()
-	end)
-	mm:AddButton("Server list",Material("icon16/server.png"),function()
-		ES._MMGenerateServerList(mm)
 	end)
 	mm:AddButton("Player list",Material("icon16/user.png"),function()
 		mm:CloseChoisePanel()
@@ -545,6 +540,10 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 			self:SizeToContents()
 		end
 	end)
+	mm:AddWhitespace("Community")
+	mm:AddButton("Server list",Material("icon16/server.png"),function()
+		ES._MMGenerateServerList(mm)
+	end)
 	mm:AddButton("Website",Material("icon16/world.png"),function()
 		mm:CloseChoisePanel()
 		local p = mm:OpenFrame()
@@ -561,24 +560,33 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		web:SetPos(1,0)
 		web:OpenURL("http://casualbananas.com/")
 	end)
+	mm:AddWhitespace("Connection")
+	mm:AddButton("Disconnect",Material("icon16/server.png"),function()
+		LocalPlayer():ConCommand("disconnect")
+	end)
 
 	return mm
 end
 
 net.Receive("ESToggleMenu",function() ES.CreateMainMenu() end)
 
-local was_pressed = false
-hook.Add("Think","exclMMOpenWithF5",function()
-	if input.IsKeyDown(KEY_F5) and not was_pressed then
-		was_pressed = true
-		ES.CreateMainMenu()
-	elseif not input.IsKeyDown(KEY_F5) then
-		was_pressed = false
-	end
-end)
+local did_release=false
+hook.Add( "PreDrawHUD", "exclserver.mainmenu.open", function()
+    if (gui.IsGameUIVisible() and not allowLegacyMM) then
+        gui.HideGameUI()
+				did_release=true
 
-hook.Add("PlayerBindPress","exclMMSupressJPeg",function(ply, bind, pressed)
-	if string.find(bind,"jpeg",0,false) and input.IsKeyDown(KEY_F5) then
-		return true
-	end
+				if timer.Exists("esOpenMain") then
+					timer.Remove("esOpenMain")
+				end
+		elseif (allowLegacyMM and not gui.IsGameUIVisible()) then
+			allowLegacyMM=false
+		elseif did_release and not timer.Exists("esOpenMain") then
+			timer.Create("esOpenMain",.1,1,function()
+				ES.CreateMainMenu()
+
+				timer.Remove("esOpenMain")
+			end)
+			did_release=false
+    end
 end)

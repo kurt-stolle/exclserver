@@ -76,9 +76,9 @@ ES.Color.BlueGrey 	= ES.Color["#607d8b"]
 ES.Color.Highlight = ES.Color.LightGreen
 
 -- Allow users to customize
-local firstColor = Color(20,165,180)
-local secondColor = Color(24,135,150)
-local thirdColor = Color(28,105,120)
+local firstColor = Color(74,109,189)
+local secondColor = Color(50,82,155)
+local thirdColor = Color(33,60,121)
 
 function ES.SaveColorScheme()
 	if not file.IsDir("exclserver","DATA") then
@@ -104,9 +104,9 @@ function ES.PushColorScheme(f,s,t)
 	if not f or not s or not t then
 		ES.DebugPrint("Color scheme has been reset.");
 
-		firstColor = Color(20,165,180)
-		secondColor = Color(24,135,150)
-		thirdColor = Color(28,105,120)
+		firstColor =  Color(74,109,189)
+		secondColor = Color(50,82,155)
+		thirdColor = Color(33,60,121)
 
 		return
 	end

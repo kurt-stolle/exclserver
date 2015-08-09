@@ -70,7 +70,7 @@ function ES.OpenMOTD()
 
 
 		This server is running ExclServer 2.
-		You can access the ExclServer menu by pressing F5.
+		You can access the ExclServer menu by pressing ESC.
 		From here you can access the shop, player list, and more.
 
 

@@ -39,7 +39,7 @@ ES.CreateFont("ESChatFont.Bold",{
 local ads={
 	"Visit our forums at <url>community.casualbananas.com</url>!",
 	"Donate and receive <hl>1000 bananas</hl> for every <hl>1 USD</hl> you donate. Type <hl>!donate</hl> in chat to donate!",
-	"Press <hl>F5</hl> to open ExclServer, where you can spend your bananas.",
+	"Press <hl>ESC</hl> to open ExclServer, where you can spend your bananas.",
 	"Put <hl>[CB]</hl> in your steam name to join our community!",
 	"You are playing on a <hl>Casual Bananas</hl> community server.",
 }

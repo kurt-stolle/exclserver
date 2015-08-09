@@ -35,16 +35,23 @@ local PNL = {}
 function PNL:Init()
 	self.TimeCreate = SysTime()
 
+	-- Logo
 	self.LogoMat = Material("exclserver/logo.png")
 
-	-- main element
+	-- Avatar
+	self.Avatar = vgui.Create("esAvatar",self)
+	self.Avatar:SetSize(64,64)
+	self.Avatar:SetPlayer(LocalPlayer(),64)
+
+	--[[ Remove
 	self.rm = vgui.Create("esIconButton",self)
 	self.rm:SetIcon(Material("exclserver/mmarrowicon.png"))
-	self.rm:SetSize(32,50)
+	self.rm:SetSize(32,32)
+	self.rm:SetRotation(180)
 	self.rm.DoClick = function(self)
 		if IsValid(self:GetParent()) then self:GetParent():Remove() end
-	end
-	self.rm.Paint = function(self,w,h)
+	end]]
+	--[[self.rm.Paint = function(self,w,h)
 		if not self.Mat then return end
 
 		surface.SetMaterial(self.Mat)
@@ -52,11 +59,11 @@ function PNL:Init()
 		surface.DrawTexturedRectRotated(w/2,w/2,w,w,180)
 
 		draw.SimpleText("Close","ESDefault",w/2,h-14,Color(255,255,255),1)
-	end
+	end]]
 
 	self.ElementMainX = -256
 	self.ElementMainButtons = {}
-	self.yCreateMainButtons = 110
+	self.yCreateMainButtons = 90
 
 	-- choise panel
 	self.ElementChoiseX = 0 -- this is relative!
@@ -124,6 +131,15 @@ function PNL:AddButton(name,icon,func)
 	self.yCreateMainButtons = self.yCreateMainButtons+34
 end
 function PNL:AddWhitespace(txt)
+	local lbl=vgui.Create("DLabel",self)
+	lbl:SetText("     "..(txt or "My Category"))
+	lbl:SetPos(10,self.yCreateMainButtons+12)
+	lbl:SetFont("ESDefault")
+	lbl:SetColor(ES.Color["#CCC"])
+	lbl:SizeToContents()
+
+	table.insert(self.ElementMainButtons,lbl)
+
 	self.yCreateMainButtons = self.yCreateMainButtons+34
 end
 function PNL:Think()
@@ -132,21 +148,23 @@ function PNL:Think()
 		for k,v in pairs(self.ElementMainButtons)do
 			if IsValid(v) then v:SetPos(self.ElementMainX,v.y) end
 		end
-		self.rm:SetPos(self.ElementMainX + 256 + 16,16)
 	elseif self.ElementMainX ~= 0 then
 		self.ElementMainX = 0
-		self.rm:SetPos(self.ElementMainX + 256 + 16,16)
 	end
 
+	--self.rm:SetPos(self.ElementMainX + 256 - 10 - self.rm:GetWide(),10)
+	self.Avatar:SetPos(self.ElementMainX+10,10)
 end
 local color_choice_bg=Color(35,35,35)
 local color_choice_border=Color(255,255,255,5)
+local x,y
 function PNL:Paint(w,h)
 	local p = LocalPlayer()
 	local scrW,scrH = ScrW(),ScrH()
 
-	--[[surface.SetDrawColor(colTransBlack)
-	surface.DrawRect(0,0,w,h)]]
+	surface.SetDrawColor(ES.Color.Black)
+	surface.DrawRect(self.ElementMainX,0,256,h)
+
 	Derma_DrawBackgroundBlur(self,self.TimeCreate)
 
 	-- THE CHOISE ELEMENT
@@ -154,8 +172,6 @@ function PNL:Paint(w,h)
 	if self.ElementChoiseEnabled then
 		render.PushFilterMag( TEXFILTER.ANISOTROPIC )
 		render.PushFilterMin( TEXFILTER.ANISOTROPIC )
-
-		local x,y
 
 		for k,v in pairs(self.ElementChoiseElements)do
 			if not v.wait then
@@ -219,59 +235,30 @@ function PNL:Paint(w,h)
 	surface.SetDrawColor(ES.GetColorScheme(1))
 	surface.DrawRect(self.ElementMainX,0,256,h)
 
-	surface.SetDrawColor(ES.Color["#1E1E1EFE"])
-	surface.DrawRect(self.ElementMainX,79,256,h)
+	surface.SetDrawColor(ES.Color["#1E1E1E"])
+	surface.DrawRect(self.ElementMainX,10+64+10,256,h)
 
-	surface.SetDrawColor(ES.Color["#000"])
-	surface.DrawRect(self.ElementMainX+256,0,1,h)
-	surface.SetDrawColor(ES.Color["#FFFFFF03"])
-	surface.DrawRect(self.ElementMainX+255,0,1,h)
-
-	---draw.SimpleText("ExclServer","ES.MainMenu.MainElementHeader",self.ElementMainX+10,24,ES.Color.White)
+	x,y=self.ElementMainX+10+64+10,8
+	local _,hText=draw.SimpleText("My Account","ESDefault++",x,y,ES.Color.White)
+	y=y+hText+6
+	_,hText=draw.SimpleText(p:ESGetNetworkedVariable("bananas","Loading").." bananas","ESDefault",x,y,ES.Color.White)
+	y=y+hText+4
+	local vip=p:ESGetNetworkedVariable("VIP",0)
+	_,hText=draw.SimpleText(vip==1 and "Bronze VIP" or vip==2 and "Silver VIP" or vip==3 and "Gold VIP" or vip==4 and "Carebear VIP" or "Not VIP","ESDefault",x,y,ES.Color.White)
+	x,y=self.ElementMainX,h-64
 
 	surface.SetMaterial(self.LogoMat)
-	surface.SetDrawColor(ES.Color.White)
-	surface.DrawTexturedRect(self.ElementMainX,80-64,256,64)
-
-	--display bananas
-	--[[surface.SetDrawColor(ES.Color["#00000077"])
-	surface.DrawRect(self.ElementMainX,h-10-60,256,60)
-
-	surface.SetDrawColor(ES.Color["#FFFFFF02"])
-	surface.DrawRect(self.ElementMainX,h-10-60,256,1)
-	surface.DrawRect(self.ElementMainX,h-10,256,1)]]
-
-	draw.SimpleText("Bananas","ES.MainMenu.MainElementInfoBnnsSmall",self.ElementMainX+10,h-10-60+4,ES.Color.White)
-	if not (IsValid(p) or not p:ESGetNetworkedVariable("bananas",false) ) then
-		draw.SimpleText("Loading...","ES.MainMenu.MainElementInfoBnns",self.ElementMainX+10,h-10-60+18,ES.Color.White)
-	else
-		if not didLoad then
-			bananaDisplay = p:ESGetBananas()
-			didLoad = true
-		end
-		local bananaDisplayRound = math.Round(bananaDisplay)
-			if bananaDisplayRound ~= p:ESGetBananas() then
-			if bananaDisplay - p:ESGetBananas() > 0 then
-				bananaDisplay = Lerp(FrameTime(),bananaDisplay-1,p:ESGetBananas())
-			else
-				bananaDisplay = Lerp(FrameTime(),bananaDisplay+1,p:ESGetBananas())
-			end
-		else
-			bananaDisplay = bananaDisplayRound
-		end
-		draw.SimpleText(tostring(bananaDisplayRound),"ES.MainMenu.MainElementInfoBnns",self.ElementMainX+10,h-10-60+18,ES.Color.White)
-	end
+	surface.SetDrawColor(ES.Color["#2E2E2E"])
+	surface.DrawTexturedRect(x,y,256,64)
+	surface.SetTextColor(ES.Color["#2E2E2E"])
+	surface.SetTextPos( x+210,y+32)
+	surface.SetFont("ESDefaultBold")
+	surface.DrawText(ES.version)
 end
 vgui.Register("ESMainMenu",PNL,"EditablePanel")
 
 --### MAIN ELEMENT BUTTON
 
-ES.CreateFont("ES.MainMenu.MainElementButtonShad",{
-	font = ES.Font,
-	size = 18,
-	weight = 400,
-	blursize=2,
-})
 ES.CreateFont("ES.MainMenu.MainElementButton",{
 	font = ES.Font,
 	size = 18,
@@ -300,19 +287,27 @@ end
 function PNL:Paint(w,h)
 	if not self.bg then return end
 
-	if self.Hover then
-		surface.SetDrawColor(ES.GetColorScheme(2))
-	else
-		surface.SetDrawColor(ES.Color["#222"])
+	if not self.dotColor then
+		self.dotColor = table.Copy(ES.Color["#333"])
 	end
-	surface.SetMaterial(self.bg)
-	--surface.DrawTexturedRect(0,0,w,h)
+
+	local clr;
+	if self.Hover then
+		clr=ES.GetColorScheme(2)
+	else
+		clr=ES.Color["#333"]
+	end
+
+	self.dotColor.r = Lerp(FrameTime()*10,self.dotColor.r,clr.r)
+	self.dotColor.g = Lerp(FrameTime()*10,self.dotColor.g,clr.g)
+	self.dotColor.b = Lerp(FrameTime()*10,self.dotColor.b,clr.b)
+
+	self._expand = Lerp(FrameTime()* ( self.Hover and 6 or 8),self._expand or 0,self.Hover and w*2 or 12)
+	self._rot = Lerp(FrameTime()*3,self._rot or 0, self.Hover and 0 or 45)
+
+	surface.SetDrawColor(self.dotColor)
 	draw.NoTexture()
-
-	self._expand = Lerp(FrameTime()*8,self._expand or 16,self.Hover and w*2 or 16)
-	self._rot = Lerp(FrameTime()*4,self._rot or 0, self.Hover and 0 or 45)
-
-	surface.DrawTexturedRectRotated(10+h/2,h/2,self._expand,self._expand,self._rot)
+	surface.DrawTexturedRectRotated(5+h/2,h/2,self._expand,self._expand,self._rot)
 
 	--surface.SetDrawColor(ES.Color.White)
 	--surface.SetMaterial(self.icon)
@@ -324,7 +319,7 @@ function PNL:Paint(w,h)
 	if self.Hover then
 		col = ES.Color.White
 	end
-	draw.SimpleText(self.title,"ES.MainMenu.MainElementButton",42 + 10,h/2,col,0,1)
+	draw.SimpleText(self.title,"ES.MainMenu.MainElementButton",40,h/2,col,0,1)
 end
 vgui.Register("ES.MainMenu.NavigationItem",PNL,"Panel")
 

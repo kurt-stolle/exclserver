@@ -14,7 +14,7 @@ function ES.CreateSetting(name,default)
 	end
 end
 function ES.GetSetting(name)
-	return settings[name] or ES.Error("SETTING_GET_NOT_FOUND",name);
+	return settings[name] or ES.Error("SETTING_GET_NOT_FOUND",name) and nil;
 end
 function ES.SetSetting(name,value,serverid)
 	if not serverid then

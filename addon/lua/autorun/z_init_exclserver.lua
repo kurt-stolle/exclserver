@@ -16,7 +16,8 @@ if not ES.debug then
 end
 
 -- The rough version string
-ES.version = "7.1.x"
+-- VERSION: 7.1.8
+ES.version = "7.1"
 
 -- Debug print
 local color_debug_text=Color(255,255,255)

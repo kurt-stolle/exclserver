@@ -41,13 +41,15 @@ function ES._MMGenerateServerList(base)
           local lbl_players = pnl:Add("esLabel")
           lbl_players:SetPos(10,lbl_name.y + lbl_name:GetTall() + 4)
           lbl_players:SetFont("ESDefault");
-          lbl_players:SetText("0/0 Players")
+          lbl_players:SetColor(ES.Color["#FFFFFFA3"])
+          lbl_players:SetText("Loading player count...")
           lbl_players:SizeToContents()
 
           local lbl_map = pnl:Add("esLabel")
           lbl_map:SetPos(10,lbl_players.y + lbl_players:GetTall() + 4)
           lbl_map:SetFont("ESDefault");
-          lbl_map:SetText("Playing on unknown map")
+          lbl_map:SetColor(ES.Color["#FFFFFFA3"])
+          lbl_map:SetText("Loading map...")
           lbl_map:SizeToContents()
 
           local btn_conn =pnl:Add("esButton")
@@ -64,18 +66,23 @@ function ES._MMGenerateServerList(base)
 
           local api=ES.GetSetting("API:Url")
 
-          if not api then print("API is not LIVE!") continue end
+          if not api then ES.Error("MM_SERVERLIST_API_UNKNOWN","API URL invalid, tell server owner to check config.") continue end
+
+          api=string.gsub(api,"https","http");
+
+          ES.DebugPrint("Fetching: "..api.."/api/servers/status/"..v.id)
+
 
           HTTP {
             failed=function(err)
-              print("Server information fetch failed.",err)
+              ES.Error("MM_SERVERLIST_FETCH_FAILED",err)
             end,
             success=function(code,res)
               local servers=util.JSONToTable(res)
               PrintTable(res)
             end,
-            method="get",
-            url=api.."/api/servers/status/"..v.id,
+            method="GET",
+            url=(api.."/api/servers/status/"..v.id),
             parameters={},
             headers={}
           }
