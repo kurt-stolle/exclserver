@@ -210,7 +210,7 @@ function ES.CreateMainMenu()
 			end}
 		})
 	end)
-	mm:AddButton("Sever",Material("icon16/shield.png"),function()
+	mm:AddButton("Server",Material("icon16/shield.png"),function()
 		mm:CloseChoisePanel()
 
 		mm:OpenChoisePanel({

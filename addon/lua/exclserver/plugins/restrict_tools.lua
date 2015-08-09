@@ -41,7 +41,7 @@ if SERVER then
 		ES.ToolRestrictions[toolmode] = req
 
 		ES.ChatBroadcast(ES.Color.Highlight,toolmode,ES.Color.White," was restricted to ",ES.Color.Highlight,req <= 4 and "VIP tier "..tostring(req) or req == 5 and "Administrator" or req == 6 and "Super Administrator" or req == 7 and "Operator")
-	end,60)
+	end,40)
 
 	ES.ToolRestrictions = {}
 	PLUGIN:AddHook("ESDatabaseReady",function()

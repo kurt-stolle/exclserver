@@ -58,7 +58,7 @@ if SERVER then
 		addPropRestriction(a[1],a[2] and 0 or ES.ServerID)
 
 		ES.ChatBroadcast("Restricted ",ES.Color.Highlight,a[1],ES.Color.White,".")
-	end,60)
+	end,40)
 
 	-- Hooks
 	PLUGIN:AddHook("ESDatabaseReady",function()
