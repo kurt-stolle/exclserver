@@ -56,11 +56,17 @@ function ES._MMGenerateServerList(base)
           btn_conn:SetPos(pnl:GetWide()-102,2)
           btn_conn:SetSize(100,30)
           btn_conn:SetText("Connect")
+          btn_conn.DoClick=function()
+            LocalPlayer():ConCommand("connect "..v.ip..":"..v.port)
+          end
 
           local btn_copy = pnl:Add("esButton")
           btn_copy:SetPos(pnl:GetWide()-102,34)
           btn_copy:SetSize(100,30)
           btn_copy:SetText("Copy IP")
+          btn_copy.DoClick=function()
+            SetClipboardText(v.dns)
+          end
 
           table.insert(panels,pnl)
 
