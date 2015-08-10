@@ -50,7 +50,7 @@ function meta:__call()
 
 	if CLIENT then return end
 
-	ES.CreateSetting("Plugin:"..self:GetName()..".Enabled",bit.band(self.flags,EXCL_PLUGIN_FLAG_NODEFAULTDISABLED) > 0)
+	ES.CreateSetting("PLUGIN:"..self:GetName()..".Enabled",bit.band(self.flags,EXCL_PLUGIN_FLAG_NODEFAULTDISABLED) > 0)
 end
 function meta:Load()
 	self.disabled = false

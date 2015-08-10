@@ -8,7 +8,7 @@ if SERVER then
 
 	-- Vars
 	ES.RestrictedProps = {}
-	ES.CreateSetting("props_blacklist_is_whitelist",true)
+	ES.CreateSetting("PLUGIN:Prop Restrict.BlacklistIsWhitelist",true)
 
 	local loadedGlobal = {}
 	local loadedLocal = {}
@@ -36,7 +36,7 @@ if SERVER then
 	local function isBlockedModel(p,model)
 		model=parseModel(model)
 
-		if ES.GetSetting("props_blacklist_is_whitelist",false) then
+		if ES.GetSetting("PLUGIN:Prop Restrict.BlacklistIsWhitelist",false) then
 			if table.HasValue(ES.RestrictedProps,model) then
 				return false
 			else
