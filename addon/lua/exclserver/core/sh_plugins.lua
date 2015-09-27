@@ -34,7 +34,7 @@ function ES.Plugin()
 	PLUGIN.commands = {}
 	PLUGIN.flags = 0
 	PLUGIN.id = -1
-	PLUGIN.disabled = false
+	PLUGIN.disabled = true
 
 	return PLUGIN
 end
@@ -50,8 +50,18 @@ function meta:__call()
 
 	if CLIENT then return end
 
-	ES.CreateSetting("PLUGIN:"..self:GetName()..".Enabled",bit.band(self.flags,EXCL_PLUGIN_FLAG_NODEFAULTDISABLED) > 0)
+	ES.CreateSetting("PLUGIN:"..self:GetName()..".Enabled",bit.band(self.flags,EXCL_PLUGIN_FLAG_NODEFAULTDISABLED) > 0,function(value)
+		value=tobool(value);
+
+		if self:IsEnabled() and value == false then
+			self:UnLoad()
+		elseif not self:IsEnabled() and value == true then
+			self:Load()
+		end
+	end)
 end
+function meta:IsEnabled() return not self.disabled end
+function meta:IsDisabled() return self.disabled end
 function meta:Load()
 	self.disabled = false
 	if SERVER then
@@ -59,12 +69,16 @@ function meta:Load()
 			ES.AddCommand(k,v.func,v.rank)
 		end
 	end
+
+	ES.DebugPrint("  LOADED PLUGIN: ",self.name);
 end
 function meta:UnLoad()
 	self.disabled = true
 	for k,v in pairs(self.commands)do
-		ES.RemoveCommand(k.func)
+		ES.RemoveCommand(k)
 	end
+
+	ES.DebugPrint("UNLOADED PLUGIN: ",self.name);
 end
 function meta:SetRank(r)
 	self.minrank = (r or "user")
@@ -79,7 +93,7 @@ function meta:SetInfo(n,d,a)
 end
 function meta:AddHook(n,f)
 	self.hooks[string.lower(n)] = f
-	hook.Add(n,self.name.."-->"..n,function(...)
+	hook.Add(n,self.name.."->"..n,function(...)
 		if not self.disabled then
 			local ret=f(...)
 			if ret ~= nil then
@@ -94,8 +108,12 @@ if SERVER then
 	end
 end
 
-hook.Add("Initialize","ExclPluginsLoad",function()
+hook.Add("ESPostSettingsLoaded","ExclPluginsLoad",function()
 	for k,v in pairs(ES.Plugins) do
-		v:Load()
+		if ES.GetSetting("PLUGIN:"..v:GetName()..".Enabled",false) then
+			v:Load()
+		else
+			v:UnLoad()
+		end
 	end
 end)

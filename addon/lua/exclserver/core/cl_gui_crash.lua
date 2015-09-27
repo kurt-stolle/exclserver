@@ -245,23 +245,23 @@ net.Receive("ESCrashPong", function()
 	ES.DebugPrint("Connection regained (pong)")
 end )
 
-hook.Add("Move" , "ESCrashReconnect" , function()
+hook.Add("Move" , "exclserver.crash.connectionregain" , function()
 	lastmovetime = CurTime()
 end )
 
-hook.Add("InitPostEntity" , "ESCrashReconnect" , function()
+hook.Add("InitPostEntity" , "exclserver.crash.connectionregain" , function()
 	spawned = true
 	spawntime = CurTime() + 30
 end )
 
 local test = 0
-hook.Add("Think" , "ESCrashReconnect" , function()
+hook.Add("Think" , "exclserver.crash.connectionregain" , function()
 	if not game.SinglePlayer() then
 		if not crashed and IsCrashed() and not pending then
 			pending = true
 			RunConsoleCommand("excl_ping")
 
-			test = CurTime() + 3.5
+			test = CurTime() + 3.0
 
 			ES.DebugPrint("Connection lost! Sending ping!")
 		end
@@ -284,3 +284,16 @@ hook.Add("Think" , "ESCrashReconnect" , function()
 		end
 	end
 end )
+
+concommand.Add("excl_fake_crash",function()
+	hook.Remove("InitPostEntity" , "exclserver.crash.connectionregain");
+	hook.Remove("Move" , "exclserver.crash.connectionregain");
+	hook.Remove("Think" , "exclserver.crash.connectionregain");
+
+	ES.DebugPrint("Connection to gameserver lost");
+	crashed = true;
+	shouldretry = true;
+	pending = false;
+
+	createMenu()
+end);

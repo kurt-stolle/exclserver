@@ -1,9 +1,5 @@
 AddCSLuaFile()
 
-if jit then
-	jit.on();
-end
-
 ES = {}
 
 -- Debug mode, only when playing on a local server.

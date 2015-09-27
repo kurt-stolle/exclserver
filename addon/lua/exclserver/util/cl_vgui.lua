@@ -138,5 +138,35 @@ function ES.UIDrawBlur(panel,mtr)
 	end
 end
 
+-- easily create settings stuff
+function ES.UICreateSettingModPanel(setting)
+	local val=ES.GetSetting(setting)
+	local pnl;
+	local typ=type(val)
+	if typ == "boolean" then
+		pnl = vgui.Create("esToggleButton")
+		pnl:SetChecked(val)
+		pnl:SetText(setting)
+		pnl.DoClick = function(pnl,check)
+			net.Start("exclserver.settings.send")
+			net.WriteString(setting);
+			net.WriteString(tostring(check))
+			net.SendToServer()
+		end
+	else
+		pnl = vgui.Create("Panel")
+		pnl:SetTall(18)
+
+		local lbl=pnl:Add("DLabel")
+		lbl:SetFont("ESDefaultBold")
+		lbl:SetColor(ES.Color.White)
+		lbl:SetText(setting)
+		lbl:SizeToContents()
+
+	end
+
+	return pnl;
+end
+
 -- Disable ugly progress thingy
 hook.Remove( "SpawniconGenerated", "SpawniconGenerated")

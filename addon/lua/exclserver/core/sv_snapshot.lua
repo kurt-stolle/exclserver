@@ -45,10 +45,14 @@ net.Receive("exclserver.snapshot.send.part",function(len,p)
 	requesters[p:UniqueID()] = nil
 	build[p:UniqueID()] = nil
 
-	if !file.Exists("exclsnapshots", "DATA") then
-		file.CreateDir("exclsnapshots")
+	if !file.Exists("exclserver", "DATA") then
+		file.CreateDir("exclserver")
+
+		if !file.Exists("exclserver/snapshots", "DATA") then
+			file.CreateDir("exclserver/snapshots")
+		end
 	end
-	file.Write("exclsnapshots/"..p:SteamID().."_"..os.time().."_base64.txt", util.Base64Encode(data))
+	file.Write("exclserver/snapshots/"..p:SteamID().."_"..os.time().."_base64.txt", util.Base64Encode(data))
 end)
 
 ES.AddCommand("snapshot",function(p,a)
@@ -68,7 +72,7 @@ ES.AddCommand("snapshot",function(p,a)
 	if not requesters[vic:UniqueID()] then
 		requesters[vic:UniqueID()] = {}
 	end
-	
+
 	requesters[vic:UniqueID()][#requesters[vic:UniqueID()] + 1] = p
 
 	p._es_snapshotCooldown = true

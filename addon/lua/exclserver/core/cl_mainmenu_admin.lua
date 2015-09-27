@@ -109,29 +109,45 @@ function ES._MMGeneratePlugins(base)
 	  		author:SetFont("ESDefault")
 	  		author:SizeToContents()
 
-	  		local status=header:Add("DLabel")
-	  		status:SetColor(ES.Color.White)
-	  		status:Dock(RIGHT)
-				status:SetText("Enabled")
-				status:SetFont("ESDefault")
-				status:SizeToContents()
+	  		local status=header:Add("esToggleButton")
+	  		status.PerformLayout = function(status)
+					status:SetPos(header:GetWide() - status:GetWide()-8,8)
+				end
+				status:SetText("")
+				status:SetSize(18*2,18)
+				status.DoClick = function(status,enabled)
+					net.Start("exclserver.settings.send");
+					net.WriteString("PLUGIN:"..v:GetName()..".Enabled");
+					net.WriteString(tostring(enabled))
+					net.SendToServer();
+				end
+				status:SetChecked(ES.GetSetting("PLUGIN:"..v:GetName()..".Enabled",false));
 
-				if LocalPlayer():ESGetRank():GetPower() >= ES.POWER_OWNER then
-					local toggleEnabled=row:Add("esToggleButton")
-					toggleEnabled:SetText(v:GetDescription())
-					toggleEnabled:SetChecked(true)
-					toggleEnabled:Dock(BOTTOM)
-					toggleEnabled:DockMargin(10,10,10,10)
-					toggleEnabled.DoClick = function(self,checked)
+				local descr=row:Add("DLabel")
+				descr:SetFont("ESDefault")
+				descr:Dock(BOTTOM)
+				descr:DockMargin(10,0,10,10)
+				descr:SetText(v:GetDescription())
+				descr:SizeToContents()
+				descr:SetColor(ES.Color.White)
 
+				local prfx="PLUGIN:"..v:GetName()..".";
+				for k,v in pairs(ES.GetSettings())do
+					if string.find(k,prfx,0,false) and k ~= prfx..".Enabled" then
+						local toggleEnabled=row:Add("esToggleButton")
+						toggleEnabled:SetText(string.gsub(string.gsub(k,prfx,""),"."," "))
+						toggleEnabled:SetChecked(true)
+						toggleEnabled:Dock(BOTTOM)
+						toggleEnabled:DockMargin(10,10,10,10)
+						toggleEnabled.DoClick = function(self,checked)
+							net.Start("exclserver.settings.send");
+							net.WriteString(k);
+							net.WriteString(tostring(checked))
+							net.SendToServer();
+						end
+
+						row:SetTall( row:GetTall() + toggleEnabled:GetTall() + 20 )
 					end
-				else
-					local descr=row:Add("DLabel")
-					descr:SetFont("ESDefault")
-					descr:SetPos(10,42)
-					descr:SetText(v:GetDescription())
-					descr:SizeToContents()
-					descr:SetColor(ES.Color.White)
 				end
 	end
 
@@ -147,14 +163,23 @@ function ES._MMGeneratePlugins(base)
 end
 
 function ES._MMGenerateConfiguration(base)
-	local frame= base:OpenFrame(380)
+	local frame= base:OpenFrame(800)
   	frame:SetTitle("Configuration")
 
   	local help=frame:Add("DLabel")
-  	help:SetText(ES.FormatLine("This tab is a work in progress. Check back later.","ESDefault+",380))
+  	help:SetText(ES.FormatLine("These are all non-plugin related settings. For plugin settings see the Plugins tab.","ESDefault+",380))
   	help:SetFont("ESDefault+")
   	help:SetColor(ES.Color.White)
   	help:DockMargin(10,10,10,0)
   	help:SizeToContents()
   	help:Dock(TOP)
+
+		for k,v in ipairs(ES.GetSettings())do
+			if not string.find(v,"PLUGIN",1,true) then
+				local pnl=ES.UICreateSettingModPanel(v)
+				pnl:SetWide(360)
+				pnl:Dock(TOP)
+				pnl:SetParent(frame)
+			end
+		end
 end

@@ -22,6 +22,15 @@ function ES.CloseMOTD()
 		context:Remove()
 	end
 end
+
+local webPanel;
+
+hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti)
+	if not IsValid(webPanel) then return end
+
+	webPanel:OpenURL(ES.GetSetting("Website:Url","") or "");
+end);
+
 function ES.OpenMOTD()
 	ES.CloseMOTD()
 
@@ -88,7 +97,7 @@ function ES.OpenMOTD()
 	sidebar:DockMargin(10,0,10,0)
 
 		local forums=vgui.Create("esFrame",sidebar)
-		forums:SetTitle("Forums")
+		forums:SetTitle("Website")
 		forums:SetTall(260)
 		forums:Dock(TOP)
 		forums:EnableCloseButton(false)
@@ -99,7 +108,7 @@ function ES.OpenMOTD()
 			hack:DockMargin(1,1,1,1)
 
 			local html=vgui.Create("DHTML",hack)
-			html:OpenURL("https://community.casualbananas.com/")
+			html:OpenURL(ES.GetSetting("Website:Url","") or "")
 			html:Dock(FILL)
 			html:DockMargin(0,0,-80,0)
 			html:Call("$('body').css({zoom:'70%'})")
@@ -109,8 +118,10 @@ function ES.OpenMOTD()
 			overlay:Dock(FILL)
 
 			overlay.OnMouseReleased=function()
-				gui.OpenURL("https://community.casualbananas.com/")
+				gui.OpenURL(ES.GetSetting("Website:Url",""))
 			end
+
+			webPanel = html;
 
 		local bananas=vgui.Create("esFrame",sidebar)
 		bananas:SetTitle("Bananas")
@@ -168,7 +179,7 @@ function ES.OpenMOTD()
 			btn_donate:SetTall(30)
 			btn_donate:DockMargin(15,0,15,15)
 			btn_donate.OnMouseReleased=function()
-				gui.OpenURL("https://es2-api.casualbananas.com/api/donate?amt="..(entry:GetValue() ~= "" and entry:GetValue() or "1").."&sid="..LocalPlayer():SteamID())
+				gui.OpenURL(ES.GetSetting("API:Url","").."/api/donate?amt="..(entry:GetValue() ~= "" and entry:GetValue() or "1").."&sid="..LocalPlayer():SteamID())
 
 				local fill=vgui.Create("esPanel")
 				fill:SetSize(ScrW(),ScrH())
