@@ -70,7 +70,7 @@ function ES._MMGenerateServerList(base)
 
           table.insert(panels,pnl)
 
-          local api=ES.GetSetting("API:Url")
+          local api=ES.GetSetting("API:URL")
 
           if not api then ES.Error("MM_SERVERLIST_API_UNKNOWN","API URL invalid, tell server owner to check config.") continue end
 

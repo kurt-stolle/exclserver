@@ -16,7 +16,7 @@ if SERVER then
 	end)
 
 	PLUGIN:AddCommand("votekick",function(p,a)
-		if p:ESGetVIPTier() < 1 then p:ChatPrint("You need at least <hl>Bronze VIP</hl> to start a vote kick.") return end
+		if p:ESGetVIPTier() < 4 then p:ChatPrint("You need at least <hl>Carebear VIP</hl> to start a vote kick.") return end
 
 		if not p or not p:IsValid() or not a or not a[1] then
 			p:ESChatPrint("Invalid arguments passed to command <hl>votekick</hl>.")

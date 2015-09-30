@@ -67,8 +67,12 @@ function ES.GetSettings()
 end
 
 --Basic settings
-ES.CreateSetting("API:Url","https://api.example.com")
-ES.CreateSetting("Website:Url","https://example.com")
+ES.CreateSetting("API:URL","https://api.example.com")
+ES.CreateSetting("Community:Name","my server")
+ES.CreateSetting("Community:URL","https://example.com")
+ES.CreateSetting("General:MOTD.Enabled",true)
+ES.CreateSetting("General:Snapshots.Enabled",true)
+ES.CreateSetting("General:Chatbox.Enabled",true)
 
 --Hooks
 hook.Add("ESDatabaseReady","exclserver.settings.load",function()
@@ -92,7 +96,10 @@ end)
 hook.Add("Initialize","exclserver.settings.preload",function()
 	if not file.Exists("exclserver/.settings_cache.txt","DATA") then return end
 
-	settings = util.JSONToTable(file.Read("exclserver/.settings_cache.txt","DATA"));
+	local cacheSettings = util.JSONToTable(file.Read("exclserver/.settings_cache.txt","DATA"));
+	for k,v in pairs(cacheSettings)do
+		settings[k]=v;
+	end
 	hook.Call("ESPostSettingsLoaded",GAMEMODE,settings,true);
 end);
 

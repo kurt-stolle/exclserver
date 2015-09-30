@@ -2,12 +2,13 @@
 local BUTTON = {}
 function BUTTON:Init()
 	self.DoClick = function() end
-	self.Text = "Meow"
+	self.Text = ""
 	self.Toggled = true
 	self.moveX = 0
 	self.hoverAlpha = 0
 	self.HideButton = false
-	self:SetTall(18)
+	self:SetTall(20)
+	self:SetWide((20)*2+2);
 end
 function BUTTON:OnMouseReleased()
 	if self.HideButton then return end

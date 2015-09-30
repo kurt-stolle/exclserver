@@ -1,5 +1,5 @@
 local PLUGIN=ES.Plugin()
-PLUGIN:SetInfo("Prop restrict","Handles prop restrictions.","Excl")
+PLUGIN:SetInfo("Prop Restrict","Handles prop restrictions.","Excl")
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 
 if SERVER then
@@ -8,7 +8,7 @@ if SERVER then
 
 	-- Vars
 	ES.RestrictedProps = {}
-	ES.CreateSetting("PLUGIN:Prop Restrict.BlacklistIsWhitelist",true)
+	ES.CreateSetting("PLUGIN:Prop Restrict.Whitelist",true)
 
 	local loadedGlobal = {}
 	local loadedLocal = {}
@@ -36,7 +36,7 @@ if SERVER then
 	local function isBlockedModel(p,model)
 		model=parseModel(model)
 
-		if ES.GetSetting("PLUGIN:Prop Restrict.BlacklistIsWhitelist",false) then
+		if ES.GetSetting("PLUGIN:Prop Restrict.Whitelist",false) then
 			if table.HasValue(ES.RestrictedProps,model) then
 				return false
 			else

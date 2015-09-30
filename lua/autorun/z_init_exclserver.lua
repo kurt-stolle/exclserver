@@ -11,8 +11,7 @@ if not ES.debug then
 	ES.debug = (hostip == "192.168" or hostip == "10.0") or false;
 end
 
--- The rough version string
--- VERSION: 7.1.8
+-- The rough version string, not including 2.
 ES.version = "7.1"
 
 -- Debug print

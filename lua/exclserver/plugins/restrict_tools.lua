@@ -1,5 +1,5 @@
 local PLUGIN=ES.Plugin()
-PLUGIN:SetInfo("Tool restrict","Allows you to restrict certain tools.","Excl")
+PLUGIN:SetInfo("Tool Restrict","Allows you to restrict certain tools.","Excl")
 PLUGIN:AddFlag(EXCL_PLUGIN_FLAG_NODEFAULTDISABLED)
 
 if SERVER then

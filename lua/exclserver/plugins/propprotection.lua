@@ -7,10 +7,10 @@ if SERVER then
 	util.AddNetworkString("ES.Plugin.PropRes.blocked")
 
   -- Config
-  ES.CreateSetting("PLUGIN:Prop Restrict.ProtectPickup",true)
-  ES.CreateSetting("PLUGIN:Prop Restrict.ProtectTool",true)
-  ES.CreateSetting("PLUGIN:Prop Restrict.ProtectUse",false)
-  ES.CreateSetting("PLUGIN:Prop Restrict.ProtectDrive",false)
+  ES.CreateSetting("PLUGIN:Prop Protect.Protect.Pickup",true)
+  ES.CreateSetting("PLUGIN:Prop Protect.Protect.Tool",true)
+  ES.CreateSetting("PLUGIN:Prop Protect.Protect.Use",false)
+  ES.CreateSetting("PLUGIN:Prop Protect.Protect.Drive",false)
 
 	-- Commands
 	PLUGIN:AddCommand("friends",function(p,a)
@@ -37,7 +37,7 @@ if SERVER then
 	end)
 
 	PLUGIN:AddHook("PhysgunPickup", function(p,ent)
-    if not ES.GetSetting("PLUGIN:Prop Restrict.ProtectPickup") then return end
+    if not ES.GetSetting("PLUGIN:Prop Protect.ProtectPickup") then return end
 
     if IsValid(ent:GetOwner()) and ent:GetOwner() ~= p and not table.HasValue(ent:GetOwner()._es_friends,p) then
       return false
@@ -45,7 +45,7 @@ if SERVER then
 	end)
 
   PLUGIN:AddHook("CanDrive", function(p,ent)
-    if not ES.GetSetting("PLUGIN:Prop Restrict.ProtectDrive") then return end
+    if not ES.GetSetting("PLUGIN:Prop Protect.ProtectDrive") then return end
 
     if IsValid(ent:GetOwner()) and ent:GetOwner() ~= p and not table.HasValue(ent:GetOwner()._es_friends,p) then
       return false
@@ -53,13 +53,13 @@ if SERVER then
 	end)
 
   PLUGIN:AddHook("CanTool", function(p,tr,tool)
-    if not ES.GetSetting("PLUGIN:Prop Restrict.ProtectTool") then return end
+    if not ES.GetSetting("PLUGIN:Prop Protect.ProtectTool") then return end
 
 
 	end)
 
   PLUGIN:AddHook("CanProperty", function(p,prop,ent)
-    if not ES.GetSetting("PLUGIN:Prop Restrict.ProtectUse") then return end
+    if not ES.GetSetting("PLUGIN:Prop Protect.ProtectUse") then return end
 
     if IsValid(ent:GetOwner()) and ent:GetOwner() ~= p and not table.HasValue(ent:GetOwner()._es_friends,p) then
       return false
@@ -67,7 +67,7 @@ if SERVER then
   end)
 
   PLUGIN:AddHook("PlayerUse", function(p,ent)
-    if not ES.GetSetting("PLUGIN:Prop Restrict.ProtectUse") then return end
+    if not ES.GetSetting("PLUGIN:Prop Protect.ProtectUse") then return end
 
 
   end)

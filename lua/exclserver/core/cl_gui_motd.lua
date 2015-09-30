@@ -28,7 +28,7 @@ local webPanel;
 hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti)
 	if not IsValid(webPanel) then return end
 
-	webPanel:OpenURL(ES.GetSetting("Website:Url","") or "");
+	webPanel:OpenURL(ES.GetSetting("Community:URL","") or "");
 end);
 
 function ES.OpenMOTD()
@@ -108,7 +108,7 @@ function ES.OpenMOTD()
 			hack:DockMargin(1,1,1,1)
 
 			local html=vgui.Create("DHTML",hack)
-			html:OpenURL(ES.GetSetting("Website:Url","") or "")
+			html:OpenURL(ES.GetSetting("Community:URL","") or "")
 			html:Dock(FILL)
 			html:DockMargin(0,0,-80,0)
 			html:Call("$('body').css({zoom:'70%'})")
@@ -118,7 +118,7 @@ function ES.OpenMOTD()
 			overlay:Dock(FILL)
 
 			overlay.OnMouseReleased=function()
-				gui.OpenURL(ES.GetSetting("Website:Url",""))
+				gui.OpenURL(ES.GetSetting("Community:URL",""))
 			end
 
 			webPanel = html;
@@ -179,7 +179,7 @@ function ES.OpenMOTD()
 			btn_donate:SetTall(30)
 			btn_donate:DockMargin(15,0,15,15)
 			btn_donate.OnMouseReleased=function()
-				gui.OpenURL(ES.GetSetting("API:Url","").."/api/donate?amt="..(entry:GetValue() ~= "" and entry:GetValue() or "1").."&sid="..LocalPlayer():SteamID())
+				gui.OpenURL(ES.GetSetting("API:URL","").."/api/donate?amt="..(entry:GetValue() ~= "" and entry:GetValue() or "1").."&sid="..LocalPlayer():SteamID())
 
 				local fill=vgui.Create("esPanel")
 				fill:SetSize(ScrW(),ScrH())

@@ -334,7 +334,7 @@ If you purchase a tier below Carebear, all tiers above said tier will decrease i
 		tbl.rows[1][6] = "Player models"
 		tbl.rows[4][6] = true
 		tbl.rows[5][6] = true
-		tbl.rows[1][7] = "Hat particles"
+		tbl.rows[1][7] = "Vote kick"
 		tbl.rows[5][7] = true
 		tbl.rows[1][8] = "Large trail"
 		tbl.rows[2][8] = false

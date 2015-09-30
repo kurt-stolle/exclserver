@@ -81,7 +81,7 @@ function ES._MMGeneratePlugins(base)
   	list:Dock(FILL)
 
   	local scrollbuddy=list:Add("Panel")
-
+		local tall=0;
   	for k,v in pairs(ES.Plugins)do
 	  		local row=scrollbuddy:Add("esPanel")
 	  		row:SetColor(ES.GetColorScheme(3))
@@ -102,19 +102,17 @@ function ES._MMGeneratePlugins(base)
 	  		name:SetFont("ESDefaultBold")
 	  		name:SizeToContents()
 
-				local author=header:Add("DLabel")
-	  		author:SetColor(ES.Color.White)
-	  		author:Dock(LEFT)
-	  		author:SetText(" created by "..v:GetAuthor())
-	  		author:SetFont("ESDefault")
-	  		author:SizeToContents()
+				local info=header:Add("DLabel")
+	  		info:SetColor(ES.Color.White)
+	  		info:Dock(LEFT)
+	  		info:SetText(" "..v:GetVersion())
+	  		info:SetFont("ESDefault")
+	  		info:SizeToContents()
 
 	  		local status=header:Add("esToggleButton")
 	  		status.PerformLayout = function(status)
 					status:SetPos(header:GetWide() - status:GetWide()-8,8)
 				end
-				status:SetText("")
-				status:SetSize(18*2,18)
 				status.DoClick = function(status,enabled)
 					net.Start("exclserver.settings.send");
 					net.WriteString("PLUGIN:"..v:GetName()..".Enabled");
@@ -133,9 +131,10 @@ function ES._MMGeneratePlugins(base)
 
 				local prfx="PLUGIN:"..v:GetName()..".";
 				for k,v in pairs(ES.GetSettings())do
-					if string.find(k,prfx,0,false) and k ~= prfx..".Enabled" then
+					if string.find(k,prfx,0,false) and k ~= prfx.."Enabled" then
+						ES.DebugPrint("Added Config option to menu: "..k);
 						local toggleEnabled=row:Add("esToggleButton")
-						toggleEnabled:SetText(string.gsub(string.gsub(k,prfx,""),"."," "))
+						toggleEnabled:SetText(string.gsub(string.gsub(k,prfx,""),"%."," "))
 						toggleEnabled:SetChecked(true)
 						toggleEnabled:Dock(BOTTOM)
 						toggleEnabled:DockMargin(10,10,10,10)
@@ -149,9 +148,11 @@ function ES._MMGeneratePlugins(base)
 						row:SetTall( row:GetTall() + toggleEnabled:GetTall() + 20 )
 					end
 				end
+
+				tall=tall+row:GetTall()+10;
 	end
 
-	scrollbuddy:SetTall(table.Count(ES.Plugins)*(80))
+	scrollbuddy:SetTall(tall)
 
 	local scroll=list:Add("esScrollbar")
 

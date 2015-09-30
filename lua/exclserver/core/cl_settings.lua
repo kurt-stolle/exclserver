@@ -1,7 +1,12 @@
 -- Getting a setting
 local settings={}
 function ES.GetSetting(name,default)
-	return settings[name] or settings[name] == nil and ES.Error("SETTING_GET_NOT_FOUND",name) and default;
+	if type(settings[name]) == "nil" then
+		ES.Error("SETTING_GET_NOT_FOUND",name);
+		return default;
+	end
+
+	return settings[name];
 end
 
 function ES.GetSettings()

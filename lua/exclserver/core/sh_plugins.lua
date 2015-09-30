@@ -86,10 +86,11 @@ end
 function meta:AddFlag(n)
 	self.flags=self.flags + n
 end
-function meta:SetInfo(n,d,a)
+function meta:SetInfo(n,d,a,v)
 	self.name = n or self.name
 	self.description = d or self.description
 	self.author = a or self.author
+	self.version = v or self.version
 end
 function meta:AddHook(n,f)
 	self.hooks[string.lower(n)] = f

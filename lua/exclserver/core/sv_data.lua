@@ -1,33 +1,14 @@
 -- Edit these variables to configurate MySQL.
 
-local DATABASE_HOST     = "localhost"--                                     -- (String) IPv4 IP of the mysql server.
-local DATABASE_PORT     = 3306;                                                 -- (Number) mysql server port.
-local DATABASE_SCHEMA   = "exclserver";                                         -- (String) name of the schema that shoul$
-local DATABASE_USERNAME = "root"--                                    -- (String) Username
-local DATABASE_PASSWORD = "rordrmew"--						  		-- (String) Password
+local DATABASE_HOST     = "localhost";	-- (String) IPv4 IP of the mysql server.
+local DATABASE_PORT     = 3306;					-- (Number) mysql server port.
+local DATABASE_SCHEMA   = "exclserver";	-- (String) name of the schema/database
+local DATABASE_USERNAME = "exclserver";	-- (String) Username
+local DATABASE_PASSWORD = "rordrmew";		-- (String) Password
 
 -- Do not edit anything under this line, unless you're a competent Lua developer.
 
---[[
-
-result format;
-Results {
-	[1] = {
-		status = true/false,
-		error = the error string,
-		affected = number of rows affected by the query,
-		lastid = the index of the last row inserted by the query,
-		data = {
-			{
-				somefield = "some shit",
-			}
-		},
-	},
-}
-
-]]
-
-require("tmysql4")
+require "tmysql4";
 
 ES.ServerID = -1
 
@@ -99,6 +80,9 @@ hook.Add("InitPostEntity","exclrp.db.loadserverid",function()
 				ES.ServerID = res[1].lastid
 
 				hook.Call("ESDatabaseReady",GM or GAMEMODE,ES.ServerID,serverIP,serverPort)
+				timer.Simple(0,function()
+					game.ConsoleCommand("changelevel "..game.GetMap()..";")
+				end)
 			end)
 		end
 	end)
