@@ -3,8 +3,8 @@
 local DATABASE_HOST     = "localhost";	-- (String) IPv4 IP of the mysql server.
 local DATABASE_PORT     = 3306;					-- (Number) mysql server port.
 local DATABASE_SCHEMA   = "exclserver";	-- (String) name of the schema/database
-local DATABASE_USERNAME = "exclserver";	-- (String) Username
-local DATABASE_PASSWORD = "rordrmew";		-- (String) Password
+local DATABASE_USERNAME = "root";	-- (String) Username
+local DATABASE_PASSWORD = "";		-- (String) Password
 
 -- Do not edit anything under this line, unless you're a competent Lua developer.
 
