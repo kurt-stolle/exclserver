@@ -27,7 +27,7 @@ The ExclServer API is easy to install, simply install it as any other Node.JS ap
 _4. Configuring the MySQL database connection settings_
 The addon has to know to which database to connect. To do this, go to the file `./lua/exclserver/core/sv_data.lua` and fill out the variables found at the top of this file.
 
-```
+```lua
 local DATABASE_HOST     = "127.0.0.1";
 local DATABASE_PORT     = 3306;
 local DATABASE_SCHEMA   = "exclserver";
