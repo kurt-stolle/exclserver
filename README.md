@@ -24,6 +24,17 @@ _3. Installing the ExclServer API (OPTIONAL)_
 The ExclServer API allows you to use the NodeBB forum plugin `nodebb-plugin-exclserver` and the loading screen, as well as a fully featured REST-API.
 The ExclServer API is easy to install, simply install it as any other Node.JS application in your favorite environment. To configure the ExclServer API, please consult the readme in the API folder.
 
+_4. Configuring the MySQL database connection settings_
+The addon has to know to which database to connect. To do this, go to the file `./lua/exclserver/core/sv_data.lua` and fill out the variables found at the top of this file.
+
+```
+local DATABASE_HOST     = "127.0.0.1";
+local DATABASE_PORT     = 3306;
+local DATABASE_SCHEMA   = "exclserver";
+local DATABASE_USERNAME = "foo";
+local DATABASE_PASSWORD = "bar";
+```
+
 # Setup
 
 _1. Ranking the server operator_
