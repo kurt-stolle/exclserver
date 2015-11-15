@@ -15,9 +15,7 @@ function chat.AddText(...)
 	chatAdd(unpack(new));
 end
 
---[[hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti) TODO: Make this work.
-	ES.DebugPrint("CHATBOX is INITIALIZING")
-
+hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti)
 	if not ES.GetSetting("General:Chatbox.Enabled",true) then
 		ES.DebugPrint("CHATBOX is DISABLED")
 		if IsValid(chatPanel) then
@@ -30,8 +28,7 @@ end
 		end
 		return
 	end
-]]
-	ES.DebugPrint("CHATBOX is ENABLED");
+end);
 
 
 	ES.CreateFont("ESChatFont.Shadow",{
@@ -275,6 +272,7 @@ end
 		return self:ESGetNetworkedVariable("typing",false)
 	end
 
+hook.Add("Initialize","exclserver.chat.init",function()
 	-- Chatbox!
 	chatPanel=vgui.Create("esChat");
 	chatPanel:SetSize(500,240);
@@ -282,7 +280,7 @@ end
 	chatPanel:SetVisible(false);
 
 	chat.AddText("Wecome to "..ES.GetSetting("Community:Name","my server").."!")
---end); UNCOMMENT WHEN ADDING CONFIGURABLE CHAT
+end);
 
 net.Receive("ES.ChatBroadcast",function()
 	chat.AddText(unpack(net.ReadTable()))
