@@ -101,13 +101,13 @@ end)
 
 -- Alter fields tables
 hook.Add("Initialize","exclrp.db.alterfields",function()
-	local query=""
 	for k,v in pairs(ES.NetworkedVariables)do
-		if v.save then
-			query=query.."ALTER TABLE `es_player_fields` ADD "..ES.DBEscape(k).." "..v.save..";";
-		end
-	end
-	conn:Query(query)
+				if v.save then
+					ES.DebugPrint("Checking player field: "..v.name)
+					ES.DBQuery("ALTER TABLE `es_player_fields` ADD "..ES.DBEscape(v.name).." "..v.save..";",ES.Void,ES.Void)
+				end
+			end
+
 end)
 
 -- Ranks configuration

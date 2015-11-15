@@ -26,9 +26,9 @@ end
 local webPanel;
 
 hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti)
-	if not IsValid(webPanel) then return end
-
-	webPanel:OpenURL(ES.GetSetting("Community:URL","") or "");
+	if IsValid(webPanel) then
+		webPanel:OpenURL(ES.GetSetting("Community:URL","") or "");
+	end
 end);
 
 function ES.OpenMOTD()

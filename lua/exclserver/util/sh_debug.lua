@@ -19,3 +19,5 @@ function ES.TimeProbe(id)
     ES.DebugPrint(id.." took "..(os.clock() - runtime).." to run.");
   end)
 end
+
+function ES.Void() end

@@ -8,16 +8,18 @@ function chat.AddText(...)
 	local new={}
 	for k,v in ipairs{...}do
 		if type(v) == "string" then
-			//<(.-)>(.-)</(.-)> parse this
+			//TODO: <(.-)>(.-)</(.-)> parse this
 		end
 		table.insert(new,v);
 	end
 	chatAdd(unpack(new));
 end
-chatAdd=chat.AddText;
 
-hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti)
+--[[hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti) TODO: Make this work.
+	ES.DebugPrint("CHATBOX is INITIALIZING")
+
 	if not ES.GetSetting("General:Chatbox.Enabled",true) then
+		ES.DebugPrint("CHATBOX is DISABLED")
 		if IsValid(chatPanel) then
 			chatPanel:Remove();
 			timer.Destroy("ES.AdvertiseInChat")
@@ -28,6 +30,9 @@ hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti)
 		end
 		return
 	end
+]]
+	ES.DebugPrint("CHATBOX is ENABLED");
+
 
 	ES.CreateFont("ESChatFont.Shadow",{
 		font=ES.Font,
@@ -66,11 +71,10 @@ hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti)
 	})
 
 	local ads={
-		"Visit our forums at <url>community.casualbananas.com</url>!",
 		"Donate and receive <hl>1000 bananas</hl> for every <hl>1 USD</hl> you donate. Type <hl>!donate</hl> in chat to donate!",
 		"Press <hl>ESC</hl> to open ExclServer, where you can spend your bananas.",
 		"Put <hl>[CB]</hl> in your steam name to join our community!",
-		"You are playing on a <hl>Casual Bananas</hl> community server.",
+		"You are playing on a <hl>Excl Server</hl> powered server.",
 	}
 	timer.Create("ES.AdvertiseInChat",60*5,0,function()
 		local str=table.Random(ads)
@@ -278,7 +282,7 @@ hook.Add("ESSettingsChanged","exclserver.motd.update",function(setti)
 	chatPanel:SetVisible(false);
 
 	chat.AddText("Wecome to "..ES.GetSetting("Community:Name","my server").."!")
-end);
+--end); UNCOMMENT WHEN ADDING CONFIGURABLE CHAT
 
 net.Receive("ES.ChatBroadcast",function()
 	chat.AddText(unpack(net.ReadTable()))

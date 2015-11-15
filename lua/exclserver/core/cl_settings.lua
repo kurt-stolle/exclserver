@@ -16,7 +16,9 @@ end
 -- Receive settings
 net.Receive("exclserver.settings.send",function()
   settings=net.ReadTable()
-	ES.DebugPrint("Received new settings table.",ES.GetSettings())
+	ES.DebugPrint("Received new settings table.")
 
-	hook.Call("ESSettingsChanged",GAMEMODE,settings);
+	timer.Simple(0,function()
+		hook.Call("ESSettingsChanged",GAMEMODE,settings);
+	end);
 end)

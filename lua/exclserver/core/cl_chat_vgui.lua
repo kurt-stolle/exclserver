@@ -6,7 +6,7 @@ function PANEL:Init()
 
 	ES.DebugPrint("Created ExclServer chat panel.");
 
-	self:SetTitle("Casual Bananas Chat")
+	self:SetTitle("ExclServer Chat")
 
 	local scrollpanel=self:Add("esPanel")
 	scrollpanel:SetColor(ES.Color.Invisible)
