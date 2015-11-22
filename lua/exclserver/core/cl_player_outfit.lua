@@ -43,7 +43,7 @@ hook.Add("PostPlayerDraw", "ES.DrawPlayerOutfit", function(p)
 
 			pos,ang = p:GetBonePosition(drawBone)
 
-			pos = pos + (ang:Up() * drawPos.y) + (ang:Forward() * drawPos.y) + (ang:Right() * drawPos.x)
+			pos = pos + (ang:Up() * drawPos.z) + (ang:Forward() * drawPos.y) + (ang:Right() * drawPos.x)
 
 			ang:RotateAroundAxis(ang:Forward(),drawAng.p)
 			ang:RotateAroundAxis(ang:Up(),drawAng.y)
